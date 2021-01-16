@@ -6,7 +6,7 @@ if ((isset($_SESSION["logged_user"])) &&($_SESSION["logged_user"] == '')){ heade
 else { $tipo_usuario = validar_usuario($_SESSION["logged_user"]);}
 /// $tipo_usuario = 0 == admin
 switch($tipo_usuario)
-{
+{ 
 	case 1:
 	//header('Location: admin.php');
 	break;
