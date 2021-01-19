@@ -84,9 +84,10 @@ if ((isset($_POST['id_pedido'])) && ($_POST['id_pedido'] != "")){
 	$docto_ve_id = "";	
 	$docto_id = -1; // existe un triger en la base que convierte el -1 en un ID irrepetible y consecutivo
 	$almacen_id = 19; // SE ASIGNA ABAJO
+	$sucursal_id = 431195; // SE ASIGNA ABAJO
 	$cliente_id = 307461; //cliente_id de AllPart matamoros
 	$clave_cliente = "ALLMAT";
-	$vendedor_id = 0;  //// CREAR UN VENDEDOR
+	$vendedor_id = 327296;  //// VENDEDOR ALEJANDRO GARCIA
 	$cond_pago_id = 219; // 30 dias de credito para 0 dias = 209
 	$dir_cli_id = 307463; // direccion 
 	$dir_consig_id = 307463; // direccion 
@@ -105,6 +106,22 @@ if ((isset($_POST['id_pedido'])) && ($_POST['id_pedido'] != "")){
 	$sistema_origen = "VE"; // SISTEMA_ORIGEN
 	$tipo_dscto = "P"; // porcentual
 	
+	//// VERIFICAR SI EXISTEN ARTICULOS EN LA LISTA QUE NO TIENEN ID_MICROSIP -> =""
+	$sql_valida_idmicrosip = "SELECT *
+					FROM pedido_nef_det pd
+					INNER JOIN articulos a ON a.id = pd.id_articulo
+					WHERE pd.id_pedido = '$id_pedido' AND a.id_microsip_nef='' ";			
+	$res_val = mysql_query($sql_valida_idmicrosip, $conex) or die(mysql_error());
+	$rowa_val = mysql_num_rows($res_val);
+	
+	if ($rowa_val > 0)
+	{ // si encuentra partidas del pedido sin id_microsip - entonces no permitira insertar
+		
+		echo '<script> $("#modal_cargando").modal("hide"); alert("Uno o varios de los articulos no estan relacionados con la lista de articulos NEF"); </script>';
+		exit;
+	}
+	/////////////--------------///////////////------////////////-----/////////////////////////		
+	
 	$consulta_pedido = "SELECT pn.almacen_id as almacen_id, pn.id_pedido_cliente as id_pedido_cliente, alm.almacen as almacen, pn.total_pedido as total_pedido
 						FROM pedido_nef pn
 						INNER JOIN almacenes alm ON alm.almacen_id = pn.almacen_id
@@ -121,7 +138,7 @@ if ((isset($_POST['id_pedido'])) && ($_POST['id_pedido'] != "")){
 		$total_impuestos = $row_p['total_pedido'] * 0.08; 
 	
 		$insertar = "INSERT INTO DOCTOS_VE 
-		(DOCTO_VE_ID, ALMACEN_ID, CLIENTE_ID, CLAVE_CLIENTE, COND_PAGO_ID, DIR_CLI_ID, DIR_CONSIG_ID, MONEDA_ID, TIPO_DOCTO, FOLIO, FECHA, HORA, ESTATUS, ORDEN_COMPRA, IMPORTE_NETO, TOTAL_IMPUESTOS, SISTEMA_ORIGEN, TIPO_DSCTO) VALUES (:docto_id,:almacen_id,:cliente_id,:clave_cliente,:cond_pago_id,:dir_cli_id,:dir_consig_id,:moneda_id,:tipo_docto,:folio,:fecha,:hora,:estatus,:orden_compra,:importe_neto,:total_impuestos,:sistema_origen,:tipo_dscto)";
+		(DOCTO_VE_ID, ALMACEN_ID, SUCURSAL_ID, CLIENTE_ID, CLAVE_CLIENTE, COND_PAGO_ID, DIR_CLI_ID, DIR_CONSIG_ID, MONEDA_ID, TIPO_DOCTO, FOLIO, FECHA, HORA, ESTATUS, ORDEN_COMPRA, IMPORTE_NETO, TOTAL_IMPUESTOS, SISTEMA_ORIGEN, TIPO_DSCTO, VENDEDOR_ID) VALUES (:docto_id,:almacen_id,:sucursal_id,:cliente_id,:clave_cliente,:cond_pago_id,:dir_cli_id,:dir_consig_id,:moneda_id,:tipo_docto,:folio,:fecha,:hora,:estatus,:orden_compra,:importe_neto,:total_impuestos,:sistema_origen,:tipo_dscto,:vendedor_id)";
 		
 		//echo "folio registrado de pedido = ".$folio."<br/>";
 		
@@ -129,6 +146,7 @@ if ((isset($_POST['id_pedido'])) && ($_POST['id_pedido'] != "")){
 		$query_insert = $con_micro_nef->prepare($insertar);
 		$query_insert->bindParam(':docto_id', $docto_id, PDO::PARAM_INT);
 		$query_insert->bindParam(':almacen_id', $almacen_id, PDO::PARAM_INT);
+		$query_insert->bindParam(':sucursal_id', $sucursal_id, PDO::PARAM_INT);
 		$query_insert->bindParam(':cliente_id', $cliente_id, PDO::PARAM_INT);
 		$query_insert->bindParam(':clave_cliente', $clave_cliente, PDO::PARAM_STR, 20);
 		$query_insert->bindParam(':cond_pago_id', $cond_pago_id, PDO::PARAM_INT);
@@ -146,6 +164,7 @@ if ((isset($_POST['id_pedido'])) && ($_POST['id_pedido'] != "")){
 		$query_insert->bindParam(':total_impuestos', $total_impuestos, PDO::PARAM_STR, 15);
 		$query_insert->bindParam(':sistema_origen', $sistema_origen, PDO::PARAM_STR, 2);
 		$query_insert->bindParam(':tipo_dscto', $tipo_dscto, PDO::PARAM_STR, 1);
+		$query_insert->bindParam(':vendedor_id', $vendedor_id, PDO::PARAM_INT);
 		$query_insert->execute();
 		
 		 
@@ -273,7 +292,8 @@ if ((isset($_POST['id_pedido'])) && ($_POST['id_pedido'] != "")){
 			}
 			else
 			{
-				echo '<script> console.log("SE APLICO EL PEDIDO CORRECTAMENTE '.$docto_ve_id.' FOLIO: '.$folio.'"); 
+				
+				echo '<script>  $("#modal_cargando").modal("hide"); console.log("SE APLICO EL PEDIDO CORRECTAMENTE '.$docto_ve_id.' FOLIO: '.$folio.'"); 
 					</script>'; 
 			}
 			
@@ -305,7 +325,10 @@ if ((isset($_POST['id_pedido'])) && ($_POST['id_pedido'] != "")){
 				$update_ped_folio = "UPDATE pedido_nef SET folio_pedido_microsip='$folio_PedNef' WHERE id_pedido='$id_pedido'";
 				if (mysql_query($update_ped_folio, $conex) or die(mysql_error()))
 				{
-				echo '<script> $("#modal_cargando").modal("hide"); lista_pedidos_nef();  </script>';
+				echo '<script> 
+						setTimeout(function(){
+							lista_pedidos_nef();
+						},1000,"JavaScript");   </script>';
 				
 				}
 		}/// insert success

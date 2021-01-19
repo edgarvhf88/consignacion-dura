@@ -210,7 +210,7 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 	
 	$(document).ready(function()
 	{
-		
+		$("#modal_cargando").modal("hide");
 		
         $("#lista_pedidos_nef").DataTable(
 		{
@@ -231,7 +231,15 @@ else /// sin resultados
                            
                         </div>
                     </div>
-				</div>';		
+				</div>
+		<script>
+			$(document).ready(function()
+			{
+				$("#modal_cargando").modal("hide");
+	
+			});
+	 
+		</script>';		
 		
 
 
