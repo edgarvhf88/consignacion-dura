@@ -1211,7 +1211,9 @@ if (id_relacion)
 						                   			<option value="4">Almacenista</option>
 						                   			<option value="3">Vendedor</option>
 						                   			<option value="2">Comprador(Requisitor)</option>
-						                   			<option value="1">Administrador</option>						<option value="11">Cuentas Por Cobrar </option>
+						                   			<option value="1">Administrador</option>						
+													<option value="11">Cuentas Por Cobrar </option>
+													<option value="17">Admin traspasos</option>
 						                   		</select>
 												
 											<a href="#" id="btn_subordinados" > Asignar Usuarios Supervisados</a><br/> 

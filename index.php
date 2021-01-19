@@ -26,6 +26,9 @@ switch($tipo_usuario)
 	case 11:
 	header('Location: cxc.php');
 	break;
+	case 17:
+	header('Location: transfer.php');
+	break;
 	
 }
 /////////////codigo para validar empresa y cargar pagina con su estilo ////////////////////////////////////////////////////////////////////

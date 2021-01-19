@@ -364,6 +364,8 @@ $container_index = '
 			<div id="div_lista_pedido" class=" col-lg-12"></div> 
 			<div id="div_mis_pedidos" class=" col-lg-12"></div>
 			<div id="div_mis_pedidos_pend_aut" class=" col-lg-12"></div>
+			
+			
 			<div id="div_mis_solicitudes" class=" col-lg-12">
 						
 				<div id="div_limit_spend" class=" col-lg-12">
