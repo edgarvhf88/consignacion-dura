@@ -35,7 +35,6 @@ $total_rows_p = mysql_num_rows($resultado_pedido);
 if ($total_rows_p > 0){
 	$almacen_id = $row_p['almacen_id'];
 }
-
 	$id_empresa = 11;
 	$folio = folio_consecutivo($id_empresa,"PED_N");
 	

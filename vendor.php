@@ -101,8 +101,7 @@ input[type=checkbox]
 				success: function(resultados)
 				{
 					$("#div_lista_pedidos_nef").html(resultados);		
-					
-					$("#modal_cargando").modal("hide");					
+										
 				}
 			});
 		return false;	
@@ -310,6 +309,7 @@ function requerir_pedido_nef(id_pedido){
 		}
 			
 			cargar_lista_pedido_nef();
+			
 	};
 	function lista_inventarios_reg(id_empresa){
 		$("#modal_cargando").modal("show");	
@@ -969,13 +969,14 @@ function requerir_pedido_nef(id_pedido){
 		else
 		{
 			// actualizar estatus,folio,fecha_entrega,total_pedido
-			$("#modal_cargando").modal("show");
+			
 			$.ajax({
 			type: "post",
 			url: "data/guardar_pedido_nef.php",
 			data: {id_pedido:id_pedido,fecha_entrega:fecha_entrega},
 			dataType: "html",
 			success:  function (response) { 
+			
 			$('#resultados_js').html(response);
 			}
 			});
@@ -1059,6 +1060,7 @@ function requerir_pedido_nef(id_pedido){
 			dataType: "html",
 			success:  function (response) { 
 			$('#div_lista_pedido_det_nef').html(response);
+			
 			}
 		});
 	};
@@ -1453,7 +1455,7 @@ var inp=inps[i];
 
 <?php echo $header_vendor; ?>
 <section class="topics">
-    <div class="container">
+    <div class="container" style="animation-fill-mode: unset;">
         <div class="row">
 			<div class="col-lg-12"  id="div_inventarios">
 				
