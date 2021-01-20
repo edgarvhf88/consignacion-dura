@@ -14,19 +14,19 @@
 	  {
 		  echo 0;
 	  }
+	  
      function lista_pedidos($id_usuario){ ///Mostrara la lista de los pedidos realizados asignados al vendedor
 global $database_conexion, $conex;
 
 $minimo =1;
 
 $consulta_relacion = "
-SELECT p.fecha_pedido_oficial as fecha_pedido_oficial, p.id as id_pedido, p.folio as folio, p.total_pedido as total_pedido, p.estatus as estatus, p.id_usuario as id_requi, p.id_empresa as id_empresa, p.orden_compra as orden_compra, cc.nombre_cc as nombre_cc, user.nombre as nombre_r, user.apellido as apellido_r, alm.almacen as almacen, pt.folio_traspaso as folio_traspaso, pt.estatus as estatus_pedido_traspaso
+SELECT p.fecha_pedido_oficial as fecha_pedido_oficial, p.id as id_pedido, p.folio as folio, p.total_pedido as total_pedido, p.estatus as estatus, p.id_usuario as id_requi, p.id_empresa as id_empresa, p.orden_compra as orden_compra, cc.nombre_cc as nombre_cc, user.nombre as nombre_r, user.apellido as apellido_r, alm.almacen as almacen
 FROM relaciones r
 LEFT JOIN pedidos p on r.id_requisitor = p.id_usuario
 LEFT JOIN centro_costos cc on cc.id_cc = p.id_cc
 LEFT JOIN usuarios user on user.id = p.id_recolector
 LEFT JOIN almacenes alm on alm.almacen_id = p.id_sucursal
-LEFT JOIN pedido_traspaso pt on pt.id_pedido_cliente = p.id
 
 WHERE r.id_vendedor = '$id_usuario' and p.estatus <> '0' and p.estatus <> '0p'
 ORDER BY p.id DESC";
@@ -56,26 +56,12 @@ echo '<table id="lista_pedidos" class="table table-striped table-bordered table-
                     		$estatus = '';
                     		$atributo = '';	
 							$almacen = '';
-                    		$validacion_btn_tracking = '';					
+                    		$validacion_btn_tracking = '';	
+							$folios_traspasos = '';
                     		while($row2 = mysql_fetch_array($resultado_relacion,MYSQL_BOTH)) // html de articulos a mostrar
                     		{
 								
-							$estatus_pedido_traspaso = $row2['estatus_pedido_traspaso'];	
-                    		if (($estatus_pedido_traspaso != "") || ($estatus_pedido_traspaso != NULL)){
-								switch($row2['estatus_pedido_traspaso'])
-								{
-									case 2:			//// en estado "En proceso"
-									$atributo = 'disabled';
-									$estatus = '<div class="btn btn-info btn-lg" >Sending Supplies </div>';
-									break;
-								case 3: // en estado "Surtido" esto cuando ya se complete la recepcion al almacen correspondiente
-									$atributo = 'disabled';
-									$estatus = '<div class="btn btn-success btn-lg" >Delivered </div>';
-									break;
-								}
-							}
-							else
-							{
+							
 								switch($row2['estatus'])
 								{
 									
@@ -102,7 +88,7 @@ echo '<table id="lista_pedidos" class="table table-striped table-bordered table-
 									$estatus = '<div class="btn btn-success btn-lg" >Delivered </div>';
 									break;
 								}
-							}
+							
                     		
                     		if ($row2['nombre_cc'] != '')
                     		{
@@ -126,6 +112,7 @@ echo '<table id="lista_pedidos" class="table table-striped table-bordered table-
                     		{
                     			$nombre_recolector = 'Personalmente';
                     		}
+							
                     			
                     		 echo ' <tr >
                     			
@@ -143,13 +130,11 @@ echo '<table id="lista_pedidos" class="table table-striped table-bordered table-
 							'.$nombre_recolector.'
                     		</td>
 							<td align="center" style="width:120px;">	
-								'.$row2['folio_traspaso'].'
+								'.$folios_traspasos.'
 							</td>	
-                    		</tr>
-                    							';
+                    		</tr>';
                     							
-                    							
-                    					//<td><button id="" onclick="enviar('.$row2['id'].');">Enviar</button></td>
+                    		
                     		
                     							
                     		}				

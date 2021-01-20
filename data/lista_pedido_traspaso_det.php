@@ -70,8 +70,8 @@ $total_rows = mysql_num_rows($resultado);
 		
 		<td class="elemen_pedidodet" id="tdclaveart_'.$id_det.'">'.$clave_microsip.'</td>
 		<td class="elemen_pedidodet" id="tdarticulo_'.$id_det.'">'.$articulo.'</td>
-		<td class="elemen_pedidodet" id="tdcantidad_'.$id_det.'">'.$cantidad.'</td>
-		<td class="elemen_pedidodet" id="tdexis_'.$id_det.'">'.$existencia.'</td>
+		<td class="elemen_pedidodet" id="tdcantidad_'.$id_det.'">'.$cantidad.'<input type="hidden" id="inputcant_'.$id_det.'" value="'.$cantidad.'" /></td>
+		<td class="elemen_pedidodet" id="tdexis_'.$id_det.'">'.$existencia.' <input type="hidden" id="inputexis_'.$id_det.'" value="'.$existencia.'" /></td>
 		<td class="elemen_pedidodet" id="tdsurtir_'.$id_det.'"><input type="number" value="'.$recomienda_surtir.'" id="surtir_'.$id_det.'" class="form-control " name="txt_cant_surtir[]"></td>
 		<td class="elemen_pedidodet" id="tdunidmedi_'.$id_det.'">'.$unidad_medida.'</td> 
 		<td class="elemen_pedidodet" id="tdprecioun_'.$id_det.'">'.$precio_unitario.'</td>
@@ -80,9 +80,7 @@ $total_rows = mysql_num_rows($resultado);
 		
 		</tr>';                    							
 		     
-		
-		               					
-		                    		
+		                		
 		                    							
 		}	
 		$permitir_agregar = '';

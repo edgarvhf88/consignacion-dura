@@ -127,7 +127,7 @@ echo '<table id="lista_pedidos_traspaso" class="table table-striped table-border
                    }				
         echo ' </tbody></table>';
  
- echo ' <div class="modal fade" id="pedido_detalle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+ echo ' <div class="modal fade" id="pedido_detalle_nef" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <!-- Header de la ventana -->
@@ -298,7 +298,7 @@ echo '<table id="lista_pedidos_traspaso" class="table table-striped table-border
                    }				
         echo ' </tbody></table>';
  
- echo ' <div class="modal fade" id="pedido_detalle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+ echo ' <div class="modal fade" id="pedido_detalle_nef" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <!-- Header de la ventana -->
