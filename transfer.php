@@ -216,6 +216,25 @@ function requerir_pedido_nef(id_pedido){
 			});
 		
 	};
+	
+	function generar_orden_compra(folio)
+	{
+		
+		jQuery.ajax({ //
+				type: "POST",
+				url: "data/insertar_orden_compra_allpart.php",
+				data: {folio:folio},
+				success: function(resultados)
+				{
+				$("#resultados_js").html(resultados);	
+					
+				}
+			});
+		
+	};
+	
+	
+	
 /*    function cambiar_estatus(id_pedido,tipo){
 	
 	var id_user = <?php echo $_SESSION["logged_user"]; ?> 

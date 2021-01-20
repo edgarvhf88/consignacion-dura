@@ -17,7 +17,7 @@ global $database_conexion, $conex;
 
 
 $pedidos_nef = "
-SELECT p.fecha_pedido_oficial as fecha_pedido_oficial, p.id_pedido as id_pedido, p.folio as folio, p.folio_pedido_microsip as folio_pedmicro , p.total_pedido as total_pedido, p.estatus as estatus, p.id_usuario as id_requi, user.nombre as nombre_r, user.apellido as apellido_r, alm.almacen as almacen, p.remisiones as rems
+SELECT p.fecha_pedido_oficial as fecha_pedido_oficial, p.id_pedido as id_pedido, p.folio as folio, p.folio_pedido_microsip as folio_pedmicro , p.total_pedido as total_pedido, p.estatus as estatus, p.id_usuario as id_requi, user.nombre as nombre_r, user.apellido as apellido_r, alm.almacen as almacen, p.remisiones as rems, p.orden_compra as orden_compra, p.recepciones as recepciones
 FROM pedido_nef p 
 LEFT JOIN almacenes alm on alm.almacen_id = p.almacen_id
 LEFT JOIN usuarios user on user.id = p.id_usuario
@@ -109,6 +109,19 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 				$permiso=permisos();
 				if ($permiso == 17)
 				{
+					//orden de compra 
+					if($row2['orden_compra'] ==""){
+					$roworden_c ='<div class="dropdown">
+							<button class="btn btn-danger btn-block dropdown-toggle btn_estatus" type="button" id="btnestatus_1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Orden Compra
+								<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+							<li class="btn btn-info btn-block btn_solicitud_traspaso" onclick="generar_orden_compra('.$folio.');" title="Genera una orden de compra en Allpart a partir del pedido en Nef.">Generar orden compra</li>
+					</div>';}
+					else {$roworden_c =$row2['orden_compra'] ;}
+					
+					//remisiones
 					$rowrems='';
 					//boton aqui
 					if($row2['rems'] ==""){
@@ -158,6 +171,7 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
                 else//cuando soy vendedor 
 				{//contenido
 				$rowrems =$row2['rems'] ;
+				$roworden_c =$row2['orden_compra'] ;
 				}
                     echo ' <tr >
                    	
@@ -168,7 +182,7 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
         <td onclick="">'.$row2['fecha_pedido_oficial'].'</td>
         <td onclick="">'.$pedido_nef.'</td>
         <td onclick="">'.$rowrems.'</td>
-        <td onclick=""></td>
+        <td onclick="">'.$roworden_c.'</td>
         <td onclick=""></td>
         <td onclick=""></td>
         <td align="right" onclick="">$'.number_format($total_pedido,2).'</td>
@@ -210,7 +224,7 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 	
 	$(document).ready(function()
 	{
-		$("#modal_cargando").modal("hide");
+		
 		
         $("#lista_pedidos_nef").DataTable(
 		{
@@ -231,15 +245,7 @@ else /// sin resultados
                            
                         </div>
                     </div>
-				</div>
-		<script>
-			$(document).ready(function()
-			{
-				$("#modal_cargando").modal("hide");
-	
-			});
-	 
-		</script>';		
+				</div>';		
 		
 
 

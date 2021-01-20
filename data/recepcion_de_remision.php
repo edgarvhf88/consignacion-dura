@@ -120,6 +120,66 @@ function recepcionar($folio)
 
 
 
+
+
+
+
+
+
+
+
+
+//OBTENER EL FOLIO SIGUIENTE DE UNA RECEPCION 
+function ObtenerFolioRec()
+{ 
+global $con_micro_nef;
+$folio = "";	
+//$valor = 88878; 
+$valor = 41599; // folio de COMPRAS
+$sql = "SELECT A.CONSECUTIVO 	
+FROM FOLIOS_COMPRAS A
+WHERE (A.FOLIO_COMPRAS_ID = '".$valor."')";
+
+$consulta = $con_micro_nef->prepare($sql);
+$consulta->execute();
+$consulta->setFetchMode(PDO::FETCH_OBJ);
+$row_result = $consulta->fetch(PDO::FETCH_ASSOC);
+if (!$consulta){
+	 	 exit;}	
+$folio_siguiente = $row_result['CONSECUTIVO'];
+return $folio_siguiente;
+}
+
+
+//obtengo el id de la recepcion insertada 
+function ObtenerIdPed($folio){ 
+global $con_micro_nef;
+$tipo_docto = "R"; // RECEPCION	
+$sql = "SELECT A.DOCTO_CM_ID AS DOCTO_CM_ID	
+FROM DOCTOS_CM A
+WHERE (A.FOLIO = '".$folio."') AND (A.TIPO_DOCTO = '".$tipo_docto."')";
+$consulta = $con_micro_nef->prepare($sql);
+$consulta->execute();
+$consulta->setFetchMode(PDO::FETCH_OBJ);
+$row_result = $consulta->fetch(PDO::FETCH_ASSOC);
+
+if (!$consulta){
+	 exit;}	
+$docto_cm_id = $row_result['DOCTO_CM_ID'];
+return $docto_cm_id;
+}
+
+
+
+
+
+
+
+
+
+
+
+
    
    
 ?>
