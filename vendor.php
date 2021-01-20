@@ -138,7 +138,7 @@ input[type=checkbox]
 		};
 		
    function detalle_pedido_tras (id,folio,total_pedido){
-		jQuery('#pedido_detalle').modal('show', {backdrop: 'static'});
+		jQuery('#pedido_detalle_nef').modal('show', {backdrop: 'static'});
 			
 			jQuery.ajax({ //
 				type: "POST",
@@ -146,13 +146,13 @@ input[type=checkbox]
 				data: {id:id,folio:folio,total_pedido:total_pedido},
 				success: function(resultados)
 				{
-					jQuery('#pedido_detalle .modal-body').html(resultados);
+					jQuery('#pedido_detalle_nef .modal-body').html(resultados);
 				}
 			});
 		};
 function solicitar_traspaso(id_pedido){
 	
-	var id_user = <?php echo $_SESSION["logged_user"]; ?> 
+	var id_user = <?php echo $_SESSION["logged_user"]; ?> ;
 		  
 				jQuery.ajax({ //
 				type: "POST",
@@ -167,7 +167,7 @@ function solicitar_traspaso(id_pedido){
 		};	
 function requerir_pedido_nef(id_pedido){
 	//$("#modal_cargando").modal("show");
-	var id_user = <?php echo $_SESSION["logged_user"]; ?> 
+	var id_user = <?php echo $_SESSION["logged_user"]; ?> ;
 		  
 				jQuery.ajax({ //
 				type: "POST",
@@ -182,7 +182,7 @@ function requerir_pedido_nef(id_pedido){
 		};		
 /*    function cambiar_estatus(id_pedido,tipo){
 	
-	var id_user = <?php echo $_SESSION["logged_user"]; ?> 
+	var id_user = <?php echo $_SESSION["logged_user"]; ?> ;
 		  
 				jQuery.ajax({ //
 				type: "POST",
@@ -1217,24 +1217,56 @@ function requerir_pedido_nef(id_pedido){
 	/// guarda la solicitud de traspaso y en base a esta la persona encargada de realizar el traspaso cuando el material este listo para surtirse
 		var id_pedido_traspaso =  document.getElementById("txt_id_pedido_traspaso").value;
 		var fecha_entrega = document.getElementById("txt_fecha_entrega_traspaso").value;
-		 var inps = document.getElementsByName('txt_cant_surtir[]');
-		 
-		 var arr_art_tras = "";
-		 var id_art_tras = "";
-		 var arr_cantidades = new Array();
-for (var i = 0; i <inps.length; i++) {
-var inp=inps[i];
-   //console.log("txt_cant_surtir["+id_art_tras+"].value="+inp.value);
-	arr_art_tras = inp.id.split("_");
-	id_art_tras = arr_art_tras[1];
-	//console.log("txt_cant_surtir["+id_art_tras+"].value="+inp.value);
-	arr_cantidades.push(id_art_tras+"_"+inp.value);
-	if (inp.value <= 0){
-		alert("proporcione la cantidad a requerida para el traspaso");
-		$("#"+inp.id).focus();
-		return false;
-	}	
-}	
+		var inps = document.getElementsByName('txt_cant_surtir[]');
+		var arr_art_tras = "";
+		var id_art_tras = "";
+		var exi="";
+		var cant_pedida="";
+		var cantidad_tecleada = "";
+		var arr_cantidades = new Array();
+		for (var i = 0; i <inps.length; i++) 
+		{
+		var inp=inps[i];
+		
+		//console.log("txt_cant_surtir["+id_art_tras+"].value="+inp.value);
+			arr_art_tras = inp.id.split("_");
+			id_art_tras = arr_art_tras[1];
+			exi= document.getElementById("inputexis_"+id_art_tras).value;
+			exi = parseFloat(exi);
+			cant_pedida= document.getElementById("inputcant_"+id_art_tras).value;
+			//console.log("txt_cant_surtir["+id_art_tras+"].value="+inp.value);
+			arr_cantidades.push(id_art_tras+"_"+inp.value);
+			cantidad_tecleada = parseFloat(inp.value);
+			if (exi <= 0){ /// si no tiene existencia no permitira el traspaso
+				alert("Los articulos debe contar con la suficiente existencia para solicitar el traspaso.");
+					$("#"+inp.id).focus();
+					return false;
+			}
+			else
+			{
+				if (cantidad_tecleada <= 0)
+				{
+					alert("proporcione la cantidad a requerida para el traspaso");
+					$("#"+inp.id).focus();
+					return false;
+				}
+				else 
+				{ 	
+					if (cantidad_tecleada > exi){
+						alert("No puede solicitar un traspaso por una cantidad mayor a la existencia. ");
+						$("#"+inp.id).focus();
+						return false;	
+					}
+					if(cantidad_tecleada > cant_pedida){
+						alert("No puede solicitar un traspaso por una cantidad mayor a la del pedido del cliente. "+cantidad_tecleada);
+						$("#"+inp.id).focus();
+						return false;	
+					}
+					
+				}	
+			}
+				
+		}	
 //console.log(arr_cantidades);
 		if (id_pedido_traspaso === ""){
 			alert("No se a agragado ningun articulo a la lista de Solicitud de Traspaso");
