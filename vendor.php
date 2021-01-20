@@ -124,21 +124,21 @@ input[type=checkbox]
 			});
 		};
    function detalle_pedido_nef (id,folio,total_pedido){
-		jQuery('#pedido_detalle').modal('show', {backdrop: 'static'});
+		jQuery('#pedido_detalle_nef').modal('show', {backdrop: 'static'});
 			
 			jQuery.ajax({ //
 				type: "POST",
-				url: "data/pedido_det.php",
+				url: "data/pedido_nef_det.php",
 				data: {id:id,folio:folio,total_pedido:total_pedido},
 				success: function(resultados)
 				{
-					jQuery('#pedido_detalle .modal-body').html(resultados);
+					jQuery('#pedido_detalle_nef .modal-body').html(resultados);
 				}
 			});
 		};
 		
    function detalle_pedido_tras (id,folio,total_pedido){
-		jQuery('#pedido_detalle_nef').modal('show', {backdrop: 'static'});
+		jQuery('#traspaso_detalle').modal('show', {backdrop: 'static'});
 			
 			jQuery.ajax({ //
 				type: "POST",
@@ -146,7 +146,7 @@ input[type=checkbox]
 				data: {id:id,folio:folio,total_pedido:total_pedido},
 				success: function(resultados)
 				{
-					jQuery('#pedido_detalle_nef .modal-body').html(resultados);
+					jQuery('#traspaso_detalle .modal-body').html(resultados);
 				}
 			});
 		};
