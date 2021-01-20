@@ -51,12 +51,11 @@ return $docto_cm_id;
 
 //doy un folio para hacer una orden de compra
 if ((isset($_POST['folio'])) && ($_POST['folio'] != "")){
-	global $con_micro_nef;
-	global $con_micro;
+	
 	
 	//variables para la cabecera
 	$folio_ped=$_POST['folio'];
-	
+	$folio_ped_bus = Format9digit($folio_ped);
 	$fecha_actual = date("d.m.Y");
 	$hora_actual = date("H:i:s");
 	$fecha_hora = date("Y/m/d H:i:s");
@@ -69,7 +68,7 @@ if ((isset($_POST['folio'])) && ($_POST['folio'] != "")){
 	$sucursal_id = 14059; // SE ASIGNA ABAJO
 	$proveedor_id = 1768; //cliente_id de AllPart matamoros
 	$clave_prov = "NEFMAT";
-	$cond_pago_id = 1680; // 30 dias de credito para 0 dias = 209
+	$cond_pago_id = 1624; // 30 dias de credito para 0 dias = 209
 	$moneda_id = 1; // MXN
 	$tipo_docto = "O"; // orden de compra
 	$folio = ObtenerFolioOC(); // FOLIO CONSECUTIVO desde tabla
@@ -92,20 +91,21 @@ if ((isset($_POST['folio'])) && ($_POST['folio'] != "")){
 	//consulta si el pedido existe en nef
 	$consulta_pedido_ms = "SELECT *
 						FROM DOCTOS_VE
-						WHERE FOLIO = '$folio_ped' AND TIPO_DOCTO ='P'";
-	$resultado_pedido = mysql_query($consulta_pedido_ms, $con_micro_nef) or die(mysql_error());
-	$row_p = mysql_fetch_assoc($resultado_pedido);
-	$total_rows_p = mysql_num_rows($resultado_pedido);
+						WHERE FOLIO = '$folio_ped_bus' AND TIPO_DOCTO ='P'";
 	
-	if ($total_rows_p > 0){
+	$resultado_pedido = $con_micro_nef->prepare($consulta_pedido_ms);
+	$resultado_pedido->execute();
+	$resultado_ped = $resultado_pedido->fetchAll(PDO::FETCH_ASSOC);
+	
+	foreach($resultado_ped as $row_p){
+		
 		// solo si encuentra el pedido entonces procede a insertarlo
 		//$almacen_id = $row_p['almacen_id']; // el almacen es el de nef almacen general, id = 19
 		$importe_neto = $row_p['IMPORTE_NETO'];
 		$total_impuestos = $row_p['TOTAL_IMPUESTOS'] * 0.08; 
-	
 	//INSERTO LA orden de compra
 		$insertar = "INSERT INTO DOCTOS_CM 
-		(DOCTO_CM_ID, TIPO_CAMBIO, DESCRIPCION, USUARIO_CREADOR, ALMACEN_ID, SUCURSAL_ID, PROVEEDOR_ID, CLAVE_PROV, COND_PAGO_ID,  MONEDA_ID, TIPO_DOCTO, FOLIO, FECHA, HORA, ESTATUS, FOLIO_PROV, IMPORTE_NETO, TOTAL_IMPUESTOS, SISTEMA_ORIGEN, TIPO_DSCTO, SUBTIPO_DOCTO, FORMA_EMITIDA, CONTABILIZADO, ACREDITAR_CXP) VALUES (:docto_id,:tipo_cambio,:descripcion,:usuario_creador,:almacen_id,:sucursal_id,:proveedor_id,:clave_prov,:cond_pago_id,:moneda_id,:tipo_docto,:folio,:fecha,:hora,:estatus,:folio_prov,:importe_neto,:total_impuestos,:sistema_origen,:tipo_dscto, :subtipo_docto, :forma_emitida, :contabilizado, :acreditar_cxp)";
+		(DOCTO_CM_ID, TIPO_CAMBIO, DESCRIPCION, USUARIO_CREADOR, ALMACEN_ID, SUCURSAL_ID, PROVEEDOR_ID, CLAVE_PROV, COND_PAGO_ID,  MONEDA_ID, TIPO_DOCTO, FOLIO, FECHA, ESTATUS, FOLIO_PROV, IMPORTE_NETO, TOTAL_IMPUESTOS, SISTEMA_ORIGEN, TIPO_DSCTO, SUBTIPO_DOCTO, FORMA_EMITIDA, CONTABILIZADO, ACREDITAR_CXP) VALUES (:docto_id,:tipo_cambio,:descripcion,:usuario_creador,:almacen_id,:sucursal_id,:proveedor_id,:clave_prov,:cond_pago_id,:moneda_id,:tipo_docto,:folio,:fecha,:estatus,:folio_prov,:importe_neto,:total_impuestos,:sistema_origen,:tipo_dscto, :subtipo_docto, :forma_emitida, :contabilizado, :acreditar_cxp)";
 try {
 		$query_insert = $con_micro->prepare($insertar);
 		$query_insert->bindParam(':docto_id', $docto_id, PDO::PARAM_INT);
@@ -167,9 +167,11 @@ try {
 
 			INNER JOIN doctos_ve DV  ON DV.docto_ve_id = DVD.docto_ve_id
 			WHERE DV.FOLIO = '$folio_ped' AND DV.tipo_docto='P'";			
-			$resultado = mysql_query($consulta_det, $con_micro_nef) or die(mysql_error());
-			$total_rows = mysql_num_rows($resultado);
 			
+			
+			$resultado_aplicar = $con_micro_nef->prepare($consulta_det);
+			$resultado_aplicar->execute();
+			$resultado = $resultado_aplicar->fetchAll(PDO::FETCH_ASSOC);
 			
 			$clave_articulo = "";
 			$articulo_id = "";
@@ -179,11 +181,14 @@ try {
 			$posicion = 0;
 			$unidades_a_recibir = "0";
 			$contenido_umed="1";
-			if ($total_rows > 0)
+			if (!$resultado)
+			{exit;}
+			else
 			{ // con resultados
-				while($row = mysql_fetch_array($resultado,MYSQL_BOTH)) 
+			
+				foreach($resultado as $row_ped_art) 
 				{ 
-					$articulo_id_nef = $row['ARTICULO_ID'];
+					$articulo_id_nef = $row_ped_art['ARTICULO_ID'];
 					//con este traigo clave, umed y articulo_id
 					
 						global $database_conexion, $conex;
@@ -201,9 +206,9 @@ try {
 							}
 					//*******************************************
 					
-					$unidades = $row['UNIDADES'];
-					$precio_unitario = $row['PRECIO_UNITARIO'];
-					$precio_total_neto = $row['PRECIO_TOTAL_NETO'];
+					$unidades = $row_ped_art['UNIDADES'];
+					$precio_unitario = $row_ped_art['PRECIO_UNITARIO'];
+					$precio_total_neto = $row_ped_art['PRECIO_TOTAL_NETO'];
 					$posicion++;
 					
 					/// insertara las partidas del pedido del cliente al pedido NEF
@@ -306,7 +311,7 @@ try {
 				
 				} */
 		}/// insert success
-	}
+	
 
 }else {
 	// ni no existe el dato id_pedido o es igual a nada entonces no realizara la insercion.

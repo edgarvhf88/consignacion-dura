@@ -46,7 +46,7 @@
 		}
 		
 		//guardo el valor en la base de datos
-		if($rems != ""){
+		if($rems != "" and $rems != "0"){
 		global $conex;	
 		
 		$remision = "UPDATE pedido_nef SET 

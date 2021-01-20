@@ -111,13 +111,14 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 				{
 					//orden de compra 
 					if($row2['orden_compra'] ==""){
+						$folio_microsip=$row2['folio_pedmicro'];
 					$roworden_c ='<div class="dropdown">
 							<button class="btn btn-danger btn-block dropdown-toggle btn_estatus" type="button" id="btnestatus_1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								Orden Compra
 								<span class="caret"></span>
 							</button>
 							<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-							<li class="btn btn-info btn-block btn_solicitud_traspaso" onclick="generar_orden_compra('.$folio.');" title="Genera una orden de compra en Allpart a partir del pedido en Nef.">Generar orden compra</li>
+							<li class="btn btn-info btn-block btn_solicitud_traspaso" onclick="generar_orden_compra('.$folio_microsip.');" title="Genera una orden de compra en Allpart a partir del pedido en Nef.">Generar orden compra</li>
 					</div>';}
 					else {$roworden_c =$row2['orden_compra'] ;}
 					
@@ -225,7 +226,7 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 	$(document).ready(function()
 	{
 		
-		
+		$("#modal_cargando").modal("hide");
         $("#lista_pedidos_nef").DataTable(
 		{
 				"order": [[ 2, "desc" ]]
