@@ -12,24 +12,9 @@
 	  
 	  function cant_proces_tras($id_pedido_cliente){
 		  global $database_conexion, $conex;
-		//$lista_arts_pendientes = array(); // catidad solicitada y surtida del pedido cliente
+	
 		$lista_arts_tras_pend = array(); // cantidad en proceso de traspaso
 		
-		/* $sql_pedido_lista = "SELECT * FROM pedidos_det  WHERE id_pedido='$id_pedido_cliente'";
-		$consulta = mysql_query($sql_pedido_lista, $conex) or die(mysql_error());
-		//$row = mysql_fetch_assoc($consulta);
-		$total_consulta = mysql_num_rows($consulta);
-		if ($total_consulta > 0){
-			while($arts_ped = mysql_fetch_array($consulta,MYSQL_BOTH)) 
-            {
-				if($arts_ped['cantidad'] <> $arts_ped['surtido']){
-					// si no esta surtido entonces
-								
-					$lista_arts_pendientes[$arts_ped['id_articulo']] = $arts_ped['cantidad']."@".$arts_ped['surtido'];
-					
-				}
-			}
-		} */
 		$sql = "SELECT  pd.id_articulo as id_articulo, pd.cantidad as cantidad, pd.surtido as surtido 
 		FROM pedido_traspaso pt
 		INNER JOIN pedido_traspaso_det pd ON pd.id_pedido = pt.id_pedido
@@ -40,26 +25,14 @@
 
 		if ($total_cons > 0){
 			while($row = mysql_fetch_array($cons,MYSQL_BOTH)) 
-            {/// validar si esta en estatus 1 solo se requirio el traspaso 
-				//generar lista consolidada de articulos traspasados y en proceso de traspaso.
-				//$valor = $lista_arts_tras_pend[$row['id_articulo']]; //validar valor en lista
+            { 
 				if($row['cantidad'] <> $row['surtido']){
 				$lista_arts_tras_pend[$row['id_articulo']] = $row['cantidad'];
 				}
 			}
 		}
 		return $lista_arts_tras_pend;
-		/* foreach($lista_arts_pendientes as $id_arti => $cantidades){
-			
-			$array = explode("@",$cantidades);
-			$cant_solicitada = $array[0];
-			$cant_surtida = $array[1];
-			$cant_pendiente = $cant_solicitada - $cant_surtida;
-			
-			$cantidad_proceso_traspaso = $lista_arts_tras_pend[$id_arti];
-			
-			$cantidad_pend_requi_tras = $cant_pendiente - $cantidad_proceso_traspaso;
-		} */
+		
 		
 		
 	  }
