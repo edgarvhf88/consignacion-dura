@@ -259,7 +259,7 @@ try {
 			$aplicar = "EXECUTE PROCEDURE APLICA_DOCTO_CM(:V_DOCTO_CM_ID)";
 		
 			try {
-				$query_aplicar = $con_micro_nef->prepare($aplicar);
+				$query_aplicar = $con_micro->prepare($aplicar);
 				$query_aplicar->bindParam(':V_DOCTO_CM_ID', $docto_cm_id, PDO::PARAM_INT);
 				
 				$query_aplicar->execute();
@@ -285,7 +285,7 @@ try {
 				$update_folio = "UPDATE FOLIOS_COMPRAS SET CONSECUTIVO = :consecutivo WHERE FOLIO_COMPRAS_ID = '".$folio_compras_id."' ";
 		
 				try {
-				$query_update_folio = $con_micro_nef->prepare($update_folio);
+				$query_update_folio = $con_micro->prepare($update_folio);
 				$query_update_folio->bindParam(':consecutivo', $consecutivo, PDO::PARAM_STR, 9);
 				$query_update_folio->execute();
 				} catch (PDOException $e) {
