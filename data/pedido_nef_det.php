@@ -17,6 +17,9 @@ foreach ($display_empresas as $id => $display_name){
 if ($tipo_usuario == 3){
 	// vendedor 
 	$Display = 'vendor_style';
+}else if ($tipo_usuario == 17){
+	// elizabeth
+	$Display = 'vendor_style';
 }
 include("../displays/".$Display.".php");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
