@@ -102,7 +102,10 @@ if ((isset($_POST['folio'])) && ($_POST['folio'] != "")){
 		// solo si encuentra el pedido entonces procede a insertarlo
 		//$almacen_id = $row_p['almacen_id']; // el almacen es el de nef almacen general, id = 19
 		$importe_neto = $row_p['IMPORTE_NETO'];
-		$total_impuestos = $row_p['TOTAL_IMPUESTOS'] * 0.08; 
+	$total_impuestos = $row_p['TOTAL_IMPUESTOS'] * 0.08; }
+	
+	if(!$resultado_ped){exit;}
+	else{
 	//INSERTO LA orden de compra
 		$insertar = "INSERT INTO DOCTOS_CM 
 		(DOCTO_CM_ID, TIPO_CAMBIO, DESCRIPCION, USUARIO_CREADOR, ALMACEN_ID, SUCURSAL_ID, PROVEEDOR_ID, CLAVE_PROV, COND_PAGO_ID,  MONEDA_ID, TIPO_DOCTO, FOLIO, FECHA, ESTATUS, FOLIO_PROV, IMPORTE_NETO, TOTAL_IMPUESTOS, SISTEMA_ORIGEN, TIPO_DSCTO, SUBTIPO_DOCTO, FORMA_EMITIDA, CONTABILIZADO, ACREDITAR_CXP) VALUES (:docto_id,:tipo_cambio,:descripcion,:usuario_creador,:almacen_id,:sucursal_id,:proveedor_id,:clave_prov,:cond_pago_id,:moneda_id,:tipo_docto,:folio,:fecha,:estatus,:folio_prov,:importe_neto,:total_impuestos,:sistema_origen,:tipo_dscto, :subtipo_docto, :forma_emitida, :contabilizado, :acreditar_cxp)";
@@ -166,7 +169,7 @@ try {
 			FROM DOCTOS_VE_DET DVD
 
 			INNER JOIN doctos_ve DV  ON DV.docto_ve_id = DVD.docto_ve_id
-			WHERE DV.FOLIO = '$folio_ped' AND DV.tipo_docto='P'";			
+			WHERE DV.FOLIO = '$folio_ped_bus' AND DV.tipo_docto='P'";			
 			
 			
 			$resultado_aplicar = $con_micro_nef->prepare($consulta_det);
@@ -212,7 +215,7 @@ try {
 					$posicion++;
 					
 					/// insertara las partidas del pedido del cliente al pedido NEF
-					$insertar_det = "INSERT INTO DOCTOS_CM_DET (DOCTO_CM_DET_ID, DOCTO_CM_ID, CLAVE_ARTICULO, ARTICULO_ID, UNIDADES, UNIDADES_A_RECIBIR, PRECIO_UNITARIO, PRECIO_TOTAL_NETO, POSICION, UMED, CONTENIDO_UMED) VALUES (:docto_id,:docto_cm_id,:clave_articulo,:articulo_id,:unidades,:unidades_a_surtir,:precio_unitario,:precio_total_neto, :posicion, :umed, :contenido_umed)";
+					$insertar_det = "INSERT INTO DOCTOS_CM_DET (DOCTO_CM_DET_ID, DOCTO_CM_ID, CLAVE_ARTICULO, ARTICULO_ID, UNIDADES, UNIDADES_A_REC, PRECIO_UNITARIO, PRECIO_TOTAL_NETO, POSICION, UMED, CONTENIDO_UMED) VALUES (:docto_id,:docto_cm_id,:clave_articulo,:articulo_id,:unidades,:unidades_a_recibir,:precio_unitario,:precio_total_neto, :posicion, :umed, :contenido_umed)";
 					
 					try {
 					$query_insert_det = $con_micro->prepare($insertar_det);
@@ -221,7 +224,7 @@ try {
 					$query_insert_det->bindParam(':clave_articulo', $clave_articulo_allpart, PDO::PARAM_STR, 20);
 					$query_insert_det->bindParam(':articulo_id', $articulo_id_allpart, PDO::PARAM_INT);
 					$query_insert_det->bindParam(':unidades', $unidades, PDO::PARAM_STR, 18);
-					$query_insert_det->bindParam(':unidades_a_surtir', $unidades_a_surtir, PDO::PARAM_STR, 18);
+					$query_insert_det->bindParam(':unidades_a_recibir', $unidades_a_recibir, PDO::PARAM_STR, 18);
 					$query_insert_det->bindParam(':precio_unitario', $precio_unitario, PDO::PARAM_STR, 18);
 					$query_insert_det->bindParam(':precio_total_neto', $precio_total_neto, PDO::PARAM_STR, 15);
 					$query_insert_det->bindParam(':posicion', $posicion, PDO::PARAM_INT);
