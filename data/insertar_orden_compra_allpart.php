@@ -256,7 +256,7 @@ try {
 			
 			 ///////////   APLICA EL DOCUMENTO DE DOCTOS_VE PARA QUE SE DESCUENTE EL INVENTARIO  ///////// 
 		
-			$aplicar = "EXECUTE PROCEDURE APLICA_DOCTO_CM(:V_DOCTO_VE_CM)";
+			$aplicar = "EXECUTE PROCEDURE APLICA_DOCTO_CM(:V_DOCTO_CM_ID)";
 		
 			try {
 				$query_aplicar = $con_micro_nef->prepare($aplicar);
@@ -303,8 +303,9 @@ try {
 				}
 				//***/**/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/**/*/*/*/
 				
-				/* //// actualiza folio de pedio nef en tabla de pedidos en sistema consigna
-				$update_ped_folio = "UPDATE pedido_nef SET folio_pedido_microsip='$folio_PedNef' WHERE id_pedido='$id_pedido'";
+				 //// guardo la orden de compra en el pedido
+				$folio_oc=str_replace (",","",number_format($folio,0))
+				$update_ped_folio = "UPDATE pedido_nef SET orden_compra='$folio_oc' WHERE folio_pedido_microsip='$folio_ped'";
 				if (mysql_query($update_ped_folio, $conex) or die(mysql_error()))
 				{
 				echo '<script> 
@@ -312,7 +313,7 @@ try {
 							lista_pedidos_nef();
 						},1000,"JavaScript");   </script>';
 				
-				} */
+				} 
 		}/// insert success
 	
 
