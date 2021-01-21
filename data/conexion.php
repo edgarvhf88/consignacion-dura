@@ -1613,9 +1613,9 @@ function ObtenerFolioTraspaso(){
 global $con_micro;
 $folio_siguiente = "";	
 $valor = 36; // ID DE CONCEPTO TRASPASO SALIDA
-$sql = "SELECT DI.SIG_FOLIO AS SIG_FOLIO	
-FROM CONCEPTOS_IN DI
-WHERE (DI.CONCEPTO_IN_ID = '".$valor."')";
+$sql = "SELECT FC.CONSECUTIVO AS CONSECUTIVO	
+FROM FOLIOS_CONCEPTOS FC
+WHERE (FC.CONCEPTO_ID = '".$valor."')";
 
 $consulta = $con_micro->prepare($sql);
 $consulta->execute();
@@ -1623,7 +1623,7 @@ $consulta->setFetchMode(PDO::FETCH_OBJ);
 $row_result = $consulta->fetch(PDO::FETCH_ASSOC);
 if (!$consulta){
 	 	 exit;}	
-$folio_siguiente = $row_result['SIG_FOLIO'];
+$folio_siguiente = $row_result['CONSECUTIVO'];
 return $folio_siguiente;
 }
 function ObtenerFolio(){ 
@@ -1712,6 +1712,21 @@ while($row_exis=$consulta->fetch())
 $lista[$row_exis->ALMACEN_ID] = $row_exis->NOMBRE;
 }
 return $lista;
+}
+///////// FUNCION PARA OBTENER SUCURSAL_ID DE MATRIZ ALLPART
+function Sucursal_Allpart(){
+	global $con_micro;		
+	$sql = "SELECT SUC.SUCURSAL_ID AS SUCURSAL_ID 
+			FROM SUCURSALES SUC WHERE (SUC.NOMBRE='Matriz')";
+
+$consulta = $con_micro->prepare($sql);
+$consulta->execute();
+$consulta->setFetchMode(PDO::FETCH_OBJ);
+$row_result = $consulta->fetch(PDO::FETCH_ASSOC);
+if (!$consulta){
+	 exit;}	
+$sucursal_id = $row_result['SUCURSAL_ID'];
+return $sucursal_id;
 }
 
 /////// FUNCION PARA OBTENER LISTA DE ARTICULOS CON MOVIMIENTOS EN ALMACEN GENERAL EMPRESA ALLPART
@@ -2089,6 +2104,21 @@ else
 return $lista; 
 }
 
+///////// FUNCION PARA OBTENER SUCURSAL_ID DE MATRIZ ALLPART
+function Sucursal_Nef(){
+	global $con_micro_nef;		
+	$sql = "SELECT SUC.SUCURSAL_ID AS SUCURSAL_ID 
+			FROM SUCURSALES SUC WHERE (SUC.NOMBRE='Matriz')";
+
+$consulta = $con_micro_nef->prepare($sql);
+$consulta->execute();
+$consulta->setFetchMode(PDO::FETCH_OBJ);
+$row_result = $consulta->fetch(PDO::FETCH_ASSOC);
+if (!$consulta){
+	 exit;}	
+$sucursal_id = $row_result['SUCURSAL_ID'];
+return $sucursal_id;
+}
 ?>
 
 

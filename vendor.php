@@ -22,6 +22,9 @@ switch($tipo_usuario)
 	case 5:
 	header('Location: supervisor.php');
 	break;
+	case 17:
+	header('Location: transfer.php');
+	break;
 }
 
 /////////////codigo para validar empresa y cargar pagina con su estilo ////////////////////////////////////////////////////////////////////

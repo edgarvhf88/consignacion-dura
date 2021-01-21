@@ -49,7 +49,7 @@ include("../displays/".$Display.".php");
 		  echo 0;
 	  }
      function busca_pedido($id_pedido,$segundos,$folio,$total_pedido){ 
-global $database_conexion, $conex, $folio_tabla_mis_pedidos, $clave_lista_pedido_index, $nombre_articulo_lista_pedido_index, $cantidad_lista_pedido_index, $precio_unitario_lista_pedido_index, $total_lista_pedido_index ;
+global $database_conexion, $conex, $folio_tabla_mis_pedidos, $clave_lista_pedido_index, $nombre_articulo_lista_pedido_index, $cantidad_lista_pedido_index, $precio_unitario_lista_pedido_index, $total_lista_pedido_index, $tipo_usuario;
 if ($segundos != '')
 {
 	sleep($segundos);
@@ -64,7 +64,28 @@ else
 }
 
 $minimo =1;
+if ($tipo_usuario == 17){
+	
+$consulta_t = "SELECT * FROM pedido_traspaso WHERE id_pedido = $id_pedido ";
+$resultado_t = mysql_query($consulta_t, $conex) or die(mysql_error());
+$row = mysql_fetch_assoc($resultado_t);
+$total_t = mysql_num_rows($resultado_t);
+if ($total_t > 0){
+	if ($row['folio_traspaso'] == ""){
+		$btn_generar_traspaso = ' <button type="button" class="btn btn-warning" onclick="gentrasmicro('.$id_pedido.');"> Generar Traspaso Microsip </button>';
+	}
+	else
+	{
+		$btn_generar_traspaso = ' <div class="col-lg-12" align="center">Folio de Traspaso: '.$row['folio_traspaso'].' </div>';
+	}
+}
+	
 
+
+
+}else {
+	$btn_generar_traspaso = '';
+}
 $consulta_lista = "SELECT * FROM pedido_traspaso_det WHERE id_pedido = $id_pedido ";
 $resultado_lista = mysql_query($consulta_lista, $conex) or die(mysql_error());
 $total_rows2 = mysql_num_rows($resultado_lista);
@@ -106,7 +127,8 @@ echo ' <table>
                                                     </tr>
                                                 ';
                                                 
-                            }                
+                            }  
+							
                              echo ' 
                              </table>
                              <table>
@@ -116,7 +138,10 @@ echo ' <table>
                                     <td class="" id="td_total_pedido" style="align:right;"><h4 style="text-align:right; width:180px; float:right;">Total = $'.number_format($total_pedido,2).'</h4>
                                     </td>
                                 </tr>
-                             </tbody></table>';
+                             </tbody></table>
+							 <div class="col-lg-12" align="center">
+							 '.$btn_generar_traspaso.'
+							 </div>';
 
                                  echo '
 
@@ -124,6 +149,7 @@ echo ' <table>
 
                                 $(document).ready( function () {
                                     $("#pedido_det").DataTable();
+										
                                 } );
 
                                 </script>

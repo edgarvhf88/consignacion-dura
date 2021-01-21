@@ -47,7 +47,7 @@ echo '<table id="lista_pedidos_traspaso" class="table table-striped table-border
                     		    <th>Folio</th>
                     		    <th>Fecha Requerido</th>
                     		    <th>Fecha Entrega</th>
-                    		    <th>OC Dura</th>
+                    		   
                     		    <th>Folio Traspaso</th>
                     		    <th>Total </th>
                     		    <th>Estatus </th>
@@ -61,28 +61,31 @@ echo '<table id="lista_pedidos_traspaso" class="table table-striped table-border
 					$folio = '';
 					$total_pedido = 0;
 					$validacion_btn_tracking = '';					
-					$pedido_nef = '';					
+					$pedido_nef = '';	
+					
                    while($row2 = mysql_fetch_array($resultado_pednef,MYSQL_BOTH)) // html de articulos a mostrar
                    {
                    $id_pedido = $row2['id_pedido'];
 				   $folio = $row2['folio'];
 				   $total_pedido = $row2['total_pedido'];
 				   
+				   
+				   
                    switch($row2['estatus'])
                    {
                    	
                    	case 1:		// en estado  solicitado en procesamiento
                   
-                   	$estatus = 'Solicitado';
+                   	$estatus = '<div class="btn btn-primary btn-sm btn-block" >Solicitado </div>';
                    							
                    	break;
                    	case 2:			//// en estado aplicado
                    
-                   	$estatus = '<div class="btn btn-warning btn-lg" >Sending Supplies </div>';
+                   	$estatus = '<div class="btn btn-warning btn-sm btn-block" >Traspaso realizado </div>';
                    	break;
                    	case 3: // en estado "Surtido" esto cuando ya se complete la recepcion al almacen correspondiente
                    	
-                   	$estatus = '<div class="btn btn-success btn-lg" >Recibido por Almacen </div>';
+                   	$estatus = '<div class="btn btn-success btn-sm btn-block" >Recibido por Almacen </div>';
                    	break;
                    }
                    
@@ -118,13 +121,15 @@ echo '<table id="lista_pedidos_traspaso" class="table table-striped table-border
         <td onclick="detalle_pedido_tras('.$id_pedido.','.$folio.','.$total_pedido.');">'.$row2['fecha_pedido_oficial'].'</td>
         <td onclick="detalle_pedido_tras('.$id_pedido.','.$folio.','.$total_pedido.');">'.$row2['fecha_entrega'].'</td>
     
-        <td onclick="detalle_pedido_tras('.$id_pedido.','.$folio.','.$total_pedido.');">'.$row2['orden_compra'].'</td>
+       
         <td onclick="detalle_pedido_tras('.$id_pedido.','.$folio.','.$total_pedido.');">'.$row2['folio_traspaso'].'</td>
         <td align="right" onclick="detalle_pedido_tras('.$id_pedido.','.$folio.','.$total_pedido.');">$'.number_format($total_pedido,2).'</td>
         <td align="right" id="td_estatus_'.$id_pedido.'">'.$estatus.'</td>	
                    </tr>';
                    
-                   }				
+                   }
+			
+				   
         echo ' </tbody></table>';
  
  echo ' <div class="modal fade" id="traspaso_detalle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -135,6 +140,7 @@ echo '<table id="lista_pedidos_traspaso" class="table table-striped table-border
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                         <h3 class="modal-title">
                                            Detalle Solicitud de traspaso
+										  <input id="txt_id_ped_tras" value="" type="hidden" />
                                         </h3>
                                     </div>
                                     <!-- Contenido de la ventana -->
@@ -145,9 +151,10 @@ echo '<table id="lista_pedidos_traspaso" class="table table-striped table-border
                                         </div>
                                     </div>
                                     <!-- Footer de la ventana -->
-                                    <div class="modal-footer">
+                                    <div class="modal-footer" id="modal_footer_traspaso">
                                         
-                                        <button type="button" class="btn btn-primary " data-dismiss="modal">Cerrar</button>
+                                      
+										<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
                                     </div>
                                     
                                 </div>

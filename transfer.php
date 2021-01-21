@@ -343,28 +343,7 @@ function requerir_pedido_nef(id_pedido){
 		//verificacion de iventario activo
 	 
 	};
-	function traspaso_nuevo(){
-		ocultar_divs_principales();
-		$("#div_solicitud_traspaso").show();
-		var verif_carga =  document.getElementById("txt_verif_carga_art_traspaso").value;
-		if (verif_carga == 0){
-			cargar_art_pedido();
-		}
-				cargar_lista_pedido();
-	 
-	};
-	function pedido_nuevo()
-	{
-		ocultar_divs_principales();
-		$("#div_pedido_nuevo").show();
-		// cargar los datos correspondientes de las tablas pedido_nef y pedido_nef_det
-		var verif_carga = document.getElementById("txt_verif_carga_art_nef").value; 
-		if (verif_carga == 0){
-			cargar_art_pedido_nef();
-		}
-			
-			cargar_lista_pedido_nef();
-	};
+
 	function lista_inventarios_reg(id_empresa){
 		$("#modal_cargando").modal("show");	
 		jQuery.ajax({ 
@@ -1092,18 +1071,7 @@ function requerir_pedido_nef(id_pedido){
 		
 		
 	};
-	function cargar_lista_pedido(){
-		var id_user = <?php echo $_SESSION["logged_user"]; ?> 
-		$.ajax({
-			type: "post",
-			url: "data/lista_pedido_traspaso_det.php",
-			data: {id_user:id_user},
-			dataType: "html",
-			success:  function (response) { 
-			$('#div_lista_pedido_det').html(response);
-			}
-		});
-	};
+
 	function cargar_lista_pedido_nef(){
 		var id_user = <?php echo $_SESSION["logged_user"]; ?> 
 		$.ajax({
@@ -1327,34 +1295,21 @@ var inp=inps[i];
 			});
 		return false;	
    };
-	/////// inserta pedido nef a base de id de pedido en sistema
-	function insertar_pedido_nef(id_pedido){
-		$("#modal_cargando").modal("show");
-		$.ajax({
-			type: "post",
-			url: "data/insertar_pedido_nef.php",
-			data: {id_pedido:id_pedido},
-			dataType: "html",
-			success:  function (response) {
-			$('#resultados_js').html(response);
-			}
-		});
+	function gentrasmicro(id_pedido_trapaso)
+	{
+		$("#modal_cargando").modal("show");	
 		
-	};
-	
-	/////// inserta la remision del pedido dado
-	function Insert_remision(id_pedido){
-		$.ajax({
-			type: "post",
-			url: "data/generar_remision.php",
-			data: {id_pedido:id_pedido},
-			dataType: "html",
-			success:  function (response) {
-			$('#resultados_js').html(response);
-			}
-		});
-		
-	};
+		jQuery.ajax({ 
+				type: "POST",
+				url: "data/generar_traspaso_micro.php",
+				data: {id_pedido_trapaso:id_pedido_trapaso},
+				success: function(resultados)
+				{ 			
+					// success
+					$("#resultados_js").html(resultados);			
+				}
+			});
+	}
 	/////// Actualizar inventario despues de surtir pedido
 	function SincronizarInventario(id_pedido){
 		$.ajax({
