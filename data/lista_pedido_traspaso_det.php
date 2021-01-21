@@ -101,6 +101,7 @@ $total_rows = mysql_num_rows($resultado);
 				$("#txt_id_pedido_traspaso").val("'.$id_pedido.'");	
 				$("#txt_requisitor_traspaso").val("'.$requisitor.'");	
 				$("#select_almacen_traspaso").val("'.$almacen_id.'");	
+				
                
 				
 			
