@@ -13,10 +13,11 @@ foreach ($display_empresas as $id => $display_name){
 	}
 	//echo $id." ** ".id_empresa($_SESSION["logged_user"])."<br />"; 
 };
-
+$btn_recibir = "";
 if ($tipo_usuario == 3){
 	// vendedor 
 	$Display = 'vendor_style';
+	$btn_recibir = '<input type="button" class="btn btn-info elementos_recibir" value="Recive" id="btn_recibir_tool" onclick="recibir();"/>';
 }
 include("../displays/".$Display.".php");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,7 +47,7 @@ include("../displays/".$Display.".php");
 		  echo 0;
 	  }
      function busca_pedido($id_pedido,$segundos,$folio,$total_pedido,$tipo_usuario){ 
-global $database_conexion, $conex, $folio_tabla_mis_pedidos, $clave_lista_pedido_index, $nombre_articulo_lista_pedido_index, $cantidad_lista_pedido_index, $precio_unitario_lista_pedido_index, $total_lista_pedido_index ;
+global $database_conexion, $conex, $folio_tabla_mis_pedidos, $clave_lista_pedido_index, $nombre_articulo_lista_pedido_index, $cantidad_lista_pedido_index, $precio_unitario_lista_pedido_index, $total_lista_pedido_index, $btn_recibir ;
 if ($segundos != '')
 {
 	sleep($segundos);
@@ -61,16 +62,22 @@ else
 }
 
 $select_traspaso ='';
+$cont =0;
+$id_traspaso_mostrar_al_inicio = "";
 $sql_traspasos = "SELECT folio_traspaso, id_pedido FROM pedido_traspaso WHERE id_pedido_cliente = '$id_pedido' AND estatus = '2'";
 $res_traspasos = mysql_query($sql_traspasos, $conex) or die(mysql_error());
 $total_rows_traspasos = mysql_num_rows($res_traspasos);
 //$lista_traspasos = array();
 if ($total_rows_traspasos > 0){
-	$select_traspaso = '<select class=" form-control elementos_recibir">';
+	
+	$select_traspaso = '<select class="select form-control elementos_recibir" id="select_traspaso">';
 	 while($row_traspaso = mysql_fetch_array($res_traspasos,MYSQL_BOTH)) // html de articulos a mostrar
     {
+		if ($cont == 0){ $id_traspaso_mostrar_al_inicio = 'ver_partidas_traspaso('.$row_traspaso['id_pedido'].');'; }
+		$cont++;
 		//$lista_traspasos[$row_traspaso['id_pedido']] = $row_traspaso['folio'];
 		$select_traspaso .= '<option value="'.$row_traspaso['id_pedido'].'"> '.$row_traspaso['folio_traspaso'].'</option>';
+		
 	}
 	$select_traspaso .= '</select>';
 }
@@ -145,29 +152,40 @@ $tabla = '<table id="pedido_det" class="table table-striped table-bordered table
                                 </tr>
                              </tbody></table>';
 
-							$cabezera = ' <table class="col-lg-12 col-md-12">
+							$cabezera = '<p> <table class="col-lg-12 col-md-12">
 							<tr>
 								<td class="col-md-2" id="td_folio_pedido">'.$texto_folio.'
 								</td>
-								<td class="col-md-5 col-lg-7" id="">
 								
-								</td>
-								<td class="col-md-2 " align="right" >
-								<input type="button" class="btn btn-info elementos_recibir" value="Recive" id="btn_recibir_tool" onclick="recibir();"/>
+								<td class="col-md-1 " align="right" >
+								'.$btn_recibir.'
 								
 								</td>
 								<td  class="col-md-2 " >
-									'.$select_traspaso.'
+									<span class="elementos_recibir"> Folio a Recibir </span>'.$select_traspaso.'
+								</td>
+								<td class="col-md-3 col-lg-3" id="">
+								
 								</td>
 							</tr>
-							</table>';
+							</table> </p>';
+							
+											
                                  echo $cabezera.$tabla.'
 
                                 <script>
 
                                 $(document).ready( function () {
                                     $("#pedido_det").DataTable();
-									'.$ocultar_btn_recibir.' 
+									'.$ocultar_btn_recibir.'
+									'.$id_traspaso_mostrar_al_inicio.' 
+									$("#select_traspaso").change(function(){
+										var id_traspaso = $(this).val();
+										//alert("id_traspaso = "+id_traspaso);
+										ver_partidas_traspaso(id_traspaso);
+										
+									});
+									
                                 } );
 
                                 </script>
