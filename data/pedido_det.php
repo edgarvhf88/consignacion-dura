@@ -63,7 +63,7 @@ else
 
 $select_traspaso ='';
 $cont =0;
-$id_traspaso_mostrar_al_inicio = "";
+$id_traspaso_mostrar_al_inicio = '';
 $sql_traspasos = "SELECT folio_traspaso, id_pedido FROM pedido_traspaso WHERE id_pedido_cliente = '$id_pedido' AND estatus = '2'";
 $res_traspasos = mysql_query($sql_traspasos, $conex) or die(mysql_error());
 $total_rows_traspasos = mysql_num_rows($res_traspasos);

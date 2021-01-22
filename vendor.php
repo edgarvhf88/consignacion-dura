@@ -1482,7 +1482,20 @@ function requerir_pedido_nef(id_pedido){
    
    
    };
-   
+   function ver_partidas_traspaso(id_pedido_traspaso)
+	{	
+		
+		$.ajax({
+			type: "post",
+			url: "data/ver_partidas_traspaso.php",
+			data: {id_pedido_traspaso:id_pedido_traspaso},
+			dataType: "html",
+			success:  function (response) {
+			//$('#select_arti_oc').html(response);
+			$('#resultados_js').html(response);
+			}
+		});
+	};
    function sin_accion(){
 	  return false;
   };
