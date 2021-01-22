@@ -129,7 +129,7 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 				//////////////////////////////////////////////////////////////////////////
 					$rowrems='';
 					//boton aqui
-				if($row2['rems'] ==""){
+				if($row2['rems'] =="" ){
 					$pedido_nef_original =$row2['folio_pedmicro'];
 					$rowrems='<div class="dropdown">
 							<button class="btn btn-danger btn-block dropdown-toggle btn_estatus" type="button" id="btnestatus_1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -173,7 +173,7 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 				//////////////////////////////////////////////////////////////////////////
 					$rowrec='';
 					//boton aqui
-				if($row2['recepciones'] ==""){
+				if($row2['recepciones'] =="" and $row2['orden_compra'] !=""){
 					$orden_compra_allpart =$row2['orden_compra'];
 					
 					$rowrec='<div class="dropdown">
@@ -201,7 +201,7 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 					
 				}
 				//SE RECEPCIONO PARCIALMENTE///////////////////////////// //////////////
-				else if ($row2['rems'] != "")
+				else if ($row2['recepciones'] != "")
 				{
 						
 						$recepciones = array();
