@@ -278,9 +278,7 @@ function insertar_ligas($docto_cm_id_rec, $docto_cm_id_oc)
 $tipo = $_POST['tipo'];
 if ($tipo==1)
 {//carga la remision a recepcionar 
-$oc="";
-
-if (isset ($_POST['oc'])) {$oc = $_POST['oc'];	}
+$oc = $_POST['oc'];
 $folio = $_POST['folio'];
 $id_pedido = $_POST['id_pedido'];
 

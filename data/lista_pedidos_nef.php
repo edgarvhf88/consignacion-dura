@@ -105,28 +105,31 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
                 	$pedido_nef = '<button class="btn btn-danger btn-block " type="button" id="btnestatus_'.$id_pedido.'" onclick="insertar_pedido_nef('.$id_pedido.');"> Generar Pedido Microsip </button>';
                 }
 				
+				////////////////PERSONAL DE TRASPASOS////////////////////////////////////////////////
 				//reviso si tiene permiso para buscar las remisiones
 				//esta vista es para el de traspasos para editar las remisiones 
-				$permiso=permisos();
-				if ($permiso == 17)
-				{
-					//orden de compra 
-					if($row2['orden_compra'] ==""){
-						$folio_microsip=$row2['folio_pedmicro'];
-					$roworden_c ='<div class="dropdown">
-							<button class="btn btn-danger btn-block dropdown-toggle btn_estatus" type="button" id="btnestatus_1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								Orden Compra
-								<span class="caret"></span>
-							</button>
-							<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-							<li class="btn btn-info btn-block btn_solicitud_traspaso" onclick="generar_orden_compra('.$folio_microsip.');" title="Genera una orden de compra en Allpart a partir del pedido en Nef.">Generar orden compra</li>
-					</div>';}
-					else {$roworden_c =$row2['orden_compra'] ;}
-					
-					//remisiones
+				
+			$permiso=permisos();
+			if ($permiso == 17)
+			{ 
+				///////ORDEN DE COMPRA///////////////////////////// 
+				if($row2['orden_compra'] ==""){
+				$folio_microsip=$row2['folio_pedmicro'];
+				$roworden_c ='<div class="dropdown">
+						<button class="btn btn-danger btn-block dropdown-toggle btn_estatus" type="button" id="btnestatus_1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Orden Compra
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+						<li class="btn btn-info btn-block btn_solicitud_traspaso" onclick="generar_orden_compra('.$folio_microsip.');" title="Genera una orden de compra en Allpart a partir del pedido en Nef.">Generar orden compra</li>
+				</div>';}
+				else {$roworden_c =$row2['orden_compra'] ;}
+				//////////////////////////////////////////////////////////////////////////	
+				//REMISIONES////////////////////////////////////////////////////////// 
+				//////////////////////////////////////////////////////////////////////////
 					$rowrems='';
 					//boton aqui
-					if($row2['rems'] ==""){
+				if($row2['rems'] ==""){
 					$pedido_nef_original =$row2['folio_pedmicro'];
 					$rowrems='<div class="dropdown">
 							<button class="btn btn-danger btn-block dropdown-toggle btn_estatus" type="button" id="btnestatus_1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -134,9 +137,8 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 								<span class="caret"></span>
 							</button>
 							<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-							<li class="btn btn-info btn-block btn_solicitud_traspaso" id="btn_solicitudtraspaso_1" onclick="buscar_remisiones(\''.$pedido_nef_original.'\', \'nef\', \'1\');" title="Busca en microsip si existen remisiones para ese pedido.">Buscar remisiones</li>
-							
-					</div>';}
+							<li class="btn btn-info btn-block btn_solicitud_traspaso" id="btn_solicitudtraspaso_1" onclick="buscar_remisiones(\''.$pedido_nef_original.'\', \'nef\', \'1\');" title="Busca en microsip si existen remisiones para ese pedido.">Buscar remisiones</li></div>';}
+				//YA SE REMISIONO COMPLETA ///////////////////////////////////////////
 				else if ($row2['estatus'] == 3)
 				{//contenido
 					$remisiones = array();
@@ -150,32 +152,86 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 					
 					
 				}
+				//SE REMISIONO PARCIALMENTE///////////////////////////// //////////////
 				else if ($row2['rems'] != "")
-					{
+				{
 						
 						$remisiones = array();
-					$remsiones = explode(",", $row2['rems']);
-					$orden_c_enciar =$row2['orden_compra'];
+						$remsiones = explode(",", $row2['rems']);
+						$orden_c_enciar =$row2['orden_compra'];
 					foreach ($remsiones as $rem)
-					{
-						$rowrems .='<a onclick="detalle_remision ('.$rem.', '.$orden_c_enciar.', '.$id_pedido.');">'.$rem.'</a> <br>' ;
-						
-					}
-						
-						
+						{
+							$rowrems .='<a onclick="detalle_remision ('.$rem.', '.$orden_c_enciar.', '.$id_pedido.');">'.$rem.'</a> <br>' ;
+						}
 						$pedido_nef_original =$row2['folio_pedmicro'];
 						
 						$rowrems .='<span onclick="buscar_remisiones(\''.$pedido_nef_original.'\', \'nef\', \'1\');" ><i class="fa fa-refresh" aria-hidden="true" ></i></span>';
 						
+				}
+				//////////////////////////////////////////////////////////////////////////////
+				//RECEPCIONES//////////////////////////////////////////////////////////
+				//////////////////////////////////////////////////////////////////////////
+					$rowrec='';
+					//boton aqui
+				if($row2['recepciones'] ==""){
+					$orden_compra_allpart =$row2['orden_compra'];
+					
+					$rowrec='<div class="dropdown">
+							<button class="btn btn-danger btn-block dropdown-toggle btn_estatus" type="button" id="btnestatus_1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Recepcion
+								<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+							<li class="btn btn-info btn-block btn_solicitud_traspaso" id="btn_solicitudtraspaso_1" onclick="buscar_remisiones(\''.$orden_compra_allpart.'\', \'nef\', \'2\');" title="Busca en microsip si existen recepciones para esta ORDEN.">Buscar recepciones</li></div>';}
+				//YA SE RECEPCIONO COMPLETA ///////////////////////////////////////////
+				else if ($row2['estatus'] == 4)
+				{//contenido
+					$recepciones = array();
+					$recepciones = explode(",", $row2['recepciones']);
+					
+					foreach ($recepciones as $rec)
+					{
+						$print_rec = str_replace("RAP","",$rec);
+						$print_rec =str_replace("," , "", number_format($print_rec, 0));
+						$print_rec = 'RAP'.$print_rec;
+						$rowrec .='<a onclick="detalle_recepcion (\''.$rec.'\', '.$id_pedido.');">'.$print_rec.'</a> <br>' ;
+						
 					}
-				
+					
 					
 				}
-                else//cuando soy vendedor 
-				{//contenido
-				$rowrems =$row2['rems'] ;
-				$roworden_c =$row2['orden_compra'] ;
+				//SE RECEPCIONO PARCIALMENTE///////////////////////////// //////////////
+				else if ($row2['rems'] != "")
+				{
+						
+						$recepciones = array();
+						$recepciones = explode(",", $row2['recepciones']);
+						$orden_c_enciar =$row2['orden_compra'];
+					foreach ($recepciones as $rec)
+						{
+						
+						$print_rec = str_replace("RAP","",$rec);
+						$print_rec =str_replace("," , "", number_format($print_rec, 0));
+						$print_rec = 'RAP'.$print_rec;
+						
+							$rowrec .='<a onclick="detalle_recepcion (\''.$rec.'\', '.$orden_c_enciar.', '.$id_pedido.');">'.$print_rec.'</a> <br>' ;
+						}
+						$orden_compra_allpart =$row2['orden_compra'];
+						
+						$rowrec .='<span onclick="buscar_remisiones(\''.$orden_compra_allpart.'\', \'nef\', \'2\');" ><i class="fa fa-refresh" aria-hidden="true" ></i></span>';
+						
 				}
+				
+					
+			}
+			////////////////VENDEDOR//////////////////////////////////////////////////////////
+               else//cuando soy vendedor 
+			{//contenido
+			$rowrems =$row2['rems'] ;
+			$rowrec =$row2['recepciones'] ;
+			$roworden_c =$row2['orden_compra'] ;
+			}
+			////////////////////////////////////////////////////////////////////////////////////////////////
                     echo ' <tr >
                    	
 					<td onclick="">'.$requisitor.'
@@ -186,7 +242,7 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 					<td onclick="">'.$pedido_nef.'</td>
 					<td onclick="">'.$rowrems.'</td>
 					<td onclick="">'.$roworden_c.'</td>
-					<td onclick=""></td>
+					<td onclick="">'.$rowrec.'</td>
 					<td onclick=""></td>
 					<td align="right" onclick="">$'.number_format($total_pedido,2).'</td>
 					<td align="right" id="td_estatus_'.$id_pedido.'">'.$estatus.'</td>	
@@ -203,7 +259,7 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
                                     <!-- Header de la ventana -->
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h3 class="modal-title">
+                                        <h3 class="modal-title" id="detalle_modal_titulo">
                                            Detalle de remision
                                         </h3>
                                     </div>

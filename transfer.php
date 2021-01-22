@@ -156,6 +156,7 @@ input[type=checkbox]
 			
 			jQuery('#remision_detalle').modal('show', {backdrop: 'static'});
 			var tipo='1';
+			$("#detalle_modal_titulo").html('Detalle de Remision');
 			jQuery.ajax({ //
 				type: "POST",
 				url: "data/recepcion_de_remision.php",
@@ -166,6 +167,31 @@ input[type=checkbox]
 				}
 			});
 		};
+		
+		function detalle_recepcion (folio, oc, id_pedido){
+			
+			jQuery('#remision_detalle').modal('show', {backdrop: 'static'});
+			var tipo='1';
+			$("#detalle_modal_titulo").html('Detalle de Recepcion');
+			jQuery.ajax({ //
+				type: "POST",
+				url: "data/recepcion_solicitud_tras.php",
+				data: {folio:folio, tipo:tipo, oc:oc, id_pedido:id_pedido},
+				success: function(resultados)
+				{
+					jQuery('#remision_detalle .modal-body').html(resultados);
+				}
+			});
+		};
+		
+		
+		
+		function solicitar_tras_de_rec (folio, id_pedido){
+			//FOLIO es el de la recepcion
+			//ID_PEDIDO es el id del pedido generado por consigna dura
+			
+		};
+		
 		
 		function recepcionar (folio, oc, id_pedido){
 		jQuery('#remision_detalle').modal('show', {backdrop: 'static'});
@@ -230,6 +256,9 @@ function requerir_pedido_nef(id_pedido){
 			});
 		
 	};
+	
+	
+	
 	
 	function generar_orden_compra(folio)
 	{

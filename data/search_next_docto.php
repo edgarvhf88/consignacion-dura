@@ -13,7 +13,7 @@
 	{
 		$base_datos= $_POST['base_datos'];
 		$folio= $_POST['folio'];
-		busca_recepcion($folio, $base_datos);
+		busca_recepciones($folio, $base_datos);
 	}
 	 
 	  //busca las remisiones
@@ -66,48 +66,57 @@
 		echo '<script> lista_pedidos_nef(); </script>';
 		}
    
-   //busca las recepciones 
-		/*  function busca_recepcion($folio, $base_datos)
+  function busca_recepciones($folio, $base_datos)
 	  {
+		$folio_bus=Format9digit($folio);
+		
 		 //selecciono la base de datos
-		 if ($base_datos='nef')
-		 {
-			//base de nef
-			global $con_micro_nef;
-			 
-		 }
-		 $folio="";
+		global $con_micro;
 		 //hago la consulta
 		$aplicar = "SELECT
-		DV2.FOLIO AS FOLIO
-		FROM DOCTOS_CM DC
-		LEFT JOIN DOCTOS_CM_LIGAS DCL1 ON DCL1.DOCTO_CM_FTE_ID = DC.DOCTO_CM_ID
-		LEFT JOIN DOCTOS_CM DC2 ON DC2.DOCTO_CM_ID = DCL1.DOCTO_CM_DEST_ID AND DC2.TIPO_DOCTO ='R'
-		WHERE DC.FOLIO = '$folio'";
-		$query_aplicar = $con_micro_nef->prepare($aplicar);
+        DV2.FOLIO AS FOLIO,
+		DV.ESTATUS AS ESTATUS
+        
+		FROM DOCTOS_CM DV
+        LEFT JOIN DOCTOS_CM_LIGAS DVL1 ON DVL1.DOCTO_CM_FTE_ID = DV.DOCTO_CM_ID
+        LEFT JOIN DOCTOS_CM DV2 ON DV2.DOCTO_CM_ID = DVL1.DOCTO_CM_DEST_ID 
+        WHERE DV.FOLIO = '$folio_bus' AND DV.TIPO_DOCTO='O'";
+		
+		$query_aplicar = $con_micro->prepare($aplicar);
 		$query_aplicar->execute();
 		$results = $query_aplicar->fetchAll(PDO::FETCH_ASSOC);
 		//recorro el array y concateno la variables
-		
+		$recs="";
 		foreach($results as $row)
 		{
-			if ($folio ==""){
-			$folio .=$row['FOLIO'];}
-			
-			else if ($folio!="") {$folio .=",".$row['FOLIO'];}
-		}
-		//guardo el valor en la base de datos
-		if($folio != ""){
-		$remision = "
-		update remisiones SET 
-		remisiones='$folio',
-		WHERE ";
-		mysql_query($remision, $conex) or die(mysql_error());
+			$estatus = $row['ESTATUS'];
+			if ($recs ==""){
+			$recs .= $row['FOLIO'];}
+			else {
+			$recs .= ",".$row['FOLIO'];}
 		}
 		
+		//guardo el valor en la base de datos
+		if($recs != "" and $recs != "0"){
+		global $conex;	
+		
+		$remision = "UPDATE pedido_nef SET 
+		recepciones='$recs'
+		WHERE orden_compra='$folio'";
+		
+		if ($estatus =='S')
+		{
+			$remision = "UPDATE pedido_nef SET 
+			recepciones='$recs',
+			estatus='4'
+			WHERE orden_compra='$folio'";
 		}
-   
-    */
+		
+		mysql_query($remision, $conex) or die(mysql_error());
+		}
+		echo '<script> lista_pedidos_nef(); </script>';
+		
+	}
    
    
    
