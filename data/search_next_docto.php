@@ -53,7 +53,7 @@
 		remisiones='$rems'
 		WHERE folio_pedido_microsip='$folio'";
 		
-		if ($estatus='S')
+		if ($estatus =='S')
 		{
 			$remision = "UPDATE pedido_nef SET 
 			remisiones='$rems',

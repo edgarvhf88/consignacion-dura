@@ -152,20 +152,34 @@ input[type=checkbox]
 			});
 		};
 		//vista previa de la remision
-		function detalle_remision (folio){
+		function detalle_remision (folio, oc, id_pedido){
 			
 			jQuery('#remision_detalle').modal('show', {backdrop: 'static'});
 			var tipo='1';
-			
 			jQuery.ajax({ //
 				type: "POST",
 				url: "data/recepcion_de_remision.php",
-				data: {folio:folio, tipo:tipo},
+				data: {folio:folio, tipo:tipo, oc:oc, id_pedido:id_pedido},
 				success: function(resultados)
 				{
 					jQuery('#remision_detalle .modal-body').html(resultados);
 				}
 			});
+		};
+		
+		function recepcionar (folio, oc, id_pedido){
+		jQuery('#remision_detalle').modal('show', {backdrop: 'static'});
+			var tipo='2';
+			
+			jQuery.ajax({ //
+				type: "POST",
+				url: "data/recepcion_de_remision.php",
+				data: {folio:folio, tipo:tipo, oc:oc, id_pedido:id_pedido},
+				success: function(resultados)
+				{
+					jQuery('#remision_detalle .modal-body').html(resultados);
+				}
+			}); 
 		};
 		
 		

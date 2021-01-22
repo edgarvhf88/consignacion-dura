@@ -304,7 +304,7 @@ try {
 				//***/**/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/**/*/*/*/
 				
 				 //// guardo la orden de compra en el pedido
-				$folio_oc=str_replace (",","",number_format($folio,0))
+				$folio_oc=str_replace (",","",number_format($folio,0));
 				$update_ped_folio = "UPDATE pedido_nef SET orden_compra='$folio_oc' WHERE folio_pedido_microsip='$folio_ped'";
 				if (mysql_query($update_ped_folio, $conex) or die(mysql_error()))
 				{

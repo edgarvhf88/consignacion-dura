@@ -1,10 +1,24 @@
 <?php include("../data/conexion.php"); 
 
 
-function cargar_remision($folio)
+function cargar_remision($folio, $oc, $id_pedido)
 {
-	//con el folio proporcionado cargo la remision y la muestro en una tabla
+	
 	$folio_bus=Format9digit($folio);
+	//con el folio proporcionado cargo la remision y la muestro en una tabla
+		$rec_folio = rem_sin_rec($folio); 
+		if ($oc !=""){
+		if ($rec_folio != "" )
+		{
+			$boton_recepcionar= '<h4 align"center">Recepcion: '.$rec_folio.'</h4>';
+		}
+		else {
+			$boton_recepcionar = '<div class="col-lg-12" align="center">
+							 <button id="gen_tras_micro" onclick="recepcionar('.$folio.', '.$oc.', '.$id_pedido.');" class="btn btn-primary" >Generar Recepcion en AllPart </button>
+							 </div>';
+		}
+		}
+		else {$boton_recepcionar="";}
 		
 		 //selecciono la base de datos
 		global $con_micro_nef;
@@ -61,7 +75,7 @@ function cargar_remision($folio)
                     $("#remision_det").DataTable();
                 } );
                 </script>';
-				
+	$tabla .=$boton_recepcionar;			
 				echo $tabla;
 	
 	
@@ -88,7 +102,32 @@ $folio_siguiente = $row_result['CONSECUTIVO'];
 return $folio_siguiente;
 }
 
-
+function Formatrapdigit($folio){
+switch(strlen($folio)){
+		
+			case 1: 
+			$folio_siguiente = "RAP00000".$folio;
+			break;
+			case 2:
+			$folio_siguiente = "RAP0000".$folio;
+			break;
+			case 3:
+			$folio_siguiente = "RAP000".$folio;
+			break;
+			case 4:
+			$folio_siguiente = "RAP00".$folio;
+			break;
+			case 5:
+			$folio_siguiente = "RAP0".$folio;
+			break;
+			case 6:
+			$folio_siguiente = "RAP".$folio;
+			break;
+			
+		 
+	 }
+return $folio_siguiente; 
+}
 
 //obtengo el id de la recepcion insertada 
 function ObtenerIdRec($folio){ 
@@ -128,12 +167,12 @@ return $docto_cm_id;
 function rem_sin_rec($folio)
 {
 	global $con_micro;
-	$folio = "";	
+		
 	//$valor = 88878; 
 	$valor = 2329; // folio de COMPRAS recepcion
 	$sql = "SELECT FOLIO	
 	FROM DOCTOS_CM A
-	WHERE (A.FOLIO_PROV = '".$FOLIO."' AND A.TIPO_DOCTO='R' AND PROVEEDOR_ID='1768')";
+	WHERE (A.FOLIO_PROV = '".$folio."' AND A.TIPO_DOCTO='R' AND PROVEEDOR_ID='1768')";
 	
 	$consulta = $con_micro->prepare($sql);
 	$consulta->execute();
@@ -146,20 +185,29 @@ function rem_sin_rec($folio)
 	return $folio_rec;}
 }
 
+function ObtenerIdLigas($fuente, $destino)
+{ 
+global $con_micro;
+
+$sql = "SELECT A.DOCTO_CM_LIGA_ID AS DOCTO_CM_LIGA_ID	
+FROM DOCTOS_CM_LIGAS A
+WHERE (A.DOCTO_CM_FTE_ID = '".$fuente."') AND (A.DOCTO_CM_DEST_ID = '".$destino."')";
+$consulta = $con_micro->prepare($sql);
+$consulta->execute();
+$consulta->setFetchMode(PDO::FETCH_OBJ);
+$row_result = $consulta->fetch(PDO::FETCH_ASSOC);
+
+if (!$consulta){
+	 exit;}	
+$id = $row_result['DOCTO_CM_LIGA_ID'];
+return $id;
+}
+
 //inserta las ligas entre una orden de compra y una recepcion 
 function insertar_ligas($docto_cm_id_rec, $docto_cm_id_oc)
-{
-	//consulta para los identificadores 
-	$consulta = "SELECT 
-	dc.docto_cm_det_id as id_recepcion, 
-	dc2.docto_cm_det_id as id_orden
-	FROM doctos_cm_det dc
-	inner join doctos_cm_det dc2 on dc2.docto_cm_id = '$docto_cm_id_oc' and dc.articulo_id = dc2.articulo_id
-	WHERE dc.docto_cm_id = '$docto_cm_id_rec'";
+{ 	global $con_micro;
+	$docto_id=-1;
 	
-	$resultado = $con_micro_nef->prepare($consulta);
-	$resultado->execute();
-	$res = $resultado->fetchAll(PDO::FETCH_ASSOC);
 	
 	if ($docto_cm_id_rec != 0 and $docto_cm_id_oc !=0)
 	{
@@ -177,21 +225,38 @@ function insertar_ligas($docto_cm_id_rec, $docto_cm_id_oc)
 					print "Error!: " . $e->getMessage() . "<br/>";
 					die();
 					}	
-					if (!$query_insert_det)
-						{echo '<script> console.log("No se aplico la relacion en DOCTOS LIGAS"); </script>';
+	if (!$query_insert_det)
+	{echo '<script> console.log("No se aplico la relacion en DOCTOS LIGAS"); </script>';
 						exit;}
 	else 
 	{echo '<script> console.log("Se genero la relacion correctamente"); </script>';}
-						
-	foreach($res as $row_)
+	
+		//consulta para los identificadores 
+	$consulta = "SELECT 
+	dc.docto_cm_det_id as ID_RECEPCION, 
+	dc2.docto_cm_det_id as ID_ORDEN
+	FROM doctos_cm_det dc
+	inner join doctos_cm_det dc2 on dc2.docto_cm_id = ".$docto_cm_id_oc." and dc.articulo_id = dc2.articulo_id
+	WHERE dc.docto_cm_id = ".$docto_cm_id_rec;
+	
+	$resultado = $con_micro->prepare($consulta);
+	$resultado->execute();
+	$res = $resultado->fetchAll(PDO::FETCH_ASSOC);
+	
+	
+	$docto_id_det=ObtenerIdLigas($docto_cm_id_oc, $docto_cm_id_rec);
+	
+	foreach($res as $row)
 	{
-		$docto_cm_fte_id =$row['id_orden'];
-		$docto_cm_dest_id= $row['id_recepcion'];
+		$docto_cm_fte_id = $row['ID_ORDEN'];
+		$docto_cm_dest_id = $row['ID_RECEPCION'];
+		
+		echo $docto_cm_fte_id."---".$docto_cm_dest_id;
 	//recorer el ciclo e incertar los detalles 
 	$insertar_det = "INSERT INTO DOCTOS_CM_LIGAS_DET (DOCTO_CM_LIGA_ID, DOCTO_CM_DET_FTE_ID, DOCTO_CM_DET_DEST_ID) VALUES (:docto_id,:docto_fte_id,:docto_dest_id)";
 					try {
 					$query_insert_det = $con_micro->prepare($insertar_det);
-					$query_insert_det->bindParam(':docto_id', $docto_id, PDO::PARAM_INT);
+					$query_insert_det->bindParam(':docto_id', $docto_id_det, PDO::PARAM_INT);
 					$query_insert_det->bindParam(':docto_fte_id', $docto_cm_fte_id, PDO::PARAM_INT);
 					$query_insert_det->bindParam(':docto_dest_id', $docto_cm_dest_id, PDO::PARAM_INT);
 					$query_insert_det->execute();
@@ -213,15 +278,21 @@ function insertar_ligas($docto_cm_id_rec, $docto_cm_id_oc)
 $tipo = $_POST['tipo'];
 if ($tipo==1)
 {//carga la remision a recepcionar 
+$oc="";
+
+if (isset ($_POST['oc'])) {$oc = $_POST['oc'];	}
 $folio = $_POST['folio'];
-cargar_remision($folio);	
+$id_pedido = $_POST['id_pedido'];
+
+cargar_remision($folio, $oc, $id_pedido);
 }
 else
 {//inserta la recepcion tomando los valores de la remision 
 	//variables para la cabecera
 	$folio_rem=$_POST['folio'];
-	$folio_orden_compra=$_POST['orden_compra'];
-	
+	$id_pedido_dura=$_POST['id_pedido'];
+	$folio_orden_compra=$_POST['oc'];
+	$folio_orden_compra = Format9digit($folio_orden_compra);
 	$folio_rem_bus = Format9digit($folio_rem);
 	//reviso si se ha recepcionado esta remision antes para evitar duplicidad
 	
@@ -242,7 +313,7 @@ else
 	$tipo_docto = "R"; // orden de compra
 	$folio = ObtenerFolioRec(); // FOLIO CONSECUTIVO desde tabla
 	$folio_cosecutivo = $folio;// FOLIO CONSECUTIVO para sumarle uno y actualizar la tabla de los folios
-	$folio = Format9digit($folio);
+	$folio = Formatrapdigit($folio);
 	
 	
 	$fecha = $fecha_actual; //"28.03.2019"; // GETDATE()
@@ -436,7 +507,7 @@ try {
 			$aplicar = "EXECUTE PROCEDURE APLICA_DOCTO_CM(:V_DOCTO_CM_ID)";
 		
 			try {
-				$query_aplicar = $con_micro_nef->prepare($aplicar);
+				$query_aplicar = $con_micro->prepare($aplicar);
 				$query_aplicar->bindParam(':V_DOCTO_CM_ID', $docto_cm_id, PDO::PARAM_INT);
 				
 				$query_aplicar->execute();
@@ -445,7 +516,7 @@ try {
 			catch (PDOException $e){ print "Error!: " . $e->getMessage() . "<br/>"; die(); }
 			if (!$query_aplicar)
 			{
-				echo '<script> console.log("No se Aplico ORDEN COMPRA"); </script>';
+				echo '<script> console.log("No se Aplico RECEPCION."); </script>';
 				exit;
 			}
 			else
@@ -462,7 +533,7 @@ try {
 				$update_folio = "UPDATE FOLIOS_COMPRAS SET CONSECUTIVO = :consecutivo WHERE FOLIO_COMPRAS_ID = '".$folio_compras_id."' ";
 		
 				try {
-				$query_update_folio = $con_micro_nef->prepare($update_folio);
+				$query_update_folio = $con_micro->prepare($update_folio);
 				$query_update_folio->bindParam(':consecutivo', $consecutivo, PDO::PARAM_STR, 9);
 				$query_update_folio->execute();
 				} catch (PDOException $e) {
@@ -480,17 +551,19 @@ try {
 				}
 				//***/**/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/**/*/*/*/
 				
-				 //// guardo la orden de compra en el pedido
-				/* $folio_oc=str_replace (",","",number_format($folio,0))
-				$update_ped_folio = "UPDATE pedido_nef SET orden_compra='$folio_oc' WHERE folio_pedido_microsip='$folio_rem'";
-				if (mysql_query($update_ped_folio, $conex) or die(mysql_error()))
+			// guardo la relacion de remision y recepcion 
+				
+				
+				$liga_dura = "INSERT INTO ligas_doctos (id_pedido, remision_nef, recepcion_allpart) 
+				VALUES ('$id_pedido_dura', '$folio_rem_bus', '$folio')";
+				if (mysql_query($liga_dura, $conex) or die(mysql_error()))
 				{
 				echo '<script> 
 						setTimeout(function(){
 							lista_pedidos_nef();
 						},1000,"JavaScript");   </script>';
 				
-				}  */
+				}  
 		}/// insert success
 	
 	

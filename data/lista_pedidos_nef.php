@@ -104,6 +104,7 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
                 {
                 	$pedido_nef = '<button class="btn btn-danger btn-block " type="button" id="btnestatus_'.$id_pedido.'" onclick="insertar_pedido_nef('.$id_pedido.');"> Generar Pedido Microsip </button>';
                 }
+				
 				//reviso si tiene permiso para buscar las remisiones
 				//esta vista es para el de traspasos para editar las remisiones 
 				$permiso=permisos();
@@ -140,10 +141,10 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 				{//contenido
 					$remisiones = array();
 					$remsiones = explode(",", $row2['rems']);
-					
+					$orden_c_enciar =$row2['orden_compra'];
 					foreach ($remsiones as $rem)
 					{
-						$rowrems .='<a onclick="detalle_remision ('.$rem.');">'.$rem.'</a> <br>' ;
+						$rowrems .='<a onclick="detalle_remision ('.$rem.', '.$orden_c_enciar.', '.$id_pedido.');">'.$rem.'</a> <br>' ;
 						
 					}
 					
@@ -154,16 +155,17 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 						
 						$remisiones = array();
 					$remsiones = explode(",", $row2['rems']);
-					
+					$orden_c_enciar =$row2['orden_compra'];
 					foreach ($remsiones as $rem)
 					{
-						$rowrems .='<a onclick="detalle_remision ('.$rem.');">'.$rem.'</a> <br>' ;
+						$rowrems .='<a onclick="detalle_remision ('.$rem.', '.$orden_c_enciar.', '.$id_pedido.');">'.$rem.'</a> <br>' ;
 						
 					}
 						
 						
 						$pedido_nef_original =$row2['folio_pedmicro'];
-						$rowrems ='<span onclick="buscar_remisiones(\''.$pedido_nef_original.'\', \'nef\', \'1\');" ><i class="fa fa-refresh" aria-hidden="true" ></i></span>';
+						
+						$rowrems .='<span onclick="buscar_remisiones(\''.$pedido_nef_original.'\', \'nef\', \'1\');" ><i class="fa fa-refresh" aria-hidden="true" ></i></span>';
 						
 					}
 				
@@ -176,19 +178,19 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 				}
                     echo ' <tr >
                    	
-        <td onclick="">'.$requisitor.'
-		<input type="hidden" id="txt_folio_pedidonef_'.$id_pedido.'" value="'.$folio.'"/></td>
-        <td onclick="">'.$almacen.'</td>
-        <td onclick="">'.$folio.'</td>
-        <td onclick="">'.$row2['fecha_pedido_oficial'].'</td>
-        <td onclick="">'.$pedido_nef.'</td>
-        <td onclick="">'.$rowrems.'</td>
-        <td onclick="">'.$roworden_c.'</td>
-        <td onclick=""></td>
-        <td onclick=""></td>
-        <td align="right" onclick="">$'.number_format($total_pedido,2).'</td>
-        <td align="right" id="td_estatus_'.$id_pedido.'">'.$estatus.'</td>	
-                   </tr>';
+					<td onclick="">'.$requisitor.'
+					<input type="hidden" id="txt_folio_pedidonef_'.$id_pedido.'" value="'.$folio.'"/></td>
+					<td onclick="">'.$almacen.'</td>
+					<td onclick="">'.$folio.'</td>
+					<td onclick="">'.$row2['fecha_pedido_oficial'].'</td>
+					<td onclick="">'.$pedido_nef.'</td>
+					<td onclick="">'.$rowrems.'</td>
+					<td onclick="">'.$roworden_c.'</td>
+					<td onclick=""></td>
+					<td onclick=""></td>
+					<td align="right" onclick="">$'.number_format($total_pedido,2).'</td>
+					<td align="right" id="td_estatus_'.$id_pedido.'">'.$estatus.'</td>	
+							</tr>';
                    
                    }				
                     echo ' </tbody></table>';
