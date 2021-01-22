@@ -557,6 +557,7 @@ try {
 				if (mysql_query($liga_dura, $conex) or die(mysql_error()))
 				{
 				echo '<script> 
+						$("#remision_detalle").modal("hide");
 						setTimeout(function(){
 							lista_pedidos_nef();
 						},1000,"JavaScript");   </script>';

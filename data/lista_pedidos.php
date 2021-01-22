@@ -81,11 +81,11 @@ echo '<table id="lista_pedidos" class="table table-striped table-bordered table-
 									break;
 								case 2:			//// en estado "En proceso"
 									$atributo = 'disabled';
-									$estatus = '<div class="btn btn-info btn-lg" >Sending Supplies </div>';
+									$estatus = '<div class="btn btn-info btn-md" >Sending Supplies </div>';
 									break;
 								case 3: // en estado "Surtido" esto cuando ya se complete la recepcion al almacen correspondiente
 									$atributo = 'disabled';
-									$estatus = '<div class="btn btn-success btn-lg" >Delivered </div>';
+									$estatus = '<div class="btn btn-success btn-md" >Delivered </div>';
 									break;
 								}
 							

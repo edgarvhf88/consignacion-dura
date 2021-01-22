@@ -203,7 +203,7 @@ input[type=checkbox]
 				data: {folio:folio, tipo:tipo, oc:oc, id_pedido:id_pedido},
 				success: function(resultados)
 				{
-					jQuery('#remision_detalle .modal-body').html(resultados);
+					$('#resultados_js').html(resultados);
 				}
 			}); 
 		};
