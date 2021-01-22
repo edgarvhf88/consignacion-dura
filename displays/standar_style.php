@@ -1151,7 +1151,7 @@ $retomar_carrito = 'Pick up again';
 $estatus_tipo_pendiente = 'Pendding';
 $estatus_tipo_ordenado = 'Ordered';
 $estatus_tipo_proceso = 'Process';
-$estatus_pedido_preparado = 'Pedido Preparado';
+$estatus_pedido_preparado = 'Sending Supplies';
 $estatus_tipo_ruta = 'En Ruta';
 $estatus_tipo_entregado = 'Surtido';
 

@@ -80,13 +80,18 @@ echo '<table id="mis_pedidos" class="table table-striped table-bordered table-ho
                     			break;
                     			case 1:
                     			$estatus = $estatus_tipo_ordenado;
-                    			$clase_td = 'class="btn-warning"';	
+                    			$clase_td = 'class="btn-primary"';	
                     			break;
                     			case 2:
                     			$estatus = $estatus_pedido_preparado;
                     			$clase_td = 'class="btn-info"';	
                     			break;
                     			case 3:
+                    			
+                    			$estatus = "Partial Delivery";
+                    			$clase_td = 'class="btn-success"';	
+                    			break;
+								case 4:
                     			
                     			$estatus = $estatus_tipo_entregado;
                     			$clase_td = 'class="btn-success"';	
