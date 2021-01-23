@@ -187,8 +187,17 @@ input[type=checkbox]
 		
 		
 		function solicitar_tras_de_rec (folio, id_pedido){
-			//FOLIO es el de la recepcion
-			//ID_PEDIDO es el id del pedido generado por consigna dura
+			var tipo='2';
+		
+			jQuery.ajax({ //
+				type: "POST",
+				url: "data/recepcion_solicitud_tras.php",
+				data: {folio:folio, tipo:tipo, id_pedido:id_pedido},
+				success: function(resultados)
+				{
+					$('#resultados_js').html(resultados);
+				}
+			});
 			
 		};
 		
