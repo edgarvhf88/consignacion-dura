@@ -696,6 +696,21 @@ function requerir_pedido_nef(id_pedido){
 				}
 			});
 	};
+	function guardar_registro_imagen_tras(nombre_imagen)
+	{
+		
+		var id_ped_tras = document.getElementById("select_traspaso").value;
+		$.ajax({
+				type: "post",
+				url: "data/registrar_imagen.php",
+				data: {id_ped_tras:id_ped_tras,nombre_imagen:nombre_imagen},
+				dataType: "html",
+				success:  function (response) {
+					$('#resultados_js').html(response); 
+				
+				}
+			});
+	};
 	function ordenes_cliente(id_cliente)
 	{
 		//var id_inventario = document.getElementById("txt_idinv_correo").value;
@@ -2122,7 +2137,7 @@ function requerir_pedido_nef(id_pedido){
 							</div>
 							<div class="col-md-12 col-sm-12 hidden-md hidden-lg">&nbsp;</div>
 							<div class="col-lg-3 col-md-3 " > 
-								<input type="button" value="Agregar imagen de lista firmada" id="btnsubirimagen" class="btn btn-info subirimagen" style="z-index:5;"/>
+								<input type="button" value="Agregar imagen de lista firmada" id="btn_img_inv" class="btn btn-info subirimagen" style="z-index:5;"/>
 							</div>
 							<div class="col-md-12 col-sm-12 hidden-md hidden-lg">&nbsp;</div>
 							<div  class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="img_registradas"> </div>
@@ -2276,7 +2291,8 @@ function requerir_pedido_nef(id_pedido){
                 				<!-- Footer de la ventana -->
                 				<div class="modal-footer">
                 				 <!-- -->		
-								 <button type="button" class="btn btn-primary" id="btn_subir_imagen">Subir Imagen</button>
+								 <button type="button" class="btn btn-primary" id="btn_subir_imagen_inv">Subir Imagen</button>
+								 <button type="button" class="btn btn-primary" id="btn_subir_imagen_tras">Subir Imagen</button>
                 					<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
 								 
                 				</div>
@@ -2819,10 +2835,17 @@ function requerir_pedido_nef(id_pedido){
 							   
                 });
 				$(".subirimagen").on("click", function(){
-                           var id_inventario = document.getElementById("txt_idinv_correo").value;
+							var id_element = $(this).id();
+							var id_inventario = document.getElementById("txt_idinv_correo").value;
 							$("#modal_subir_imagen").modal("show");
 							$("#div_vista_imagen").html('');
 							$("input[name='file']").val('');
+							
+							
+								$("#btn_subir_imagen_inv").show();
+								$("#btn_subir_imagen_tras").hide();
+							
+							
 							//preparar_correo(id_inventario);
 							
 							   
@@ -2845,11 +2868,40 @@ function requerir_pedido_nef(id_pedido){
 					
 					$("#div_vista_imagen").html('<img src="'+TmpPath+'" style="max-width:500px;">');
 				});
-				$("#btn_subir_imagen").on("click", function(){
+				$("#btn_subir_imagen_inv").on("click", function(){
 					var formData = new FormData($("#formulario")[0]);
 					var ruta = "data/subir_imagen.php";
 					
 					var id_inv = document.getElementById("inpt_id_inventario").value;
+					var imagen = $("input[name='file']").val();
+					//alert(imagen);
+					if (imagen == "")
+					{
+						alert("Seleccione una imagen para subir");
+						$("#file").focus();
+					}
+					else
+					{
+						$.ajax({
+						url: ruta,
+						type: "POST",
+						data: formData,
+						contentType: false,
+						processData:false,
+						success: function(datos)
+						{
+							$("#div_vista_imagen").html(datos);
+						}
+					
+						})
+					}
+					
+				});
+				$("#btn_subir_imagen_tras").on("click", function(){
+					var formData = new FormData($("#formulario")[0]);
+					var ruta = "data/subir_imagen_tras.php";
+					
+					var id_ped_tras = document.getElementById("select_traspaso").value;
 					var imagen = $("input[name='file']").val();
 					//alert(imagen);
 					if (imagen == "")

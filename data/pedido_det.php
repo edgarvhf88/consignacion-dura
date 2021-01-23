@@ -14,10 +14,12 @@ foreach ($display_empresas as $id => $display_name){
 	//echo $id." ** ".id_empresa($_SESSION["logged_user"])."<br />"; 
 };
 $btn_recibir = "";
+$btn_imagen = "";
 if ($tipo_usuario == 3){
 	// vendedor 
 	$Display = 'vendor_style';
-	$btn_recibir = '<input type="button" class="btn btn-info elementos_recibir" value="Recive" id="btn_recibir_tool" onclick="recibir();"/>';
+	$btn_recibir = '<input type="button" class="btn btn-success elementos_recibir" value="Recibir Material" id="btn_recibir_tool" onclick="recibir();"/>';
+	$btn_imagen = '<i class="fa fa-upload btn btn-primary subirimagen2 elementos_recibir" id="btn_img_tras"> Subir imagen </i>' ;
 }
 include("../displays/".$Display.".php");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,7 +49,7 @@ include("../displays/".$Display.".php");
 		  echo 0;
 	  }
      function busca_pedido($id_pedido,$segundos,$folio,$total_pedido,$tipo_usuario){ 
-global $database_conexion, $conex, $folio_tabla_mis_pedidos, $clave_lista_pedido_index, $nombre_articulo_lista_pedido_index, $cantidad_lista_pedido_index, $precio_unitario_lista_pedido_index, $total_lista_pedido_index, $btn_recibir ;
+global $database_conexion, $conex, $folio_tabla_mis_pedidos, $clave_lista_pedido_index, $nombre_articulo_lista_pedido_index, $cantidad_lista_pedido_index, $precio_unitario_lista_pedido_index, $total_lista_pedido_index, $btn_recibir, $btn_imagen ;
 if ($segundos != '')
 {
 	sleep($segundos);
@@ -64,6 +66,7 @@ else
 $select_traspaso ='';
 $cont =0;
 $id_traspaso_mostrar_al_inicio = '';
+$id_tras = '';
 $sql_traspasos = "SELECT folio_traspaso, id_pedido FROM pedido_traspaso WHERE id_pedido_cliente = '$id_pedido' AND estatus = '2'";
 $res_traspasos = mysql_query($sql_traspasos, $conex) or die(mysql_error());
 $total_rows_traspasos = mysql_num_rows($res_traspasos);
@@ -73,7 +76,8 @@ if ($total_rows_traspasos > 0){
 	$select_traspaso = '<select class="select form-control elementos_recibir" id="select_traspaso">';
 	 while($row_traspaso = mysql_fetch_array($res_traspasos,MYSQL_BOTH)) // html de articulos a mostrar
     {
-		if ($cont == 0){ $id_traspaso_mostrar_al_inicio = 'ver_partidas_traspaso('.$row_traspaso['id_pedido'].');'; }
+		if ($cont == 0){ $id_traspaso_mostrar_al_inicio = 'ver_partidas_traspaso('.$row_traspaso['id_pedido'].');';
+		$id_tras = $row_traspaso['id_pedido']; }
 		$cont++;
 		//$lista_traspasos[$row_traspaso['id_pedido']] = $row_traspaso['folio'];
 		$select_traspaso .= '<option value="'.$row_traspaso['id_pedido'].'"> '.$row_traspaso['folio_traspaso'].'</option>';
@@ -81,7 +85,20 @@ if ($total_rows_traspasos > 0){
 	}
 	$select_traspaso .= '</select>';
 }
-
+$cosulta_imagenes = "SELECT * FROM relacion_imagenes WHERE id_docto= '$id_tras' AND tipo_docto='TRAS'";
+		$res_img = mysql_query($cosulta_imagenes, $conex) or die(mysql_error());
+		$total_imgs = mysql_num_rows($res_img);
+		$html_imagenes = '';
+		if ($total_imgs > 0){ // con resultados
+		$html_imagenes = '<h5>Imagenes de traspaso</h5>';
+			while($row_img = mysql_fetch_array($res_img,MYSQL_BOTH)) 
+			{
+				$fecha_subida = ""; //$row_img['fecha_subida'];
+				$src_mostrar = "tras_docs/imagenes/";
+				$ruta = $src_mostrar.$row_img['ruta'];
+				$html_imagenes .= '<div class=""> <div class="topics-list"> <p><img src="'.$ruta.'" width="108" height="88" id="imagen_'.$row_img['id_imagen'].'" class="img-thumbnail imagen_tras"></p> <p><b>'.$fecha_subida.'</b></p>    </div> </div>';	
+			}
+		}
 $ocultar_precio_unitario = '';
 $ocultar_precio_total = '';
 $ocultar_precio_total_global = '';
@@ -158,37 +175,58 @@ $tabla = '<table id="pedido_det" class="table table-striped table-bordered table
 								</td>
 								
 								<td class="col-md-1 " align="right" >
-								'.$btn_recibir.'
+								
 								
 								</td>
 								<td  class="col-md-2 " >
 									<span class="elementos_recibir"> Folio a Recibir </span>'.$select_traspaso.'
 								</td>
-								<td class="col-md-3 col-lg-3" id="">
+								<td class="col-md-2 col-lg-2" id="">
+								<p>'.$btn_imagen.' </p>
+								<p>'.$btn_recibir.'	</p>
+								</td>
+								<td class="col-md-2 col-lg-2" id="">
 								
+								<div id="div_imagenes_tras">'.$html_imagenes.' </div>
 								</td>
 							</tr>
 							</table> </p>';
 							
 											
-                                 echo $cabezera.$tabla.'
+     echo $cabezera.$tabla.'
+						<script>
 
-                                <script>
-
-                                $(document).ready( function () {
-                                    $("#pedido_det").DataTable();
-									'.$ocultar_btn_recibir.'
-									'.$id_traspaso_mostrar_al_inicio.' 
-									$("#select_traspaso").change(function(){
-										var id_traspaso = $(this).val();
-										//alert("id_traspaso = "+id_traspaso);
-										ver_partidas_traspaso(id_traspaso);
-										
-									});
+							$(document).ready( function () {
+                                $("#pedido_det").DataTable();
+								'.$ocultar_btn_recibir.'
+								'.$id_traspaso_mostrar_al_inicio.' 
+								$("#select_traspaso").change(function(){
+									var id_traspaso = $(this).val();
+									//alert("id_traspaso = "+id_traspaso);
+									ver_partidas_traspaso(id_traspaso);
 									
-                                } );
+								});
+								$(".subirimagen2").on("click", function(){
+									
+									var id_ped_tras = document.getElementById("select_traspaso").value;
+									$("#modal_subir_imagen").modal("show");
+									$("#div_vista_imagen").html("");
+									$("input[name=\'file\']").val("");
+									//preparar_correo(id_inventario);
+									
+										$("#btn_subir_imagen_inv").hide();
+										$("#btn_subir_imagen_tras").show();
+									
+						   
+								});
+								$(".imagen_tras").on("click", function(){
+									$("#modal_imagen_tras").modal("show");
+								});
+								
+								
+                            } );
 
-                                </script>
+						</script>
 
                                     ';
 
