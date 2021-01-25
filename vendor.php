@@ -1772,6 +1772,11 @@ function requerir_pedido_nef(id_pedido){
 				<div  class="col-lg-12 table-responsive" id="div_detalle_orden"></div>
 				
 				
+				
+				
+				
+				
+				
 			</div>
 			
 			<div class="col-lg-12" id="div_lista_pedidos" >
