@@ -748,6 +748,8 @@ function requerir_pedido_nef(id_pedido){
 		$("#btn_add_partida").hide();
 		$("#btn_adjuntar_file").hide();
 		$('#div_detalle_orden').html("");
+		cargar_art_orden();
+		
 		
 	};
 	
@@ -861,6 +863,26 @@ function requerir_pedido_nef(id_pedido){
 			}
 		});
 	};
+	
+		function cargar_art_orden()
+	{	
+		
+		$("#modal_cargando").modal("show");
+		var almacen_id = 19;
+		var id_empresa = 11;
+		$.ajax({
+			type: "post",
+			url: "data/select_arti_rem.php",
+			data: {id_empresa:id_empresa,almacen_id:almacen_id},
+			dataType: "html",
+			success:  function (response) {
+			
+			$('#resultados_js').html(response);
+			}
+		});
+	};
+	
+	
 	function cargar_art_pedido_nef()
 	{	
 		
@@ -922,6 +944,24 @@ function requerir_pedido_nef(id_pedido){
 		});
 		
 	};	
+	
+	function cargar_dat_artimicro_allpart()
+	{
+		$("#modal_cargando").modal("show");
+		var id_articulo = document.getElementById("select_arti_rem").value;
+		$.ajax({
+			type: "post",
+			url: "data/dat_art_rem_allpart.php",
+			data: {id_articulo:id_articulo},
+			dataType: "html",
+			success:  function (response) { 
+			$('#resultados_js').html(response);
+			}
+		});
+		
+	};	
+	
+	
 	function cargar_dat_artimicro_nef_asig()
 	{
 		$("#div_datos_artnef").html("");
@@ -1014,6 +1054,50 @@ function requerir_pedido_nef(id_pedido){
 		$("#txtadd_precio_total").val(precio_total);
 	};
 	
+	//**************************************************************************
+	//               :v
+	
+	function agregar_art_orden()
+	{
+		var id_art = document.getElementById("select_arti_rem").value;
+		//var nombre_art = document.getElementById("txtadd_nombre_art_micro").value;
+		var unidades = document.getElementById("txtadd_unidades_allpart").value;
+		var precio = document.getElementById("txtadd_precio_allpart").value;
+		var precio_total = document.getElementById("txtadd_precio_total_allpart").value;
+		var udm = document.getElementById("txtadd_udm_allpart").value;
+	//	alert("id articulo > "+id_art); si es cero debe seleccionar un articulo
+	if (id_art === 0)
+	{
+		alert("Debe seleccionar un articulo para poder agregarlo");
+	}else if (id_art != 0){
+		// funcion para agregar a lista de pedido a surtir para traspaso a alamacen correspondiente
+		if (unidades != "" && unidades > 0)
+		{
+			
+			$.ajax({
+				type: "post",
+				url: "data/add_art_orden.php",
+				data: {id_art:id_art, unidades:unidades,precio:precio,precio_total:precio_total,udm:udm},
+				dataType: "html",
+				success:  function (response) { 
+				$('#resultados_js').html(response);
+				}
+			});
+			$("#txtadd_unidades").val("");
+			$("#txtadd_precio").val("");
+			$("#txtadd_precio_total").val("");
+			$("#td_addartudm").attr("title","");
+			$("#td_addartudm").html("");
+			$("#txtadd_clave_art_micro").val("");
+			$("#select_arti_pedido").focus();
+		}
+		else
+		{
+			alert("Proporcione la cantidad de unidades para traspaso");
+			$("#txtadd_unidades").focus();
+		}
+	}
+	//****************************************************************************
 	function agregar_art_pedido()
 	{
 		var id_art = document.getElementById("select_arti_pedido").value;
@@ -1125,6 +1209,7 @@ function requerir_pedido_nef(id_pedido){
 	function lista_oc_det()
 	{
 		var orden_id = document.getElementById("txt_orden_id").value;
+		cargar_art_orden();
 		$.ajax({
 		type: "post",
 		url: "data/lista_ordenes_det.php",
@@ -1789,11 +1874,90 @@ function requerir_pedido_nef(id_pedido){
 					</table>
 				</div>
 				
+					<div  class="col-lg-12"  style="z-index:9;" id="div_add_art_rem">
+					<table class="table ">
+						<thead>	
+							<tr>
+								<th hidden >
+									Clave
+								</th>
+								<th >
+									Nombre Articulo
+								</th>
+								<th >
+									UDM
+								</th>
+								<th style="width:150px;">
+									Unidades
+								</th>
+								<th style="width:150px;">
+									Precio
+								</th>
+								<th style="width:150px;">
+									Importe Total
+								</th>
+								<th>
+									Agregar
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td hidden >
+							
+								<input type="hidden" id="txtadd_nombre_art_micro_allpart" value="" />
+								<input type="text" id="txtadd_clave_art_micro_allpart" placeholder="Clave" class="form-control" />
+								</td>
+								<td >
+									<div class="col-sm-12" id="div_select_art_rem">
+										<select class="selectpicker form-control form-control-sm" data-live-search="true" id="select_arti_rem" > 
+										</select>
+									</div>
+								</td>
+								<td id="td_addartudm_allpart">
+								UDM
+								</td>
+								<td>
+								<input type="number" id="txtadd_unidades_allpart" min="1"  class="form-control" />
+								</td>
+								<td>
+									<input type="number" id="txtadd_precio_allpart"  class="form-control" />
+								</td>
+								<td id="tdadd_importe_total_allpart">
+								<input type="text" id="txtadd_precio_total_allpart" value="" disabled  class="form-control"/>
+								<input type="hidden" id="txtadd_udm_allpart" value="" />
+								
+								</td>
+								<td id="tdadd_art_rem">
+								<input type="button" id="btn_add_artpedido_allpart" value="+"  class="form-control btn btn-primary" onclick="agregar_art_pedido();"/>
+								</td>
+							</tr>
+							<tr>
+								<td hidden>
+								</td>
+								<td>
+								</td>
+								<td>
+								</td>
+								<td id="td_existencia_art_allpart">
+								</td>
+								<td>
+								</td>
+								<td>
+								</td>
+								<td>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
+				
+				
 				<div  class="col-lg-12 table-responsive" id="div_detalle_orden"></div>
 				
 				
-				
-				
+			
 				
 				
 				
@@ -2965,6 +3129,12 @@ function requerir_pedido_nef(id_pedido){
 					// cargar unidad de medida y precio
 					cargar_dat_artimicro_nef();
 				});
+				
+				$("#select_arti_rem").change(function(){
+					// cargar unidad de medida y precio
+					cargar_dat_artimicro_allpart();
+				});
+			
 				$("#select_arti_pedido_nef_asig").change(function(){
 					// cargar unidad de medida y precio
 					cargar_dat_artimicro_nef_asig();
@@ -2994,6 +3164,7 @@ function requerir_pedido_nef(id_pedido){
 				ocultar_divs_principales();
 		
 				$("#div_datos_ordenes").hide();
+				
 				$("#div_lista_ordenes").hide();
 				varificar_captura(0);
 					

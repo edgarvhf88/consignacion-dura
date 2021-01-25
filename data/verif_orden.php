@@ -75,7 +75,7 @@ function verif_orden($id_usuario_activo,$folio_orden,$fecha_orden,$requisitor,$c
 			{ 
 				if ($almacen_id != "")
 				{
-					$mostrar_btn = '$("#btn_add_partida").show();     $("#btn_guardar_oc").show();    $("#btn_guardar_oc_abierta").show();           $("#btn_adjuntar_file").show();';
+					$mostrar_btn = '$("#btn_add_partida").show(); $("#btn_guardar_oc").show();    $("#btn_guardar_oc_abierta").show();           $("#btn_adjuntar_file").show();';
 				}
 				else
 				{
@@ -127,7 +127,7 @@ function verif_orden($id_usuario_activo,$folio_orden,$fecha_orden,$requisitor,$c
 				//echo '<script> console.log("se inserto inventario_det"); </script>';
 				echo '<script> 
 				$("#btn_cancelar_oc").show();
-			
+				
 				$("#txt_orden_id").val("'.$id_oc.'");
 				$("#td_estatus_oc").html("Capturando");
 				lista_oc_det();
