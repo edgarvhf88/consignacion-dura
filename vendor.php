@@ -1744,6 +1744,8 @@ function requerir_pedido_nef(id_pedido){
 									?>
 									</select>
 								</td>
+								
+								
 								<td id="td_estatus_oc">
 								Sin Guardar - Guardada - Remisionada - Facturada
 								</td>
