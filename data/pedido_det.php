@@ -105,7 +105,7 @@ $ocultar_precio_total_global = '';
 $estatus ='';	
 $ocultar_btn_recibir ='';	
 
-$consulta_lista = "SELECT pd.clave_empresa as clave_empresa, pd.id_articulo as id_articulo, pd.articulo as articulo, pd.precio_unitario as precio_unitario, pd.precio_total as precio_total, pd.cantidad as cantidad, p.estatus as estatus
+$consulta_lista = "SELECT pd.clave_empresa as clave_empresa, pd.id_articulo as id_articulo, pd.articulo as articulo, pd.precio_unitario as precio_unitario, pd.precio_total as precio_total, pd.cantidad as cantidad, pd.surtido as surtido, p.estatus as estatus
 					FROM pedidos_det pd
 					INNER JOIN pedidos p ON p.id = pd.id_pedido
 					WHERE id_pedido = $id_pedido ";
@@ -128,6 +128,7 @@ $tabla = '<table id="pedido_det" class="table table-striped table-bordered table
                                 <th>'.$nombre_articulo_lista_pedido_index.'</th>
                                 <th>'.$cantidad_lista_pedido_index.'</th>
                                 <th class="elementos_recibir">Por Recibir</th>
+                                <th class="elementos_recibidos">Recibidos</th>
                                 <th '.$ocultar_precio_unitario.' >'.$precio_unitario_lista_pedido_index.'</th>
                                 <th '.$ocultar_precio_total.' >'.$total_lista_pedido_index.'</th>
                                 
@@ -145,6 +146,7 @@ $tabla = '<table id="pedido_det" class="table table-striped table-bordered table
                             <td>'.$row2['articulo'].'</td>
                             <td>'.$row2['cantidad'].'</td>
                             <td class="elementos_recibir" id="td_art_'.$row2['id_articulo'].'">'.CantRecibir($row2['id_articulo'],$id_pedido).'</td>
+                            <td class="elementos_recibidos" id="td_recibidos_'.$row2['id_articulo'].'">'.$row2['surtido'].'</td>
                             
                             <td align="right" '.$ocultar_precio_unitario.' >$'.number_format($row2['precio_unitario'],2).' </td>
                             <td align="right" '.$ocultar_precio_total.' >$'.number_format($row2['precio_total'],2).'</td>
@@ -187,7 +189,7 @@ $tabla = '<table id="pedido_det" class="table table-striped table-bordered table
 								</td>
 								<td class="col-md-2 col-lg-2" id="">
 								
-								<div id="div_imagenes_tras">'.$html_imagenes.' </div>
+								<div id="div_imagenes_tras" class="elementos_recibir">'.$html_imagenes.' </div>
 								</td>
 							</tr>
 							</table> </p>';
