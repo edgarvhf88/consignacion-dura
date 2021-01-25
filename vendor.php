@@ -1511,6 +1511,26 @@ function requerir_pedido_nef(id_pedido){
 			}
 		});
 	};
+   function recibir_traspaso()
+	{	
+		var id_ped_tras = document.getElementById("select_traspaso").value;
+		var confirma = confirm("Desea registrar el traspaso recibido?");
+		if (confirma == false){
+			
+		}else{
+			$.ajax({
+				type: "post",
+				url: "data/recibir_traspaso.php",
+				data: {id_ped_tras:id_ped_tras},
+				dataType: "html",
+				success:  function (response) {
+				//$('#select_arti_oc').html(response);
+				$('#resultados_js').html(response);
+				}
+			});
+		}
+			
+	};
    function sin_accion(){
 	  return false;
   };
