@@ -2137,6 +2137,67 @@ else
 return $lista; 
 }
 
+//funciones para traer datos de la base de consigna 
+function lista_articulos_consigna()//todos los articulos de consigna 
+{
+	
+	global $database_conexion, $conex;
+			
+		$consulta = "SELECT id, nombre, clave_microsip FROM articulos";
+		$resultado = mysql_query($consulta, $conex) or die(mysql_error());
+		//$row = mysql_fetch_assoc($resultado);
+		$total_rows = mysql_num_rows($resultado);
+		$lista = array();	
+		$articulo="";
+			while($row = mysql_fetch_array($resultado,MYSQL_ASSOC)) // html de articulos a mostrar
+            {
+				$articulo = $row['nombre'];	
+				$lista[$row['id']] = utf8_decode($row['clave_microsip']).' - '.utf8_encode($articulo);
+			}
+			  return $lista;
+	
+}
+
+function UDMArticulo_dura($id)
+{
+		global $database_conexion, $conex;
+			
+		$consulta = "SELECT unidad_medida FROM articulos WHERE id = '$id'";
+		$resultado = mysql_query($consulta, $conex) or die(mysql_error());
+		//$row = mysql_fetch_assoc($resultado);
+		$total_rows = mysql_num_rows($resultado);
+		$unidad_medida="";
+			while($row = mysql_fetch_array($resultado,MYSQL_ASSOC)) // html de articulos a mostrar
+            {
+				$unidad_medida = $row['unidad_medida'];	
+				
+			}
+			
+			  return $unidad_medida;
+	
+}
+
+
+
+function PrecioArticulo_dura($id)
+{
+		global $database_conexion, $conex;
+			
+		$consulta = "SELECT precio FROM articulos WHERE id = '$id'";
+		$resultado = mysql_query($consulta, $conex) or die(mysql_error());
+		//$row = mysql_fetch_assoc($resultado);
+		$total_rows = mysql_num_rows($resultado);
+		$precio="";
+			while($row = mysql_fetch_array($resultado,MYSQL_ASSOC)) // html de articulos a mostrar
+            {
+				$precio = $row['precio'];	
+				
+			}
+			
+			  return $precio;
+	
+}
+
 ?>
 
 

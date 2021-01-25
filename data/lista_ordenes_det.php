@@ -20,7 +20,7 @@ global  $conex;
 		oc_det.precio_unitario as precio_unitario,
 		oc_det.precio_total as precio_total
 					FROM ordenes_det oc_det 
-					INNER JOIN articulos art ON art.id = oc_det.id_articulo
+					INNER JOIN articulos art ON art.id = oc_det.articulo_id
 					WHERE oc_det.id_oc = '$orden_id' 
 					";			
 		
