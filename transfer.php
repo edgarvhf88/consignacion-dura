@@ -2133,7 +2133,7 @@ var inp=inps[i];
 							</div>
 							<div class="col-md-12 col-sm-12 hidden-md hidden-lg">&nbsp;</div>
 							<div class="col-lg-3 col-md-3 " > 
-								<input type="button" value="Agregar imagen de lista firmada" id="btnsubirimagen" class="btn btn-info subirimagen" style="z-index:5;"/>
+								<input type="button" value="Agregar imagen de lista firmada" id="btn_img_inv" class="btn btn-info subirimagen" style="z-index:5;"/>
 							</div>
 							<div class="col-md-12 col-sm-12 hidden-md hidden-lg">&nbsp;</div>
 							<div  class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="img_registradas"> </div>
