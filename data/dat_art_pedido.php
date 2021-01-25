@@ -3,7 +3,7 @@
 		$id_articulo = $_POST['id_articulo']; // Articulo_id microsip
 		
 	  if ($id_articulo != ""){
-		$precio = PrecioArticulo($id_articulo);
+		$precio = "";//PrecioArticulo($id_articulo);
 		$udm = UDMArticulo($id_articulo);
 		$clave = str_replace('"','\"', ClaveArticulo($id_articulo));;
 		$nombre = str_replace('"','\"',NombreArticulo($id_articulo));

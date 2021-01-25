@@ -19,7 +19,7 @@ if ($tipo_usuario == 3){
 	// vendedor 
 	$Display = 'vendor_style';
 	$btn_recibir = '<input type="button" class="btn btn-success elementos_recibir" value="Recibir Material" id="btn_recibir_tool" onclick="recibir();"/>';
-	$btn_imagen = '<i class="fa fa-upload btn btn-primary subirimagen2 elementos_recibir" id="btn_img_tras"> Subir imagen </i>' ;
+	$btn_imagen = '<i class="fa fa-upload btn btn-primary subirimagen2 elementos_recibir" id="btn_img_tras" style="font: arial;"> Subir imagen </i>' ;
 }
 include("../displays/".$Display.".php");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
