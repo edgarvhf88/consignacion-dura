@@ -23,7 +23,7 @@
 global $database_conexion, $conex;
 
 $pedidos_traspaso = "
-SELECT p.fecha_pedido_oficial as fecha_pedido_oficial, p.id_pedido as id_pedido, p.fecha_entrega as fecha_entrega, p.folio as folio, p.requisitor as requisitor, p.total_pedido as total_pedido, p.estatus as estatus, p.id_usuario as id_requi, p.folio_traspaso as folio_traspaso, user.nombre as nombre_r, user.apellido as apellido_r, alm.almacen as almacen, pp.orden_compra as orden_compra
+SELECT p.fecha_pedido_oficial as fecha_pedido_oficial, p.id_pedido as id_pedido, p.fecha_entrega as fecha_entrega, p.folio as folio, p.requisitor as requisitor, p.total_pedido as total_pedido, p.estatus as estatus, p.id_usuario as id_requi, p.folio_traspaso as folio_traspaso, user.nombre as nombre_r, user.apellido as apellido_r, alm.almacen as almacen, pp.folio as folio_cliente
 FROM pedido_traspaso p 
 LEFT JOIN almacenes alm on alm.almacen_id = p.almacen_id
 LEFT JOIN pedidos pp on pp.id = p.id_pedido_cliente
@@ -41,10 +41,12 @@ if ($total_pednef > 0){ // con resultados
 echo '<table id="lista_pedidos_traspaso" class="table table-striped table-bordered table-hover table-responsive display">
                     	<thead>
                     		<tr class="info">
-                    			<th>Vendedor</th>
+								<th>Folio</th>
+                    			<th hidden>Vendedor</th>
+                    		    <th>#Requi</th>
                     		    <th>Requisitor</th>
                     		    <th>Almacen</th>
-                    		    <th>Folio</th>
+                    		    
                     		    <th>Fecha Requerido</th>
                     		    <th>Fecha Entrega</th>
                     		   
@@ -67,6 +69,7 @@ echo '<table id="lista_pedidos_traspaso" class="table table-striped table-border
                    {
                    $id_pedido = $row2['id_pedido'];
 				   $folio = $row2['folio'];
+				   $folio_cliente = $row2['folio_cliente'];
 				   $total_pedido = $row2['total_pedido'];
 				   
 				   
@@ -112,12 +115,12 @@ echo '<table id="lista_pedidos_traspaso" class="table table-striped table-border
 				
                    	
                     echo ' <tr >
-                   	
-        <td onclick="detalle_pedido_tras('.$id_pedido.','.$folio.','.$total_pedido.');">'.$vendedor.'
+        <td onclick="detalle_pedido_tras('.$id_pedido.','.$folio.','.$total_pedido.');">'.$folio.'</td>           	
+        <td hidden>'.$vendedor.'
 		<input type="hidden" id="txt_folio_pedidonef_'.$id_pedido.'" value="'.$folio.'"/></td>
+		<td> '.$folio_cliente.'</td>
         <td onclick="detalle_pedido_tras('.$id_pedido.','.$folio.','.$total_pedido.');">'.$requisitor.'</td>
         <td onclick="detalle_pedido_tras('.$id_pedido.','.$folio.','.$total_pedido.');">'.$almacen.'</td>
-        <td onclick="detalle_pedido_tras('.$id_pedido.','.$folio.','.$total_pedido.');">'.$folio.'</td>
         <td onclick="detalle_pedido_tras('.$id_pedido.','.$folio.','.$total_pedido.');">'.$row2['fecha_pedido_oficial'].'</td>
         <td onclick="detalle_pedido_tras('.$id_pedido.','.$folio.','.$total_pedido.');">'.$row2['fecha_entrega'].'</td>
     
