@@ -1628,6 +1628,19 @@ function requerir_pedido_nef(id_pedido){
 		}
 			
 	};
+	function validar_pedido(id_pedido){
+		$.ajax({
+				type: "post",
+				url: "data/validar_pedido.php",
+				data: {id_pedido:id_pedido},
+				dataType: "html",
+				success:  function (response) {
+				//$('#select_arti_oc').html(response);
+				$('#resultados_js').html(response);
+				}
+			});
+		
+	}
    function sin_accion(){
 	  return false;
   };

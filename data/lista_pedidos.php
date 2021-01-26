@@ -41,10 +41,10 @@ if ($total_relaciones > 0){ // con resultados
 echo '<table id="lista_pedidos" class="table table-striped table-bordered table-hover table-responsive display">
                     	<thead>
                     		<tr class="info">
-                    										<th>Requisitor</th>
+                    										<th>Folio</th>
+                    		                                <th>Requisitor</th>
                     		                                <th>Empresa</th>
                     		                                <th>Almacen</th>
-                    		                                <th>Folio</th>
                     		                                <th>Fecha</th>
                     		                                <th>Ord. de Compra</th>
                     		                                <th>Total</th>
@@ -81,11 +81,25 @@ echo '<table id="lista_pedidos" class="table table-striped table-bordered table-
 									break;
 								case 2:			//// en estado "En proceso"
 									$atributo = 'disabled';
-									$estatus = '<div class="btn btn-info btn-md" >Sending Supplies </div>';
+									$estatus = '<div class="btn btn-warning btn-md btn-block" >Sending Supplies </div>';
 									break;
-								case 3: // en estado "Surtido" esto cuando ya se complete la recepcion al almacen correspondiente
+								case 3: // surtido parcial
 									$atributo = 'disabled';
-									$estatus = '<div class="btn btn-success btn-md" >Delivered </div>';
+									$estatus = '<div class="dropdown">
+									<button class="btn btn-info btn-block dropdown-toggle btn_estatus" type="button" id="btnestatus_'.$row2['id_pedido'].'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="btnestatus_'.$row2['id_pedido'].'">
+										Partial Delivery
+										<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+									<li class="btn btn-info btn-block btn_solicitud_traspaso" id="btn_solicitudtraspaso_'.$row2['id_pedido'].'" onclick="solicitar_traspaso('.$row2['id_pedido'].');">Solicitar Traspaso</li>
+									<li class="btn btn-primary btn-block btn_pedido_nef" id="btn_realizarpedidonef_'.$row2['id_pedido'].'" onclick="requerir_pedido_nef('.$row2['id_pedido'].');" >Realizar Pedido NEF</li>
+									</ul>
+									</div>';
+									break;
+								
+								case 4: // en estado "Surtido" esto cuando ya se complete la recepcion al almacen correspondiente
+									$atributo = 'disabled';
+									$estatus = '<div class="btn btn-success btn-md btn-block" >Delivered </div>';
 									break;
 								}
 							
@@ -115,27 +129,27 @@ echo '<table id="lista_pedidos" class="table table-striped table-bordered table-
 							
                     			
                     		 echo ' <tr >
-                    			
+                    		<td onclick="detalle_pedido('.$row2['id_pedido'].','.$row2['folio'].','.$row2['total_pedido'].');">'.$row2['folio'].'</td>	
                     		<td onclick="detalle_pedido('.$row2['id_pedido'].','.$row2['folio'].','.$row2['total_pedido'].');">'.Nombre($row2['id_requi']).'
 							<input type="hidden" id="txt_folio_pedido_'.$row2['id_pedido'].'" value="'.$row2['folio'].'"/></td>
                     		<td onclick="detalle_pedido('.$row2['id_pedido'].','.$row2['folio'].','.$row2['total_pedido'].');">'.EMPRESA_NOMBRE($row2['id_empresa']).'</td>
                     		<td onclick="detalle_pedido('.$row2['id_pedido'].','.$row2['folio'].','.$row2['total_pedido'].');">'.$almacen.'</td>
-                    		<td onclick="detalle_pedido('.$row2['id_pedido'].','.$row2['folio'].','.$row2['total_pedido'].');">'.$row2['folio'].'</td>
+                    		
                     		<td onclick="detalle_pedido('.$row2['id_pedido'].','.$row2['folio'].','.$row2['total_pedido'].');">'.$row2['fecha_pedido_oficial'].'</td>
                     		<td onclick="detalle_pedido('.$row2['id_pedido'].','.$row2['folio'].','.$row2['total_pedido'].');">'.$row2['orden_compra'].'</td>
                     		<td align="right" onclick="detalle_pedido('.$row2['id_pedido'].','.$row2['folio'].','.$row2['total_pedido'].');">$'.number_format($row2['total_pedido'],2).'</td>
-                    		<td align="right" id="td_estatus_'.$row2['id_pedido'].'">'.$estatus.'</td>
+                    		<td align="right" id="td_estatus_'.$row2['id_pedido'].'" >'.$estatus.'</td>
                     		<td align="center" style="width:120px;" hidden>
                     
 							'.$nombre_recolector.'
                     		</td>
-							<td align="center" style="width:120px;">	
+							<td align="center" style="width:120px;" onclick=" validar_pedido('.$row2['id_pedido'].');">	
 								'.$folios_traspasos.'
 							</td>	
                     		</tr>';
                     							
                     		
-                    		
+                    		/// validar_pedido('.$row2['id_pedido'].'); // funcion para validar pedidos
                     							
                     		}				
                     		 echo ' </tbody></table>';
@@ -197,7 +211,7 @@ echo '<table id="lista_pedidos" class="table table-striped table-bordered table-
 		
         $("#lista_pedidos").DataTable(
 		{
-				"order": [[ 2, "desc" ]]
+				//"order": [[ 2, "desc" ]]
 		});
 		
 	});

@@ -1342,6 +1342,54 @@ function CantRecibir($id_articulo,$id_pedido_cliente){
 	
 	
 }
+function ValidarPedidoCliente($id_pedido){
+	global $conex;
+	$consulta = "SELECT pt.cantidad as cantidad, pt.surtido as surtido
+				FROM pedidos_det pt 
+				WHERE pt.id_pedido = $id_pedido";
+	$res = mysql_query($consulta, $conex) or die(mysql_error());
+	$total = mysql_num_rows($res);
+	$completo = 0;
+	$estatus = 0;
+	$cant_total = 0;
+	if ($total > 0){
+		while($row = mysql_fetch_array($res,MYSQL_BOTH)) // html de articulos a mostrar
+		{
+			$cant_total += $row['cantidad'];
+			$resta = $row['cantidad'] - $row['surtido'];
+			$completo += $resta;
+		}
+		if ($completo == 0){  // pedido completado 4
+			$estatus = 4;
+			
+		}else if($completo <> 0){  // pedido incompleto 3
+			// verifica si existen mas traspasos por recibir
+			$consulta2 = "SELECT *
+				FROM pedido_traspaso 
+				WHERE id_pedido_cliente = '$id_pedido' and estatus='2'";
+			$res2 = mysql_query($consulta2, $conex) or die(mysql_error());
+			$total2 = mysql_num_rows($res2);
+			if ($total2 > 0){
+				$estatus = 2;
+			}else{
+				if ($cant_total == $completo){
+				$estatus = 1;
+				}else{
+				$estatus = 3;
+				}
+			}
+			
+			
+			
+		}
+		$up_estatus = "UPDATE pedidos SET estatus='$estatus' WHERE id='$id_pedido'";
+			if (mysql_query($up_estatus, $conex) or die(mysql_error())){
+			/* 	echo '<script>console.log("canttotal: "+'.$cant_total.'); 
+				console.log("resta: "+'.$completo.'); </script>'; */
+			}
+	}
+	
+}
 ////////////////////////////******* funciones a base de datos firebird   ALLPART    ************************
 ///////// FUNCION PARA OBTENER UNIDAD DE CLAVE
 function Articulo_Id($clave_articulo){
