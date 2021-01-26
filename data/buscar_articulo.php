@@ -45,6 +45,24 @@ function cantidad_pedidas($id_articulo){
 			$cantidad = $row['cantidad'];
 		}  
 		return $cantidad;
+	}
+function cantidad_traspaso($id_articulo){
+		global $conex;
+				
+		$consulta = "SELECT SUM(pd.cantidad) as cantidad
+		FROM pedido_traspaso_det pd
+		INNER JOIN pedido_traspaso p on p.id_pedido = pd.id_pedido
+		WHERE pd.id_articulo = '".$id_articulo."' AND p.estatus = '2' ";  // estatus diferente a abieto y surtido
+		$resultado = mysql_query($consulta, $conex) or die(mysql_error());
+		$row = mysql_fetch_assoc($resultado);
+		$total_rows = mysql_num_rows($resultado);
+		$cantidad = 0; // la cantidad que esta en pedidos ordenados y en proceso
+		
+		if ($total_rows > 0)
+		{ // con resultados --> actualiza el total
+			$cantidad = $row['cantidad'];
+		}  
+		return $cantidad;
 	}	
 	
      function busca_articulo($valor,$id_empresa_user_activo, $id_categoria, $almacen_id, $tipo_usuario){ 
@@ -138,7 +156,7 @@ $ruta = "assets/images/".$src_img;	}
 
 if ($row['existencia'] != ""){
 	
-$existencia = $row['existencia']; // - cantidad_pedidas($row['id']);	
+$existencia = $row['existencia'] - cantidad_traspaso($row['id']);	
 $existencia = number_format($existencia, 2);		
 }else{ $existencia = "0";	}
 if ($tipo_usuario == 4){

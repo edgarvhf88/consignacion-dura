@@ -41,7 +41,7 @@ $consulta = "SELECT p.estatus as estatus, p.orden_compra as orden_compra, p.id a
 			LEFT JOIN centro_costos cc on cc.id_cc = p.id_cc
 			LEFT JOIN usuarios user on user.id = p.id_recolector
 			LEFT JOIN almacenes alm on alm.almacen_id = p.id_sucursal
-			WHERE p.id_usuario = '$id_usuario' and p.id_empresa = '$id_empresa' and p.estatus <> '$proceso' and p.estatus <> '$pausada' and p.estatus <> '$pend_aut' 
+			WHERE p.id_usuario = '$id_usuario' and p.id_empresa = '$id_empresa' and p.estatus <> '$proceso' and p.estatus <> '$pausada' 
 			ORDER BY p.folio DESC";
 $resultado = mysql_query($consulta, $conex) or die(mysql_error());
 //$row = mysql_fetch_assoc($resultado);
@@ -84,16 +84,16 @@ echo '<table id="mis_pedidos" class="table table-striped table-bordered table-ho
                     			break;
                     			case 2:
                     			$estatus = $estatus_pedido_preparado;
-                    			$clase_td = 'class="btn-info"';	
+                    			$clase_td = 'class="btn-warning"';	
                     			break;
                     			case 3:
                     			
                     			$estatus = "Partial Delivery";
-                    			$clase_td = 'class="btn-success"';	
+                    			$clase_td = 'class="btn-info"';	
                     			break;
 								case 4:
                     			
-                    			$estatus = $estatus_tipo_entregado;
+                    			$estatus = "Delivery";
                     			$clase_td = 'class="btn-success"';	
                     			break;
                     		}

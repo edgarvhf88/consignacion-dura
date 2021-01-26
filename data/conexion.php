@@ -1461,7 +1461,7 @@ $existencia = str_replace(",","",$existencia);
 	
 return $existencia;
 }
-function MinMaxReorden($id){
+function MinMaxReorden($id,$almacen_id){
 	global $con_micro;		
 	$sql_existencia = "SELECT 
 		NIVA.INVENTARIO_MAXIMO AS MAXIMO,
@@ -1470,7 +1470,7 @@ function MinMaxReorden($id){
 	FROM NIVELES_ARTICULOS NIVA
 		
 	WHERE (NIVA.ARTICULO_ID = '$id')
-	AND (NIVA.ALMACEN_ID = '390226')";
+	AND (NIVA.ALMACEN_ID = '$almacen_id')";
 
 // ALMACEN STARKEY 390226
 $consulta = $con_micro->prepare($sql_existencia);
@@ -1508,7 +1508,7 @@ return $valor;
 function PrecioArticulo($id){
 	global $con_micro;		
 	$sql_precio = "SELECT 
-		PRE_ART.PRECIO AS PRECIO, PRE_ART.MONEDA_ID AS MONEDA_ID
+	PRE_ART.PRECIO AS PRECIO, PRE_ART.MONEDA_ID AS MONEDA_ID
 	FROM PRECIOS_ARTICULOS PRE_ART
 	WHERE (PRE_ART.ARTICULO_ID = '$id')
 	AND (PRE_ART.PRECIO_EMPRESA_ID = '42')";
@@ -1520,10 +1520,10 @@ $consulta->setFetchMode(PDO::FETCH_OBJ);
 if (!$consulta){
  //echo "sin resultados";
 	 exit;}	
-	 $sql_tipocambio = "SELECT *
-  FROM HISTORIA_CAMBIARIA
- WHERE MONEDA_ID = '41560'
- ORDER BY FECHA ASC";
+	 $sql_tipocambio = "SELECT H.TIPO_CAMBIO
+  FROM HISTORIA_CAMBIARIA H
+ WHERE (H.MONEDA_ID = '2770')
+ ORDER BY H.FECHA ASC";
   // Dolares = 41560
 $consulta_cambio = $con_micro->prepare($sql_tipocambio);
 $consulta_cambio->execute();
@@ -1544,7 +1544,7 @@ $precio = 0;
 while($row_exis=$consulta->fetch())	
 {
 	
-if ($row_exis->MONEDA_ID == '41560'){
+if ($row_exis->MONEDA_ID == '2770'){
 	
 	$precio = $tipocambio * $row_exis->PRECIO;
 }else {
@@ -1661,9 +1661,9 @@ function ObtenerFolioTraspaso(){
 global $con_micro;
 $folio_siguiente = "";	
 $valor = 36; // ID DE CONCEPTO TRASPASO SALIDA
-$sql = "SELECT DI.SIG_FOLIO AS SIG_FOLIO	
-FROM CONCEPTOS_IN DI
-WHERE (DI.CONCEPTO_IN_ID = '".$valor."')";
+$sql = "SELECT DI.CONSECUTIVO AS CONSECUTIVO	
+FROM FOLIOS_CONCEPTOS DI
+WHERE (DI.CONCEPTO_ID = '".$valor."')";
 
 $consulta = $con_micro->prepare($sql);
 $consulta->execute();
@@ -1671,7 +1671,7 @@ $consulta->setFetchMode(PDO::FETCH_OBJ);
 $row_result = $consulta->fetch(PDO::FETCH_ASSOC);
 if (!$consulta){
 	 	 exit;}	
-$folio_siguiente = $row_result['SIG_FOLIO'];
+$folio_siguiente = $row_result['CONSECUTIVO'];
 return $folio_siguiente;
 }
 function ObtenerFolio(){ 
@@ -1739,6 +1739,20 @@ if (!$consulta){
 	 exit;}	
 $docto_ve_id = $row_result['DOCTO_VE_ID'];
 return $docto_ve_id;
+}
+function Sucursal_Allpart(){ 
+global $con_micro;
+
+$sql = "SELECT SUC.SUCURSAL_ID AS SUCURSAL_ID	
+FROM SUCURSALES SUC";
+$consulta = $con_micro->prepare($sql);
+$consulta->execute();
+$consulta->setFetchMode(PDO::FETCH_OBJ);
+$row_result = $consulta->fetch(PDO::FETCH_ASSOC);
+if (!$consulta){
+	 exit;}	
+$SUCURSAL_ID = $row_result['SUCURSAL_ID'];
+return $SUCURSAL_ID;
 }
 ///////// FUNCION PARA OBTENER Lista da almacenes miscrosip
 function lista_almacenes_microsip(){

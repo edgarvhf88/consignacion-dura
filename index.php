@@ -1578,7 +1578,7 @@ function ver_partidas_traspaso(id_pedido_traspaso)
 						buscar();
 					} 
 				});
-				
+				buscar();
 				
 				//cargar_push();
 				
