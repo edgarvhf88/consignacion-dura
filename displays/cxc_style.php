@@ -53,12 +53,7 @@ $menu_bar = '<ul class="nav navbar-nav navbar-right ">
                     </a>
 					
                 </li> 
-
-				<li  style="">
-                    <a href="#" style="z-index:10;" onclick="lista_traspasos();">
-                      <span class="fa fa-file" aria-hidden="true"></span>  Traspasos
-                    </a>
-				</li>					
+					
 				<!-- -->
                
                 <li class="dropdown" style="z-index:11; ">

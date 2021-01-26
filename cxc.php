@@ -113,6 +113,22 @@ include("displays/".$Display.".php");
 			});
 	};
 	
+	function buscar_facturas(folio)
+	{
+		var tipo=3;
+		jQuery.ajax({ //
+				type: "POST",
+				url: "data/search_next_docto.php",
+				data: {folio:folio, tipo:tipo},
+				success: function(resultados)
+				{
+				$("#resultados_js").html(resultados);	
+					
+				}
+			});
+		
+	};
+	
 	function lista_traspasos(){
 		ocultar_divs();
 		$("#modal_cargando").modal("show");	
@@ -194,6 +210,36 @@ include("displays/".$Display.".php");
     });
 		
 	};	
+	
+	function detalle_orden (id){
+		jQuery('#orden_detalle').modal('show', {backdrop: 'static'});
+			
+			jQuery.ajax({ //
+				type: "POST",
+				url: "data/detalle_orden_cliente.php",
+				data: {id:id},
+				success: function(resultados)
+				{
+					jQuery('#orden_detalle .modal-body').html(resultados);
+				}
+			});
+		};
+		
+		function remision_allpart (id){
+		
+			
+			jQuery.ajax({ //
+				type: "POST",
+				url: "data/insertar_remision_allpart.php",
+				data: {id:id},
+				success: function(resultados)
+				{
+					$('#resultados_js').html(resultados);
+				}
+			});
+		};
+		
+		
 	function act_fecha_periodo()
 	{
 		var fecha_ini =  document.getElementById("datepicker_ini").value;	
@@ -278,13 +324,7 @@ include("displays/".$Display.".php");
 			
 		</div>
 		<div class="col-lg-12"  id="div_ordenes_principal">
-			<div class="col-lg-12 clearfix "  id="" >	
-				<ul class="nav nav-pills nav-justified opcoc" >
-					<li name="opciones_oc" id="li_oc_abiertas" role="presentation" border-radius ><a href="#" id="a_oc_abiertas" class="opc_oc">OC Abiertas</a></li>
-					<li id="li_oc_todas"  name="opciones_oc" role="presentation" class="active"><a href="#"  id="a_oc_todas" class="opc_oc active">Todas</a></li>
-					<li id="li_oc_cerradas"  name="opciones_oc" role="presentation"><a href="#"  id="a_oc_cerradas" class="opc_oc">OC Cerradas</a></li>
-				</ul>
-			</div>
+			
 			
 			<div class="col-lg-12">&nbsp;</div>
 			<!--<div class="col-lg-12 clearfix"  id="div_ord_nav">	

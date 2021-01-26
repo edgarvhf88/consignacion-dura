@@ -38,9 +38,9 @@ $docto_ve_id = $row_result['DOCTO_VE_ID'];
 return $docto_ve_id;
 }
 
-if ((isset($_POST['id_orden'])) && ($_POST['id_orden'] != "")){
+if ((isset($_POST['id'])) && ($_POST['id'] != "")){
 	// datos de la orden
-	$id_orden = $_POST['id_orden'];
+	$id_orden = $_POST['id'];
 		//$fecha_actual = date("Y-m-d H:i:s");
 		$fecha_actual = date("d.m.Y");
 		$hora_actual = date("H:i:s");
@@ -53,12 +53,12 @@ if ((isset($_POST['id_orden'])) && ($_POST['id_orden'] != "")){
 	$cliente_id = 4111; //cliente_id de AllPart matamoros
 	$clave_cliente = "DURA";
 	$vendedor_id = 3628;  //// VENDEDOR ALEJANDRO GARCIA
-	$cond_pago_id = 1624; // 30 dias de credito para 0 dias = 209
+	$cond_pago_id = 1680; // 30 dias de credito para 0 dias = 209
 	$dir_cli_id = 4113; // direccion 
 	$dir_consig_id = 4113; // direccion 
 	$moneda_id = 1; // MXN
 	$tipo_docto = "R"; // PEDIDO
-	$folio = ObtenerFolioPed(); // FOLIO CONSECUTIVO desde tabla
+	$folio = ObtenerFolioRem(); // FOLIO CONSECUTIVO desde tabla
 	$folio_cosecutivo = $folio;// FOLIO CONSECUTIVO para sumarle uno y actualizar la tabla de los folios
 	$folio_RemAllpart = $folio;// FOLIO Pedido NEF para registrar en el sistema y relacionarlo
 	$folio = Format9digit($folio);
@@ -75,7 +75,7 @@ if ((isset($_POST['id_orden'])) && ($_POST['id_orden'] != "")){
 	//// VERIFICAR SI EXISTEN ARTICULOS EN LA LISTA QUE NO TIENEN ID_MICROSIP -> =""
 	$sql_valida_idmicrosip = "SELECT *
 					FROM ordenes_det od
-					INNER JOIN articulos a ON a.id = od.id_articulo
+					INNER JOIN articulos a ON a.id = od.articulo_id
 					WHERE od.id_oc = '$id_orden' AND a.id_microsip='' ";			
 	$res_val = mysql_query($sql_valida_idmicrosip, $conex) or die(mysql_error());
 	$rowa_val = mysql_num_rows($res_val);
@@ -88,10 +88,10 @@ if ((isset($_POST['id_orden'])) && ($_POST['id_orden'] != "")){
 	}
 	/////////////--------------///////////////------////////////-----/////////////////////////		
 	
-	$consulta_pedido = "SELECT od.almacen_id as almacen_id, od.id_pedido_cliente as id_pedido_cliente, alm.almacen as almacen, od.total_pedido as total_pedido
+	$consulta_pedido = "SELECT od.almacen_id as almacen_id, alm.almacen as almacen, od.total as total, od.folio as folio
 						FROM ordenes od
 						INNER JOIN almacenes alm ON alm.almacen_id = od.almacen_id
-						WHERE od.id_oc = '$id_oc'";
+						WHERE od.id_oc = '$id_orden'";
 	$resultado_pedido = mysql_query($consulta_pedido, $conex) or die(mysql_error());
 	$row_p = mysql_fetch_assoc($resultado_pedido);
 	$total_rows_p = mysql_num_rows($resultado_pedido);
@@ -102,8 +102,8 @@ if ((isset($_POST['id_orden'])) && ($_POST['id_orden'] != "")){
 		
 		$orden_compra = $row_p['folio'];
 		$almacen_id = $row_p['almacen_id'];
-		$importe_neto = $row_p['total_pedido'];
-		$total_impuestos = $row_p['total_pedido'] * 0.08; 
+		$importe_neto = $row_p['total'];
+		$total_impuestos = $row_p['total'] * 0.08; 
 		
 		$insertar = "INSERT INTO DOCTOS_VE 
 		(DOCTO_VE_ID, ALMACEN_ID, SUCURSAL_ID, CLIENTE_ID, CLAVE_CLIENTE, COND_PAGO_ID, DIR_CLI_ID, DIR_CONSIG_ID, MONEDA_ID, TIPO_DOCTO, FOLIO, FECHA, HORA, ESTATUS, ORDEN_COMPRA, IMPORTE_NETO, TOTAL_IMPUESTOS, SISTEMA_ORIGEN, TIPO_DSCTO, VENDEDOR_ID) VALUES (:docto_id,:almacen_id,:sucursal_id,:cliente_id,:clave_cliente,:cond_pago_id,:dir_cli_id,:dir_consig_id,:moneda_id,:tipo_docto,:folio,:fecha,:hora,:estatus,:orden_compra,:importe_neto,:total_impuestos,:sistema_origen,:tipo_dscto,:vendedor_id)";
@@ -153,10 +153,17 @@ if ((isset($_POST['id_orden'])) && ($_POST['id_orden'] != "")){
 	
 			//articulo
 			/// inserta partidas de de la orden
-			$consulta_det = "SELECT = pd.cantidad as cantidad, pd.precio_unitario as precio_unitario, pd.precio_total as precio_total, pd.unidad_medida as unidad_medida, pd.id_microsip as id_microsip	
-			FROM ordenes pd, a.clave_microsip as clave_microsip
-			inner join articulos art on art.id_microsip = pd.id_microsip
-			WHERE pd.id_oc = '$id_oc'";			
+			$consulta_det = "
+			SELECT  pd.cantidad as cantidad, 
+			pd.precio_unitario as precio_unitario, 
+			pd.precio_total as precio_total, 
+			pd.udm as unidad_medida, 
+			art.id_microsip as id_microsip, 
+			art.clave_microsip as clave_microsip
+			
+			FROM ordenes_det pd
+			inner join articulos art on art.id = pd.articulo_id
+			WHERE pd.id_oc = '$id_orden'";			
 			$resultado = mysql_query($consulta_det, $conex) or die(mysql_error());
 			$total_rows = mysql_num_rows($resultado);
 			
@@ -181,7 +188,7 @@ if ((isset($_POST['id_orden'])) && ($_POST['id_orden'] != "")){
 					$insertar_det = "INSERT INTO DOCTOS_VE_DET (DOCTO_VE_DET_ID, DOCTO_VE_ID, CLAVE_ARTICULO, ARTICULO_ID, UNIDADES, UNIDADES_A_SURTIR, PRECIO_UNITARIO, PRECIO_TOTAL_NETO, POSICION) VALUES (:docto_id,:docto_ve_id,:clave_articulo,:articulo_id,:unidades,:unidades_a_surtir,:precio_unitario,:precio_total_neto, :posicion)";
 					
 					try {
-					$query_insert_det = $con_micro_nef->prepare($insertar_det);
+					$query_insert_det = $con_micro->prepare($insertar_det);
 					$query_insert_det->bindParam(':docto_id', $docto_id, PDO::PARAM_INT);
 					$query_insert_det->bindParam(':docto_ve_id', $docto_ve_id, PDO::PARAM_INT);
 					$query_insert_det->bindParam(':clave_articulo', $clave_articulo, PDO::PARAM_STR, 20);
@@ -245,7 +252,7 @@ if ((isset($_POST['id_orden'])) && ($_POST['id_orden'] != "")){
 				$update_folio = "UPDATE FOLIOS_VENTAS SET CONSECUTIVO = :consecutivo WHERE FOLIO_VENTAS_ID = '".$folio_ventas_id."' ";
 		
 				try {
-				$query_update_folio = $con_micro_nef->prepare($update_folio);
+				$query_update_folio = $con_micro->prepare($update_folio);
 				$query_update_folio->bindParam(':consecutivo', $consecutivo, PDO::PARAM_STR, 9);
 				$query_update_folio->execute();
 				} catch (PDOException $e) {
@@ -263,12 +270,14 @@ if ((isset($_POST['id_orden'])) && ($_POST['id_orden'] != "")){
 				}
 				//***/**/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/**/*/*/*/
 				//// actualiza folio de pedion en tabla de pedidos en sistema consigna
-				$update_ped_folio = "UPDATE pedido_nef SET folio_pedido_microsip='$folio_RemAllpart' WHERE id_pedido='$id_pedido'";
+				$folio_remision_guardar=str_replace(",","",number_format($folio,0));
+				$update_ped_folio = "UPDATE ordenes SET folio_remision='$folio_remision_guardar', estatus='2' WHERE id_oc='$id_orden'";
 				if (mysql_query($update_ped_folio, $conex) or die(mysql_error()))
 				{
 				echo '<script> 
+				$("#orden_detalle").modal("hide");
 						setTimeout(function(){
-							lista_pedidos_nef();
+							lista_ordenes_cxc();
 						},1000,"JavaScript");   </script>';
 				
 				}

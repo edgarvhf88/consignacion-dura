@@ -157,6 +157,26 @@ echo '
 			$estatus = "Parcial";
 		}
 		
+		if($folio_remision != "" and $folio_factura =="")
+		{
+			$rowfacturar ='<div class="dropdown">
+						<button class="btn btn-danger btn-block dropdown-toggle btn_estatus" onclick="buscar_facturas('.$folio_remision.');" type="button" id="btnestatus_1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Factura
+						</button>
+				</div>';
+		}
+		else 
+		{
+			if($folio_factura != "" ){
+			$folio_factura_sin = str_replace("FD","", $folio_factura);
+			$folio_factura_sin = str_replace(",","", number_format($folio_factura_sin,0));
+			$folio_factura_sin = 'FD'.$folio_factura_sin;
+			$rowfacturar = $folio_factura_sin;}
+			else {$rowfacturar = $folio_factura;}
+			
+		}
+		
+		
 		echo '<tr class="" title="">
 		
 		<td class="elemen_reg_ord" id="tdalmac_'.$id_oc.'">'.$almacen.'</td>
@@ -172,7 +192,7 @@ echo '
 		<td class="elemen_reg_ord" id="	'.$id_oc.'"> </td>
 		<td class="elemen_reg_ord" id="tdreqfac_'.$id_oc.'">'.$req_factura.'</td>
 		<td class="elemen_reg_ord" id="tdfoliorem_'.$id_oc.'">'.$folio_remision.'</td>
-		<td class="elemen_reg_ord" id="tdfoliofac_'.$id_oc.'">'.$folio_factura.'</td>
+		<td class="elemen_reg_ord" id="tdfoliofac_'.$id_oc.'">'.$rowfacturar.'</td>
 		
 		</tr>';                    							
 		     
@@ -183,7 +203,37 @@ echo '
 	}				
 	echo ' </tbody></table>';
  
- echo '<script> 
+ echo '<div class="modal fade" id="orden_detalle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <!-- Header de la ventana -->
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h3 class="modal-title" id="detalle_modal_titulo">
+                                           Detalle de remision
+                                        </h3>
+                                    </div>
+                                    <!-- Contenido de la ventana -->
+                                    <div class="modal-body" style="overflow:auto;>
+                                        <p class="h4">Modal para pedido.</p>
+                                        <div class="table-responsive">
+                                          
+                                        </div>
+                                    </div>
+                                    <!-- Footer de la ventana -->
+                                    <div class="modal-footer">
+                                        
+                                        <button type="button" class="btn btn-primary " data-dismiss="modal">Cerrar</button>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                    </div>
+ 
+ 
+ 
+ 
+ <script> 
 	$(document).ready(function(){
 				$("#tabla_ord").DataTable({
 						"order": [[ 1, "asc" ]]
@@ -198,7 +248,8 @@ echo '
 							$("#div_lista_ordenes").hide();
 							$("#txt_orden_id").val("");
 							$("#txt_orden").val(folio_oc);
-							verif_orden();
+							//verif_orden();
+							detalle_orden(id);
 							
 							$("#div_datos_ordenes").show();
                 });
