@@ -158,7 +158,7 @@ echo '
 							$("#txt_orden_id").val("");
 							$("#txt_orden").val(folio_oc);
 							verif_orden();
-							
+							$("#div_add_art_rem").show();
 							$("#div_datos_ordenes").show();
                 });
 				/* $(".elemen_reg_ord").on("click", function(){

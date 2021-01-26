@@ -55,6 +55,8 @@ function actualizar($orden_id,$tipo_oc,$fecha_orden,$requisitor,$comprador)
 	date_default_timezone_set('America/Mexico_City');
 	$fecha_hoy = date("Y-m-d H:i:s");	
 		$calc_totales = totales_orden($orden_id);
+		$calc_totales = number_format($calc_totales,2);
+		
 	if($tipo_oc == "C")
 	{	/// Orden Cerrada -> solicitar remision inmediata y facturacion
 		$update = "UPDATE ordenes SET 
@@ -79,29 +81,7 @@ function actualizar($orden_id,$tipo_oc,$fecha_orden,$requisitor,$comprador)
 			
 		}
 	}
-	else if($tipo_oc == "A")
-	{	/// Orden Abierta -> Solo guardar como orden abierta y despues se cotejara con la tabla de relaciones para surtir la orden en parcialidades (varias remisiones-facturas)
-		$update = "UPDATE ordenes SET 
-								tipo_oc='$tipo_oc', 
-								estatus='1',
-								fecha_oc='$fecha_orden',
-								requisitor='$requisitor',
-								subtotal='$calc_totales',
-								total='$calc_totales',
-								comprador='$comprador'
-								WHERE id_oc='$orden_id'";
-
-		if (mysql_query($update, $conex) or die(mysql_error()))
-		{
-			echo '<script>
-		
-			//mostrar_cc();
-			orden_nueva();
-			</script>';
-			
-		}
-		
-	}
+	
 		
 		
 		

@@ -2129,8 +2129,62 @@ function UDMArticulo_dura($id)
 	
 }
 
+function id_microsip_allpart($id)
+{
+		global $database_conexion, $conex;
+			
+		$consulta = "SELECT id_microsip FROM articulos WHERE id = '$id'";
+		$resultado = mysql_query($consulta, $conex) or die(mysql_error());
+		//$row = mysql_fetch_assoc($resultado);
+		$total_rows = mysql_num_rows($resultado);
+		$id_microsip="";
+			while($row = mysql_fetch_array($resultado,MYSQL_ASSOC)) // html de articulos a mostrar
+            {
+				$id_microsip = $row['id_microsip'];	
+				
+			}
+			
+			  return $id_microsip;
+	
+}
 
+function clave_consigna($id)
+{
+		global $database_conexion, $conex;
+			
+		$consulta = "SELECT clave_empresa FROM articulos WHERE id = '$id'";
+		$resultado = mysql_query($consulta, $conex) or die(mysql_error());
+		//$row = mysql_fetch_assoc($resultado);
+		$total_rows = mysql_num_rows($resultado);
+		$clave_empresa="";
+			while($row = mysql_fetch_array($resultado,MYSQL_ASSOC)) // html de articulos a mostrar
+            {
+				$clave_empresa = $row['clave_empresa'];	
+				
+			}
+			
+			  return $clave_empresa;
+	
+}
 
+function descripcion_empresa($id)
+{
+		global $database_conexion, $conex;
+			
+		$consulta = "SELECT descripcion FROM articulos WHERE id = '$id'";
+		$resultado = mysql_query($consulta, $conex) or die(mysql_error());
+		//$row = mysql_fetch_assoc($resultado);
+		$total_rows = mysql_num_rows($resultado);
+		$descripcion="";
+			while($row = mysql_fetch_array($resultado,MYSQL_ASSOC)) // html de articulos a mostrar
+            {
+				$descripcion = $row['descripcion'];	
+				
+			}
+			
+			  return $descripcion;
+	
+}
 function PrecioArticulo_dura($id)
 {
 		global $database_conexion, $conex;

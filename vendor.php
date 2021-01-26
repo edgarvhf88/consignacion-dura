@@ -280,7 +280,7 @@ function requerir_pedido_nef(id_pedido){
 		$("#div_lista_pedidos").hide();
 		$("#div_pedido_nuevo").hide();
 		$("#div_content_pedidos_nef").hide();
-		
+		$("#div_add_art_rem").hide();
 	}
 	function invetarios_panel(){
 		ocultar_divs_principales();
@@ -715,7 +715,7 @@ function requerir_pedido_nef(id_pedido){
 	{
 		//var id_inventario = document.getElementById("txt_idinv_correo").value;
 		
-		
+		cargar_art_orden();
 		ocultar_divs_principales();
 		$("#div_ordenes_cliente").show();
 		/* $.ajax({
@@ -735,6 +735,7 @@ function requerir_pedido_nef(id_pedido){
 		//var id_inventario = document.getElementById("txt_idinv_correo").value;
 		
 		$("#div_datos_ordenes").show();
+		$("#div_add_art_rem").show();
 		$("#txt_orden").val("");
 		//$("#txt_orden").focus();
 		$("#txt_fecha_orden").val("");
@@ -748,7 +749,7 @@ function requerir_pedido_nef(id_pedido){
 		$("#btn_add_partida").hide();
 		$("#btn_adjuntar_file").hide();
 		$('#div_detalle_orden').html("");
-		cargar_art_orden();
+		
 		
 		
 	};
@@ -1054,13 +1055,24 @@ function requerir_pedido_nef(id_pedido){
 		$("#txtadd_precio_total").val(precio_total);
 	};
 	
+	function calc_add_precio_total_orden()
+	{
+		
+		var cantidad = document.getElementById("txtadd_unidades_allpart").value;
+		var precio_unitario = document.getElementById("txtadd_precio_allpart").value;
+		
+		var precio_total = cantidad * precio_unitario;
+		
+		$("#txtadd_precio_total_allpart").val(precio_total);
+	};
+	
 	//**************************************************************************
 	//               :v
 	
 	function agregar_art_orden()
 	{
 		var id_art = document.getElementById("select_arti_rem").value;
-		//var nombre_art = document.getElementById("txtadd_nombre_art_micro").value;
+		var orden_id = document.getElementById("txt_id_orden").value;
 		var unidades = document.getElementById("txtadd_unidades_allpart").value;
 		var precio = document.getElementById("txtadd_precio_allpart").value;
 		var precio_total = document.getElementById("txtadd_precio_total_allpart").value;
@@ -1077,26 +1089,26 @@ function requerir_pedido_nef(id_pedido){
 			$.ajax({
 				type: "post",
 				url: "data/add_art_orden.php",
-				data: {id_art:id_art, unidades:unidades,precio:precio,precio_total:precio_total,udm:udm},
+				data: {id_art:id_art, unidades:unidades,precio:precio,precio_total:precio_total,udm:udm, orden_id:orden_id},
 				dataType: "html",
 				success:  function (response) { 
 				$('#resultados_js').html(response);
 				}
 			});
-			$("#txtadd_unidades").val("");
-			$("#txtadd_precio").val("");
-			$("#txtadd_precio_total").val("");
-			$("#td_addartudm").attr("title","");
-			$("#td_addartudm").html("");
-			$("#txtadd_clave_art_micro").val("");
-			$("#select_arti_pedido").focus();
+			$("#txtadd_unidades_allpart").val("");
+			$("#txtadd_precio_allpart").val("");
+			$("#txtadd_precio_total_allpart").val("");
+			$("#td_addartudm_allpart").attr("title","");
+			$("#td_addartudm_allpart").html("");
+			$("#txtadd_clave_art_micro_allpart").val("");
+			$("#select_arti_rem").focus();
 		}
 		else
 		{
 			alert("Proporcione la cantidad de unidades para traspaso");
 			$("#txtadd_unidades").focus();
 		}
-	}
+	}}
 	//****************************************************************************
 	function agregar_art_pedido()
 	{
@@ -1209,7 +1221,7 @@ function requerir_pedido_nef(id_pedido){
 	function lista_oc_det()
 	{
 		var orden_id = document.getElementById("txt_orden_id").value;
-		cargar_art_orden();
+		
 		$.ajax({
 		type: "post",
 		url: "data/lista_ordenes_det.php",
@@ -1795,15 +1807,11 @@ function requerir_pedido_nef(id_pedido){
 						</button>
 					</div>
 					<div class="col-lg-2  col-md-4 col-sm-6 col-xs-12" > 
-						<button class="btn-success btn col-lg-12 col-md-12 col-sm-12 col-xs-12"  id="btn_guardar_oc" title="Se solicita facturacion de la OC a CXC">
-						<i class="fa fa-files-o" aria-hidden="true" ></i> Cerrar OC y Fact.
+						<button class="btn-success btn col-lg-12 col-md-12 col-sm-12 col-xs-12" onclick="cerrar_oc();" id="btn_guardar_oc" title="Se solicita facturacion de la OC a CXC">
+						<i class="fa fa-files-o" aria-hidden="true" ></i> Cerrar OC.
 						</button>
 					</div>
-					<div class="col-lg-2  col-md-4 col-sm-6 col-xs-12" > 
-						<button class="btn-success btn col-lg-12 col-md-12 col-sm-12 col-xs-12"  id="btn_guardar_oc_abierta">
-						<i class="fa fa-save"></i> Guardar OC Abierta
-						</button>
-					</div>
+					
 					
 					<div class="col-lg-2  col-md-4 col-sm-6 col-xs-12" > 
 						<button class="btn-warning  btn col-lg-12 col-md-12 col-sm-12 col-xs-12" 
@@ -1929,7 +1937,7 @@ function requerir_pedido_nef(id_pedido){
 								
 								</td>
 								<td id="tdadd_art_rem">
-								<input type="button" id="btn_add_artpedido_allpart" value="+"  class="form-control btn btn-primary" onclick="agregar_art_pedido();"/>
+								<input type="button" id="btn_add_artpedido_allpart" value="+"  class="form-control btn btn-primary" onclick="agregar_art_orden();"/>
 								</td>
 							</tr>
 							<tr>
@@ -1955,7 +1963,7 @@ function requerir_pedido_nef(id_pedido){
 				
 				
 				<div  class="col-lg-12 table-responsive" id="div_detalle_orden"></div>
-				
+				<input type="hidden" id="txt_id_orden" value="" />
 				
 			
 				
@@ -3013,6 +3021,21 @@ function requerir_pedido_nef(id_pedido){
 				$("#txtadd_precio").focusout(function(){
 					calc_add_precio_total();
 				});
+				////////*************************************
+				
+				
+				
+				$("#txtadd_unidades_allpart").focusout(function(){
+					calc_add_precio_total_orden();
+				});
+				$("#txtadd_precio_allpart").focusout(function(){
+					calc_add_precio_total_orden();
+				});
+				
+				
+				
+				
+				//*******************************************
 				$('#txt_inv_cantidad_contada').keypress(function(event){
 					var keycode = (event.keyCode ? event.keyCode : event.which);
 					if(keycode == '13'){
@@ -3148,9 +3171,7 @@ function requerir_pedido_nef(id_pedido){
 				$("#btn_guardar_oc").click(function(){
 					guardar_oc("C");
 				});
-				$("#btn_guardar_oc_abierta").click(function(){
-					guardar_oc("A");
-				});
+				
 				
 				//$("#btn_nuevo_inv").hide();
 				$("#btn_cerrar_inv").hide();
@@ -3164,7 +3185,7 @@ function requerir_pedido_nef(id_pedido){
 				ocultar_divs_principales();
 		
 				$("#div_datos_ordenes").hide();
-				
+				$("#div_add_art_rem").hide();
 				$("#div_lista_ordenes").hide();
 				varificar_captura(0);
 					

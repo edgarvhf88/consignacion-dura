@@ -11,6 +11,7 @@ global  $conex;
 		art.clave_empresa as clave_empresa,
 		art.unidad_medida as unidad_medida,
 		art.nombre as nombre,
+		
 		oc_det.id_oc_det as id_oc_det,
 		oc_det.posicion as posicion,
 		oc_det.cantidad as cantidad,
@@ -76,7 +77,7 @@ echo '
 	echo ' </tbody></table>';
 	
 
- echo '<script> 
+ echo '<script> $(txt_id_orden).val('.$orden_id.');
 	$(document).ready(function(){
 				
 				
@@ -109,7 +110,8 @@ echo '
 else /// sin resultados
 {	
 					
-	echo ' <div class="row"> 
+	echo ' <script> $(txt_id_orden).val('.$orden_id.');</script>
+	<div class="row"> 
                     <div class="col-md-12">
                         <div class="topics-list">
                             <h4><a href="#">Aun no se ha agregado ninguna partida.</a></h4>

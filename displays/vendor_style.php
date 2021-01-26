@@ -28,11 +28,7 @@ switch($tipo_usuario)
                        Pedido Traspaso
                     </a>
 					<ul class="dropdown-menu">
-						<li style="background-color:rgba(192,192,192,0.8);">
-							<a href="#" onclick="traspaso_nuevo();">
-								  Nueva Solicitud de Traspaso
-							</a>
-						</li>
+						
 						<li  style="background-color:rgba(192,192,192,0.8);">
 							<a href="#" onclick="lista_solicitudes_traspaso();">
 									Lista de solicitudes de traspaso
@@ -45,11 +41,7 @@ switch($tipo_usuario)
                        Pedido NEF
                     </a>
 					<ul class="dropdown-menu">
-						<li style="background-color:rgba(192,192,192,0.8);">
-							<a href="#" onclick="pedido_nuevo();">
-								  Nuevo Pedido NEF
-							</a>
-						</li>
+					
 						<li  style="background-color:rgba(192,192,192,0.8);">
 							<a href="#" onclick="lista_pedidos_nef();">
 									Lista de Pedidos NEF
