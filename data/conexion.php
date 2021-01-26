@@ -1108,7 +1108,7 @@ $cantidad_contada = 0;
 $consulta = "SELECT SUM(odet.cantidad) as cantidad_sumada 
 				FROM ordenes_det odet
 			INNER JOIN ordenes ord ON ord.id_oc = odet.id_oc
-			WHERE odet.id_articulo = '$id_articulo' AND ord.almacen_id = '$almacen_id' AND folio_remision <> '' ";
+			WHERE odet.articulo_id = '$id_articulo' AND ord.almacen_id = '$almacen_id' AND folio_remision <> '' ";
 $resultado = mysql_query($consulta, $conex) or die(mysql_error());
 $row = mysql_fetch_assoc($resultado);
 $total_rows = mysql_num_rows($resultado);
