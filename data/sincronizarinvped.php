@@ -3,10 +3,11 @@
 if (isset($_POST['id_pedido'])){
 	
 	$id_pedido = $_POST['id_pedido'];
-	ActualizarExistencia($id_pedido);
+	$almacen_id = $_POST['almacen_id'];
+	ActualizarExistencia($id_pedido,$almacen_id);
 	
 }
-function ActualizarExistencia($id_pedido){
+function ActualizarExistencia($id_pedido,$almacen_id){
 	global $conex, $con_micro;
 
 $existencia_microsip;
@@ -23,8 +24,8 @@ $consulta_articulos = "SELECT a.id_microsip as id_microsip, a.id as id_arti
 	while($row_articulos = mysql_fetch_array($resultado_articulos,MYSQL_BOTH)) 
 	{
 		$id_arti = $row_articulos['id_arti'];
-		$existencia_microsip = ExistenciaMicrosip($row_articulos['id_microsip']);
-		$min_max_reorden = explode("_",MinMaxReorden($row_articulos['id_microsip']));
+		$existencia_microsip = ExistenciaMicrosip($row_articulos['id_microsip'],$almacen_id);
+		$min_max_reorden = explode("_",MinMaxReorden($row_articulos['id_microsip'],$almacen_id));
 		$maximo = $min_max_reorden[0];
 		$minimo = $min_max_reorden[1];
 		$reorden = $min_max_reorden[2];

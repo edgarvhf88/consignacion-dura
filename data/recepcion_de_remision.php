@@ -251,7 +251,7 @@ function insertar_ligas($docto_cm_id_rec, $docto_cm_id_oc)
 		$docto_cm_fte_id = $row['ID_ORDEN'];
 		$docto_cm_dest_id = $row['ID_RECEPCION'];
 		
-		echo $docto_cm_fte_id."---".$docto_cm_dest_id;
+		
 	//recorer el ciclo e incertar los detalles 
 	$insertar_det = "INSERT INTO DOCTOS_CM_LIGAS_DET (DOCTO_CM_LIGA_ID, DOCTO_CM_DET_FTE_ID, DOCTO_CM_DET_DEST_ID) VALUES (:docto_id,:docto_fte_id,:docto_dest_id)";
 					try {

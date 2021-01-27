@@ -1479,6 +1479,7 @@ function requerir_pedido_nef(id_pedido){
     });
 		
 	};
+	
 		/////////////////////   ABRIR MODAL PARA AGREGAR tracking  /////////////////////////
 	function agregar_tracking(id_pedido){ 
 		//alert("Articulo ID= "+id);
@@ -2936,10 +2937,6 @@ function requerir_pedido_nef(id_pedido){
 	
 	<script>
 
-
-
-
-		
 		$(document).ready(function(){
 				
 				$("#btn_guardar_tracking").click(function(){

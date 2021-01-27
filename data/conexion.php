@@ -2269,5 +2269,7 @@ function PrecioArticulo_dura($id)
 ?>
 
 
+
+
 	
 	

@@ -54,7 +54,30 @@ date_default_timezone_set('America/Mexico_City');
 $fecha_actual = date("d.m.Y");
 $hora_actual = date("H:i:s");
 $fecha_hora = date("Y/m/d H:i:s");
-	
+	echo '<script> 
+$(document).ready(function()
+{
+	/////// Actualizar inventario por articulo
+	function SyncInvArt(id_articulo,almacen_id)
+	{
+		$("#modal_cargando").modal("show");
+		
+			$.ajax({
+			type: "post",
+			url: "sincronizarinvart.php",
+			data: {id_articulo:id_articulo,almacen_id:almacen_id},
+			dataType: "html",
+			success:  function (response) 
+			{
+				$("#resultados_js").html(response);
+				$("#modal_cargando").modal("hide");
+			}
+		});
+		
+	};
+});
+
+</script>';
 if ($total_rows > 0){
 	$id_pedido_cliente = $row_pedido['id_pedido_cliente'];
 //// inicia bucle con articulos de la solicitud de traspsaso
@@ -313,10 +336,12 @@ echo '<script> console.log("No se inserto Traspaso"); </script>';
 	{
 			foreach($lista_invdet as $row_articulos) // foreacha de movimientos de entrada
 			{
+				
 				$articulo_id = $row_articulos['id_microsip'];
 				// codigo para recalculo de saldos de los articulos /*/*//*/*/*/*/*-/-*/-/-*/*-/-/-*/*/
 					//$articulo_id = 6230;
 				recalc_saldo($articulo_id);
+				//echo '<script> SyncInvArt('.$articulo_id.','.$almacen_destino_id.'); </script>';
 			}
 			//// se cambioa el estatus de la solicitud de traspaso
 			$sql_upfolio = "UPDATE pedido_traspaso SET folio_traspaso = '$folio', estatus = '2' WHERE id_pedido = '$id_pedido_trapaso' ";
@@ -328,10 +353,17 @@ echo '<script> console.log("No se inserto Traspaso"); </script>';
 			}
 
 		echo '<script> console.log("SE APLICO EL TRASPASO CORRECTAMENTE FOLIO: '.$folio.'"); 
-		     // SincronizarInventario('.$id_pedido_trapaso.');
-			 lista_solicitudes_traspaso();
-			 $("#traspaso_detalle").modal("hide");
-			 $("#modal_cargando").modal("hide");
+		     
+			
+			$("#modal_cargando").modal("hide");
+			SincronizarInventario('.$id_pedido_cliente.','.$almacen_destino_id.');
+			 setTimeout(function(){
+							$("#traspaso_detalle").modal("hide");
+						},200,"JavaScript");
+			 setTimeout(function(){
+							 lista_solicitudes_traspaso();
+						},200,"JavaScript");
+			 
 			 </script>';
 			 
 	}

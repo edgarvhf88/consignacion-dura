@@ -147,7 +147,7 @@ echo '<table id="lista_pedidos_traspaso" class="table table-striped table-border
                                         </h3>
                                     </div>
                                     <!-- Contenido de la ventana -->
-                                    <div class="modal-body" style="overflow:auto;>
+                                    <div class="modal-body" style="overflow:auto;">
                                         <p class="h4">Modal para pedido.</p>
                                         <div class="table-responsive">
                                           

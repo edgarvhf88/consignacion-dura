@@ -1363,11 +1363,11 @@ var inp=inps[i];
 			});
 	}
 	/////// Actualizar inventario despues de surtir pedido
-	function SincronizarInventario(id_pedido){
+	function SincronizarInventario(id_pedido,almacen_id){
 		$.ajax({
 		type: "post",
 		url: "data/sincronizarinvped.php",
-		data: {id_pedido:id_pedido},
+		data: {id_pedido:id_pedido,almacen_id,almacen_id},
 		dataType: "html",
         success:  function (response) {
         $('#resultados_js').html(response);

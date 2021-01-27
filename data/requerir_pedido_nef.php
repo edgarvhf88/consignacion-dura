@@ -78,7 +78,7 @@ $fecha_actual = date("Y-m-d H:i:s");
 			$total_rpeddet = mysql_num_rows($resultado_pedidodet);
 			if ($total_rpeddet > 0){
 				// actualmente tiene un pedido en proceso de captura, debe guardarlo o cancelarlo para poder procesar otro pedido.
-				echo '<script> alert("Actualmente tiene un pedido en proceso de captura, debe guardarlo o cancelarlo para poder procesar otro pedido"); </script>';
+				echo '<script> alert("Actualmente tiene un pedido en proceso de captura, debe guardarlo o cancelarlo para poder procesar otro pedido"); pedido_nuevo();</script>';
 			}else {
 				// update
 				
