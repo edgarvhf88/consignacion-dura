@@ -65,7 +65,13 @@ echo '
 	{	
 		$id_oc = $row['id_oc'];
 		$almacen = $row['almacen'];
-		$folio_oc = '<a href="#" class="link_rapido" id="ahreffoliooc_'.$id_oc.'" >'.$row['folio'].'</a><input type="hidden" id="txtfoliooc_'.$id_oc.'" value="'.$row['folio'].'" />';
+		if ($row['estatus'] == 0)
+		{
+			$folio_oc = '<a href="#" class="link_rapido" id="ahreffoliooc_'.$id_oc.'" >'.$row['folio'].'</a><input type="hidden" id="txtfoliooc_'.$id_oc.'" value="'.$row['folio'].'" />';
+		}else{
+			$folio_oc = $row['folio'].'<input type="hidden" id="txtfoliooc_'.$id_oc.'" value="'.$row['folio'].'" />';
+		}
+		
 		$fecha_oc = $row['fecha_oc'];
 		$usuario_creador = $row['nombre']." ".$row['apellido'];
 		
@@ -120,7 +126,7 @@ echo '
 		echo '<tr class="" title="">
 		
 		<td class="elemen_reg_ord" id="tdalmac_'.$id_oc.'">'.$almacen.'</td>
-		<td class="elemen_reg_ord" id="tdfolio_'.$id_oc.'">'.$folio_oc.'</td>
+		<td class="" id="tdfolio_'.$id_oc.'">'.$folio_oc.'</td>
 		<td class="elemen_reg_ord" id="tdfecha_'.$id_oc.'">'.$fecha_oc.'</td>
 		<td class="elemen_reg_ord" id="tdtipooc_'.$id_oc.'">'.$tipo_oc.'</td>
 		<td class="elemen_reg_ord" id="tdidusc_'.$id_oc.'">'.$usuario_creador.'</td>
@@ -142,7 +148,34 @@ echo '
 	}				
 	echo ' </tbody></table>';
  
- echo '<script> 
+ echo '
+ <div class="modal fade" id="modal_orden_det" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <!-- Header de la ventana -->
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h3 class="modal-title" id="detalle_modal_titulo">
+                                           Partidas en la Orden
+                                        </h3>
+                                    </div>
+                                    <!-- Contenido de la ventana -->
+                                    <div class="modal-body" style="overflow:auto;>
+                                        <p class="h4">Modal para pedido.</p>
+                                        <div class="table-responsive">
+                                          
+                                        </div>
+                                    </div>
+                                    <!-- Footer de la ventana -->
+                                    <div class="modal-footer">
+                                        
+                                        <button type="button" class="btn btn-primary " data-dismiss="modal">Cerrar</button>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                    </div>
+	<script> 
 	$(document).ready(function(){
 				$("#tabla_ord").DataTable({
 						"order": [[ 1, "asc" ]]
@@ -161,17 +194,17 @@ echo '
 							$("#div_add_art_rem").show();
 							$("#div_datos_ordenes").show();
                 });
-				/* $(".elemen_reg_ord").on("click", function(){
+				 $(".elemen_reg_ord").on("click", function(){
                             var tr_id = $(this).attr("id");
 							var arr_id = tr_id.split("_");
-							var id_inventario = arr_id[1];
-							
-							//inventario_detalles(id_inventario);
+							var id_oc = arr_id[1];
+						
+							lista_oc_det_view(id_oc);
 							//$("#inpt_id_inventario").val(id_inventario);
 							//$("#txt_id_inventario_activo").val(id_inventario);
 							//$("#modal_listadet").modal("show");
 							   
-                }); */
+                }); 
 			
 		});
 </script>';  

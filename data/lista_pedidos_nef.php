@@ -231,21 +231,23 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 			$rowrec =$row2['recepciones'] ;
 			$roworden_c =$row2['orden_compra'] ;
 			}
-			////////////////////////////////////////////////////////////////////////////////////////////////
-                    echo ' <tr >
+			
+////////////////////////////////////////////////////////////////////////////////////////////////
+				$detalle = 'detalle_pedido_nef ('.$id_pedido.','.$folio.','.$total_pedido.')';		
+				  echo ' <tr >
                    	
-					<td onclick="">'.$requisitor.'
+					<td onclick="'.$detalle.'">'.$requisitor.'
 					<input type="hidden" id="txt_folio_pedidonef_'.$id_pedido.'" value="'.$folio.'"/></td>
-					<td onclick="">'.$almacen.'</td>
-					<td onclick="">'.$folio.'</td>
-					<td onclick="">'.$row2['fecha_pedido_oficial'].'</td>
+					<td onclick="'.$detalle.'">'.$almacen.'</td>
+					<td onclick="'.$detalle.'">'.$folio.'</td>
+					<td onclick="'.$detalle.'">'.$row2['fecha_pedido_oficial'].'</td>
 					<td onclick="">'.$pedido_nef.'</td>
-					<td onclick="">'.$rowrems.'</td>
-					<td onclick="">'.$roworden_c.'</td>
-					<td onclick="">'.$rowrec.'</td>
-					<td onclick=""></td>
-					<td align="right" onclick="">$'.number_format($total_pedido,2).'</td>
-					<td align="right" id="td_estatus_'.$id_pedido.'">'.$estatus.'</td>	
+					<td onclick="'.$detalle.'">'.$rowrems.'</td>
+					<td onclick="'.$detalle.'">'.$roworden_c.'</td>
+					<td onclick="'.$detalle.'">'.$rowrec.'</td>
+					<td onclick="'.$detalle.'"></td>
+					<td align="right" onclick="'.$detalle.'">$'.number_format($total_pedido,2).'</td>
+					<td align="right" onclick="'.$detalle.'" id="td_estatus_'.$id_pedido.'">'.$estatus.'</td>	
 							</tr>';
                    
                    }				

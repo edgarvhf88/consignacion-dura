@@ -127,7 +127,7 @@ input[type=checkbox]
 			});
 		};
    function detalle_pedido_nef (id,folio,total_pedido){
-		jQuery('#pedido_detalle_nef').modal('show', {backdrop: 'static'});
+		jQuery('#remision_detalle').modal('show', {backdrop: 'static'});
 			
 			jQuery.ajax({ //
 				type: "POST",
@@ -135,7 +135,7 @@ input[type=checkbox]
 				data: {id:id,folio:folio,total_pedido:total_pedido},
 				success: function(resultados)
 				{
-					jQuery('#pedido_detalle_nef .modal-body').html(resultados);
+					jQuery('#remision_detalle .modal-body').html(resultados);
 				}
 			});
 		};
@@ -357,7 +357,8 @@ function requerir_pedido_nef(id_pedido){
 				data: {id_empresa:id_empresa},
 				success: function(resultados)
 				
-				{ 			
+				{ 	
+				$('#div_detalle_orden').html("");				
 				$("#div_lista_ordenes").html(resultados);
 				$("#modal_cargando").modal("hide");			
 			
@@ -749,7 +750,7 @@ function requerir_pedido_nef(id_pedido){
 		$("#btn_add_partida").hide();
 		$("#btn_adjuntar_file").hide();
 		$('#div_detalle_orden').html("");
-		
+		$("#div_lista_ordenes").hide();
 		
 		
 	};
@@ -786,7 +787,8 @@ function requerir_pedido_nef(id_pedido){
 	{
 		//var id_inventario = document.getElementById("txt_idinv_correo").value;
 		
-		//$("#div_datos_ordenes").hide();
+		$("#div_datos_ordenes").hide();
+		$("#div_add_art_rem").hide();
 		$("#div_lista_ordenes").toggle();
 		// ajax para cargar lista de ordenes
 		if ($('#div_lista_ordenes').is(':visible')) 
@@ -1229,6 +1231,21 @@ function requerir_pedido_nef(id_pedido){
 		dataType: "html",
         success:  function (response) {
 			$('#div_detalle_orden').html(response);
+		}
+		});
+	};
+	function lista_oc_det_view(orden_id)
+	{
+		
+		jQuery('#modal_orden_det').modal('show', {backdrop: 'static'});
+		$.ajax({
+		type: "post",
+		url: "data/lista_ordenes_det.php",
+		data: {orden_id:orden_id},
+		dataType: "html",
+        success:  function (response) {
+			
+			jQuery('#modal_orden_det .modal-body').html(response);
 		}
 		});
 	};

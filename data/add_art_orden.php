@@ -9,8 +9,8 @@
       $precio = $_POST['precio'];
       $precio_total = $_POST['precio_total'];
       $udm = $_POST['udm'];
-	  $parte=descripcion_empresa($id_consigna);
-	  $descripcion= clave_consigna($id_consigna);
+	  $parte=clave_consigna($id_consigna);
+	  $descripcion= descripcion_empresa($id_consigna);
 	  
 	if ($id_consigna != ''){ 
 	
