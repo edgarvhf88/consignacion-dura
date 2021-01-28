@@ -17,31 +17,17 @@ switch($tipo_usuario)
 	case 17:
 	//si es vendedor  mostrar_articulos(9);
 	$btns_menu_vendor = '
-				<li class="dropdown" style="background-color:rgba(192,192,192,0.8); z-index:4;">
-					<a href="#" class="dropdown-toggle" id="dropinv" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">
-                       Pedido Traspaso
+				<li  style="background-color:rgba(192,192,192,0.8); z-index:4;">
+					<a href="#" onclick="lista_solicitudes_traspaso();">
+                       Solicitudes de Traspaso
                     </a>
-					<ul class="dropdown-menu">
 					
-						<li  style="background-color:rgba(192,192,192,0.8);">
-							<a href="#" onclick="lista_solicitudes_traspaso();">
-									Lista de solicitudes de traspaso
-							</a>
-						</li>
-					</ul> 
                 </li>
-				<li class="dropdown" style="background-color:rgba(192,192,192,0.8); z-index:5;">
-					<a href="#" class="dropdown-toggle" id="dropinv" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">
-                       Pedido NEF
+				<li  style="background-color:rgba(192,192,192,0.8); z-index:5;">
+					<a href="#" onclick="lista_pedidos_nef();">
+                       Pedidos NEF
                     </a>
-					<ul class="dropdown-menu">
 					
-						<li  style="background-color:rgba(192,192,192,0.8);">
-							<a href="#" onclick="lista_pedidos_nef();">
-									Lista de Pedidos NEF
-							</a>
-						</li>
-					</ul> 
                 </li> ';
 	$nombre_usuario = '<a href="#" class="dropdown-toggle" id="dropinv" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">'.Nombre($_SESSION["logged_user"]).'</a>';
 	break;

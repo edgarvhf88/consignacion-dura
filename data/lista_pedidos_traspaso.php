@@ -168,7 +168,7 @@ echo '<table id="lista_pedidos_traspaso" class="table table-striped table-border
 	{
         $("#lista_pedidos_traspaso").DataTable(
 		{
-				"order": [[ 3, "desc" ]]
+				//"order": [[ 3, "desc" ]]
 		});
 		
 	});
