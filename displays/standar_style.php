@@ -6,11 +6,19 @@ $nombre_usuario = '<a href="login.php" class="dropdown-toggle" id="drop4" data-t
 $tipo_usuario = validar_usuario($_SESSION["logged_user"]); 
 $folio_pedido_index = "1";
 $btns_menu = '';
-$reportes = '<li style="">
+$reportes = '	<li style="">
+                    <a href="#" style="z-index:3;" onclick="spotby_lista();">
+                      <span class="fa fa-bars" aria-hidden="true"></span> Spot By
+                    </a>
+                </li> 
+
+				<li style="">
                     <a href="#" style="z-index:8;" onclick="mostrar_reportes();">
                       <span class="fa fa-table" aria-hidden="true"></span>  Reports
                     </a>
-                </li>';
+                </li>
+				
+			';
 switch($tipo_usuario)
 {
 	case 1:
@@ -19,7 +27,8 @@ switch($tipo_usuario)
 	break;
 	case 2:
 	//si es comprador
-	$btns_menu = ' <li style="background-color:rgba(192,192,192,0.8);">
+	$btns_menu = ' 
+				<li style="background-color:rgba(192,192,192,0.8);">
                     <a href="#" style="z-index:3;" onclick="mostrar_pedido();">
                       <span class="fa fa-bars" aria-hidden="true"></span>  Current Request
                     </a>

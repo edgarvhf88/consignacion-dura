@@ -134,6 +134,110 @@ function mostrar_user(){
    
    };
 
+//*******************************//////SPOT BY//////*******************************************
+function spotby_lista(){
+			var tipo =1;
+			
+			jQuery.ajax({ //
+				type: "POST",
+				url: "data/spotby.php",
+				data: {tipo:tipo},
+				success: function(response)
+				{
+					$('#lista_spotby').html(response);
+				}
+			});
+		};
+		function spotby(){
+			var tipo =1;
+			
+			jQuery.ajax({ //
+				type: "POST",
+				url: "data/spotby.php",
+				data: {tipo:tipo},
+				success: function(response)
+				{
+					$('#resultados_js').html(response);
+				}
+			});
+		};
+		
+		
+	function spotby_save(){
+			var tipo =2;
+			//tomo los valores
+			var descripcion =  document.getElementById("descripcion_spotby").value;
+			var cantidad =  document.getElementById("cantidad_spotby").value;
+			var datos_adicionales =  document.getElementById("a_datos_spotby").value;
+			
+			jQuery.ajax({ //
+				type: "POST",
+				url: "data/spotby.php",
+				data: {tipo:tipo, descripcion:descripcion, cantidad:cantidad, datos_adicionales:datos_adicionales},
+				success: function(response)
+				{
+					$('#resultados_js').html(response);
+				}
+			});
+		};	
+		
+		
+		
+		function subir_iamgen_spotby(id){
+                     var formData = new FormData($("#formulario")[0]);
+                     var ruta = "data/subir_imagen_spotby.php";
+                     var imagen = $("input[name='file']").val();
+                     //alert(imagen);
+
+                     if (imagen == "")//si no tiene nada le dice que sube algo
+                     {
+                                    alert("No se adjunto una imagen");
+
+                     }
+                     else//si tiene algo lo guarda
+                     {
+						
+                                    $.ajax({
+                                    url: ruta,
+                                    type: "POST",
+                                    data: formData,
+                                    contentType: false,
+                                    processData:false,
+                                    success: function(datos)
+                                    {
+										//aqui no llegue
+                                        $('#resultados_js').html(datos);
+										var nombre =  document.getElementById("nombre_imagen_spotby").value;
+										var tipo=3;
+										jQuery.ajax({ //
+											type: "POST",
+											url: "data/spotby.php",
+											data: {tipo:tipo, id:id, nombre:nombre},
+											success: function(response)
+											{
+												$('#resultados_js').html(response);
+												$("#spotby").modal("hide");
+												$('#descripcion_spotby').val("");
+												$('#cantidad_spotby').val("");
+												$('#a_datos_spotby').val("");
+											}
+											});
+                                    }
+                     
+                                    });
+                     } 
+		};    
+		
+		function ver_img_spotby(imagen)
+		{	
+			var mostrar ='<img src="spotby_img/imagenes/'+imagen+'" width="600" height="500">';
+		
+			$('#spotby_imagen_body').html(mostrar);
+			
+			$("#spotby_imagen").modal("show");
+		}
+
+//*********************************************************************************
 
 	function detalle_pedido(id,folio,total_pedido){
 		//alert("Articulo ID= "+id);
@@ -1185,6 +1289,7 @@ function sumar3(){
     //window.open('entradas_excel.php?f1='+fecha_ini+'&f2='+fecha_fin, "nuevo", "directories=no, location=no, menubar=no, scrollbars=yes, statusbar=no, tittlebar=no, width=400, height=250");
 }
 
+
 function cargar_arti_reportes()
 	{	
 		//var almacen_id = document.getElementById("select_almacen_oc").value;
@@ -1216,7 +1321,88 @@ function ver_partidas_traspaso(id_pedido_traspaso)
 	};
 	
 </script>
+<div id="lista_spotby">
 
+
+
+</div>
+<div class="modal fade" id="spotby" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <!-- Header de la ventana -->
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h3 class="modal-title" id="detalle_modal_titulo">
+                                           SPOT BY
+                                        </h3>
+                                    </div>
+                                    <!-- Contenido de la ventana -->
+                                    <div class="modal-body" style="overflow:auto;">
+                                       
+									   <div class=" col-lg-12" >
+										<div class="form-group col-lg-8">
+											<label >Description</label>
+											<input class="form-control" id="descripcion_spotby">
+										</div>
+										<div class="form-group col-lg-3">
+											<label >Quantity</label>
+											<input type="number" class="form-control" id="cantidad_spotby">
+										</div>
+										</div>
+										<div class=" col-lg-6" >
+										<div class="form-group col-lg-12">
+											<label >Datos adicionales</label>
+											<input class="form-control" type="text" id="a_datos_spotby">
+										</div>
+										
+										</div>
+										<div class=" col-lg-6" >
+										
+										<div class="form-group col-lg-12">
+										<br>
+										<form id="formulario" method="post" enctype="multipart/form-data" >
+											<input id="file_input" type="file" name="file" accept="image/*, .docx, .pdf, .xlsx, .msg" />
+										</form>
+										</div>
+										</div>
+									</div>
+									<input type="hidden" id="nombre_imagen_spotby">
+                                    <!-- Footer de la ventana -->
+                                    <div class="modal-footer">
+                                        
+                                        <button type="button" class="btn btn-primary " onclick="spotby_save();">Save</button>
+										<button type="button" class="btn btn-primary " data-dismiss="modal">Close</button>
+                                    </div>
+									</div>	
+									</div>
+    </div>
+	
+	
+	
+	<div class="modal fade" id="spotby_imagen" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <!-- Header de la ventana -->
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h3 class="modal-title" id="detalle_modal_titulo">
+                                           Imagen
+                                        </h3>
+                                    </div>
+                                    <!-- Contenido de la ventana -->
+                                    <div class="modal-body" style="overflow:auto;" >
+                                       <div id="spotby_imagen_body" align="center">
+									   
+									   </div>
+									</div>
+									
+                                    <!-- Footer de la ventana -->
+                                    <div class="modal-footer">
+									<button type="button" class="btn btn-primary " data-dismiss="modal">Close</button>
+                                    </div>
+								</div>	
+							</div>
+    </div>
 
 <!--Boton hacia arriba-->
 <a class="ir-arriba"  href="#" title="Volver arriba">
@@ -1251,6 +1437,11 @@ function ver_partidas_traspaso(id_pedido_traspaso)
 	<script>
 	
 		$(document).ready(function(){
+			
+			
+			
+			
+			
 				  
 				$("#btn_guardar_orden").click(function(){
 					agregar_orden();
