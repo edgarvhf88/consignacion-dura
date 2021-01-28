@@ -281,6 +281,7 @@ function requerir_pedido_nef(id_pedido){
 		$("#div_pedido_nuevo").hide();
 		$("#div_content_pedidos_nef").hide();
 		$("#div_add_art_rem").hide();
+		$("#lista_spotby").hide();
 	}
 	function invetarios_panel(){
 		ocultar_divs_principales();
@@ -867,7 +868,47 @@ function requerir_pedido_nef(id_pedido){
 			}
 		});
 	};
-	
+	//////spotby*********************************************
+	function spotby_lista(){
+			var tipo =1;
+			ocultar_divs_principales();
+			$("#lista_spotby").show();
+			jQuery.ajax({ //
+				type: "POST",
+				url: "data/spotby.php",
+				data: {tipo:tipo},
+				success: function(response)
+				{
+					$('#lista_spotby_tabla').html(response);
+				}
+			});
+		};
+		
+		function ver_img_spotby(imagen)
+		{	
+			var mostrar ='<img src="spotby_img/imagenes/'+imagen+'" width="600" height="500">';
+		
+			$('#spotby_imagen_body').html(mostrar);
+			
+			$("#spotby_imagen").modal("show");
+		}
+		
+		function verificar_spot(id)
+		{	
+			var tipo=4;
+			jQuery.ajax({ //
+				type: "POST",
+				url: "data/spotby.php",
+				data: {tipo:tipo, id:id},
+				success: function(response)
+				{
+					$('#resultados_js').html(response);
+					
+				}
+				});
+			
+		}
+	//**************************************************************
 		function cargar_art_orden()
 	{	
 		
@@ -1824,6 +1865,12 @@ function requerir_pedido_nef(id_pedido){
 						</div>
 							
 			</div>
+			
+			<div id="lista_spotby">
+			<div align="right"><br><br></div>
+			<div id="lista_spotby_tabla"></div>
+			</div>
+			
 			<div class="col-lg-12 "  id="div_ordenes_cliente" >
 				
 				
@@ -2396,7 +2443,32 @@ function requerir_pedido_nef(id_pedido){
             	</div>
             </div>
         </div>
-          <!--final modal_listadet->
+		
+		<div class="modal fade" id="spotby_imagen" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <!-- Header de la ventana -->
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h3 class="modal-title" id="detalle_modal_titulo">
+                                           Imagen
+                                        </h3>
+                                    </div>
+                                    <!-- Contenido de la ventana -->
+                                    <div class="modal-body" style="overflow:auto;" >
+                                       <div id="spotby_imagen_body" align="center">
+									   
+									   </div>
+									</div>
+									
+                                    <!-- Footer de la ventana -->
+                                    <div class="modal-footer">
+									<button type="button" class="btn btn-primary " data-dismiss="modal">Close</button>
+                                    </div>
+								</div>	
+							</div>
+    </div>
+         
 <!--modal modal_correo_dir -->
             		<div class="modal fade" id="modal_correo_dir" tabindex="-1" role="dialog">
                 		<div class="modal-dialog modal-lg" role="document">
