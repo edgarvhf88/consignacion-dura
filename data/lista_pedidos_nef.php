@@ -11,6 +11,24 @@
 			lista_pedidos_nef();
 	  }
 	  
+function obtener_traspaso($folio_recepcion){
+	global $conex;
+	$sql = "SELECT lig.id_pedido_traspaso as id_pedido_tras, pt.folio as folio_solicitud, pt.folio_traspaso as folio_traspaso 
+			FROM ligas_doctos lig 
+			INNER JOIN pedido_traspaso pt ON pt.id_pedido = lig.id_pedido_traspaso
+			WHERE lig.recepcion_allpart='$folio_recepcion'";
+	$res= mysql_query($sql, $conex) or die(mysql_error());
+	$row = mysql_fetch_assoc($res);
+	$total_r = mysql_num_rows($res);
+	$folio_solicitud = "";
+	$folio_traspaso = "";
+	if ($total_r > 0){
+		$folio_solicitud = $row['folio_solicitud'];
+		$folio_traspaso = $row['folio_traspaso'];	
+	}
+	return $folio_solicitud.",".$folio_traspaso;
+}	  
+	  
 function lista_pedidos_nef(){ ///Mostrara la lista de los pedidos_nef con el estatus y datos de folios
 global $database_conexion, $conex;
 
@@ -172,6 +190,7 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 				//RECEPCIONES//////////////////////////////////////////////////////////
 				//////////////////////////////////////////////////////////////////////////
 					$rowrec='';
+					$traspasos = "";
 					//boton aqui
 				if($row2['recepciones'] =="" and $row2['orden_compra'] !=""){
 					$orden_compra_allpart =$row2['orden_compra'];
@@ -188,9 +207,18 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 				{//contenido
 					$recepciones = array();
 					$recepciones = explode(",", $row2['recepciones']);
-					
+					$traspasos = "";
 					foreach ($recepciones as $rec)
 					{
+						$tras_rel_array = explode(",", obtener_traspaso($rec));
+						if ($tras_rel_array[0] != "" && $tras_rel_array[1] != ""){
+							$tras_rel = $tras_rel_array[0]." -> ".$tras_rel_array[1]; 
+						}else
+						{
+							$tras_rel = $tras_rel_array[0];
+						}
+							$traspasos .='<a onclick="">'.$tras_rel.'</a> <br>' ;
+						
 						$print_rec = str_replace("RAP","",$rec);
 						$print_rec =str_replace("," , "", number_format($print_rec, 0));
 						$print_rec = 'RAP'.$print_rec;
@@ -207,8 +235,17 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 						$recepciones = array();
 						$recepciones = explode(",", $row2['recepciones']);
 						$orden_c_enciar =$row2['orden_compra'];
+						$traspasos = "";
 					foreach ($recepciones as $rec)
 						{
+						$tras_rel_array = explode(",", obtener_traspaso($rec));
+						if ($tras_rel_array[0] != "" && $tras_rel_array[1] != ""){
+							$tras_rel = $tras_rel_array[0]." -> ".$tras_rel_array[1]; 
+						}else
+						{
+							$tras_rel = $tras_rel_array[0];
+						}
+							$traspasos .='<a onclick="">'.$tras_rel.'</a> <br>' ;
 						
 						$print_rec = str_replace("RAP","",$rec);
 						$print_rec =str_replace("," , "", number_format($print_rec, 0));
@@ -227,9 +264,27 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 			////////////////VENDEDOR//////////////////////////////////////////////////////////
                else//cuando soy vendedor 
 			{//contenido
-			$rowrems =$row2['rems'] ;
-			$rowrec =$row2['recepciones'] ;
-			$roworden_c =$row2['orden_compra'] ;
+				$rowrems =$row2['rems'] ;
+				$rowrec =$row2['recepciones'] ;
+				$roworden_c =$row2['orden_compra'] ;
+				$recepciones = array();
+				$tras_rel_array = array();
+				$recepciones = explode(",", $row2['recepciones']);
+				$traspasos = "";
+				if (count($recepciones) > 0){
+				foreach ($recepciones as $rec)
+				{
+				
+				$tras_rel_array = explode(",", obtener_traspaso($rec));
+				if ($tras_rel_array[0] != "" && $tras_rel_array[1] != ""){
+					$tras_rel = $tras_rel_array[0]." -> ".$tras_rel_array[1]; 
+				}else
+				{
+					$tras_rel = $tras_rel_array[0];
+				}
+					$traspasos .='<a onclick="">'.$tras_rel.'</a> <br>' ;
+				}
+				}
 			}
 			
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -245,7 +300,7 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 					<td onclick="'.$detalle.'">'.$rowrems.'</td>
 					<td onclick="'.$detalle.'">'.$roworden_c.'</td>
 					<td onclick="'.$detalle.'">'.$rowrec.'</td>
-					<td onclick="'.$detalle.'"></td>
+					<td onclick="" title="Folio Solicitud -> Folio Traspaso Microsip">'.$traspasos.'</td>
 					<td align="right" onclick="'.$detalle.'">$'.number_format($total_pedido,2).'</td>
 					<td align="right" onclick="'.$detalle.'" id="td_estatus_'.$id_pedido.'">'.$estatus.'</td>	
 							</tr>';

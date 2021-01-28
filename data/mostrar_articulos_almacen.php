@@ -219,7 +219,7 @@ echo '<table id="mostrar_articulos" class="table table-striped table-bordered ta
 			<td id="tdmax_'.$row2['id'].'">'.$max_val.'</td>
 			<td id="tdreorden_'.$row2['id'].'">'.$reorden_val.'</td>
 			<td id="tdexistencia_'.$row2['id'].'">'.$existencia_val.'</td>
-			<td id="tdexistenciaactual_'.$row2['id'].'" title="'.$title_datos.'">'.$existencia_actual.'</td>
+			<td id="tdexistenciaactual_'.$row2['id'].'" title="Es la cantidad que hay fisicamente">'.$existencia_actual.'</td>
 			<td id="tdunidped_'.$row2['id'].'" hidden >'.$unidades_pedidas.'</td>
 			<td id="td_actualizar_'.$row2['id'].'"><input type="button" class="btn btn-info btn_actualiza" id="btnact_'.$row2['id_microsip'].'" value="Sincronizar" /></td>
 			
