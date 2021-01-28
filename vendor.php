@@ -2007,6 +2007,9 @@ function requerir_pedido_nef(id_pedido){
 			
 			</div>
 			
+			
+			
+			
 			<div id="div_solicitud_traspaso" class="col-lg-12"> 
 						<!--  -->
 				<div id="div_datos_traspaso" class="col-lg-12 table-responsive" style="z-index:8;">

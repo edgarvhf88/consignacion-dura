@@ -6,11 +6,19 @@ $nombre_usuario = '<a href="login.php" class="dropdown-toggle" id="drop4" data-t
 $tipo_usuario = validar_usuario($_SESSION["logged_user"]); 
 $folio_pedido_index = "1";
 $btns_menu = '';
-$reportes = '<li style="">
+$reportes = '	<li style="">
+                    <a href="#" style="z-index:3;" onclick="spotby_lista();">
+                      <span class="fa fa-bars" aria-hidden="true"></span> Spot By
+                    </a>
+                </li> 
+
+				<li style="">
                     <a href="#" style="z-index:8;" onclick="mostrar_reportes();">
                       <span class="fa fa-table" aria-hidden="true"></span>  Reports
                     </a>
-                </li>';
+                </li>
+				
+			';
 switch($tipo_usuario)
 {
 	case 1:
@@ -19,7 +27,8 @@ switch($tipo_usuario)
 	break;
 	case 2:
 	//si es comprador
-	$btns_menu = ' <li style="background-color:rgba(192,192,192,0.8);">
+	$btns_menu = ' 
+				<li style="background-color:rgba(192,192,192,0.8);">
                     <a href="#" style="z-index:3;" onclick="mostrar_pedido();">
                       <span class="fa fa-bars" aria-hidden="true"></span>  Current Request
                     </a>
@@ -365,6 +374,10 @@ $container_index = '
 			<div id="div_mis_pedidos" class=" col-lg-12"></div>
 			<div id="div_mis_pedidos_pend_aut" class=" col-lg-12"></div>
 			
+			<div id="lista_spotby">
+			<div align="right"><button class="btn btn-primary" onclick="spotby();" > Add </button><br><br></div>
+			<div id="lista_spotby_tabla"></div>
+			</div>
 			
 			<div id="div_mis_solicitudes" class=" col-lg-12">
 						
@@ -646,6 +659,86 @@ $container_index = '
 		
 	</div>
 </section>';
+
+
+
+$modales_spotby='<div class="modal fade" id="spotby" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <!-- Header de la ventana -->
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h3 class="modal-title" id="detalle_modal_titulo">
+                                           SPOT BY
+                                        </h3>
+                                    </div>
+                                    <!-- Contenido de la ventana -->
+                                    <div class="modal-body" style="overflow:auto;">
+                                       
+									   <div class=" col-lg-12" >
+										<div class="form-group col-lg-8">
+											<label >Description</label>
+											<input class="form-control" id="descripcion_spotby">
+										</div>
+										<div class="form-group col-lg-3">
+											<label >Quantity</label>
+											<input type="number" class="form-control" id="cantidad_spotby">
+										</div>
+										</div>
+										<div class=" col-lg-6" >
+										<div class="form-group col-lg-12">
+											<label >Datos adicionales</label>
+											<input class="form-control" type="text" id="a_datos_spotby">
+										</div>
+										
+										</div>
+										<div class=" col-lg-6" >
+										
+										<div class="form-group col-lg-12">
+										<br>
+										<form id="formulario" method="post" enctype="multipart/form-data" >
+											<input id="file_input" type="file" name="file" accept="image/*, .docx, .pdf, .xlsx, .msg" />
+										</form>
+										</div>
+										</div>
+									</div>
+									<input type="hidden" id="nombre_imagen_spotby">
+                                    <!-- Footer de la ventana -->
+                                    <div class="modal-footer">
+                                        
+                                        <button type="button" class="btn btn-primary " onclick="spotby_save();">Save</button>
+										<button type="button" class="btn btn-primary " data-dismiss="modal">Close</button>
+                                    </div>
+									</div>	
+									</div>
+    </div>
+	
+	
+	
+	<div class="modal fade" id="spotby_imagen" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <!-- Header de la ventana -->
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h3 class="modal-title" id="detalle_modal_titulo">
+                                           Imagen
+                                        </h3>
+                                    </div>
+                                    <!-- Contenido de la ventana -->
+                                    <div class="modal-body" style="overflow:auto;" >
+                                       <div id="spotby_imagen_body" align="center">
+									   
+									   </div>
+									</div>
+									
+                                    <!-- Footer de la ventana -->
+                                    <div class="modal-footer">
+									<button type="button" class="btn btn-primary " data-dismiss="modal">Close</button>
+                                    </div>
+								</div>	
+							</div>
+    </div>';
 
 /*$modal_orden_index ES EL MODAL DONDE SE AGREGA EL NUMERO DE ORDEN DEL CLIENTE EN LA PAGINA INDEX.PHP*/
 $modal_orden_index = '<div class="modal fade" id="modal_orden" tabindex="-1" role="dialog" aria-labelledby="Modal orden" aria-hidden="true">

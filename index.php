@@ -134,6 +134,111 @@ function mostrar_user(){
    
    };
 
+//*******************************//////SPOT BY//////*******************************************
+function spotby_lista(){
+			var tipo =1;
+			limpiardivs();
+			$("#lista_spotby").show();
+			jQuery.ajax({ //
+				type: "POST",
+				url: "data/spotby.php",
+				data: {tipo:tipo},
+				success: function(response)
+				{
+					$('#lista_spotby_tabla').html(response);
+				}
+			});
+		};
+		function spotby(){
+			var tipo =0;
+			
+			jQuery.ajax({ //
+				type: "POST",
+				url: "data/spotby.php",
+				data: {tipo:tipo},
+				success: function(response)
+				{
+					$('#resultados_js').html(response);
+				}
+			});
+		};
+		
+		
+	function spotby_save(){
+			var tipo =2;
+			//tomo los valores
+			var descripcion =  document.getElementById("descripcion_spotby").value;
+			var cantidad =  document.getElementById("cantidad_spotby").value;
+			var datos_adicionales =  document.getElementById("a_datos_spotby").value;
+			
+			jQuery.ajax({ //
+				type: "POST",
+				url: "data/spotby.php",
+				data: {tipo:tipo, descripcion:descripcion, cantidad:cantidad, datos_adicionales:datos_adicionales},
+				success: function(response)
+				{
+					$('#resultados_js').html(response);
+				}
+			});
+		};	
+		
+		
+		
+		function subir_iamgen_spotby(id){
+                     var formData = new FormData($("#formulario")[0]);
+                     var ruta = "data/subir_imagen_spotby.php";
+                     var imagen = $("input[name='file']").val();
+                     //alert(imagen);
+
+                     if (imagen == "")//si no tiene nada le dice que sube algo
+                     {
+                                    alert("No se adjunto una imagen");
+
+                     }
+                     else//si tiene algo lo guarda
+                     {
+						
+                                    $.ajax({
+                                    url: ruta,
+                                    type: "POST",
+                                    data: formData,
+                                    contentType: false,
+                                    processData:false,
+                                    success: function(datos)
+                                    {
+										//aqui no llegue
+                                        $('#resultados_js').html(datos);
+										var nombre =  document.getElementById("nombre_imagen_spotby").value;
+										var tipo=3;
+										jQuery.ajax({ //
+											type: "POST",
+											url: "data/spotby.php",
+											data: {tipo:tipo, id:id, nombre:nombre},
+											success: function(response)
+											{
+												$('#resultados_js').html(response);
+												$("#spotby").modal("hide");
+												$('#descripcion_spotby').val("");
+												$('#cantidad_spotby').val("");
+												$('#a_datos_spotby').val("");
+											}
+											});
+                                    }
+                     
+                                    });
+                     } 
+		};    
+		
+		function ver_img_spotby(imagen)
+		{	
+			var mostrar ='<img src="spotby_img/imagenes/'+imagen+'" width="600" height="500">';
+		
+			$('#spotby_imagen_body').html(mostrar);
+			
+			$("#spotby_imagen").modal("show");
+		}
+
+//*********************************************************************************
 
 	function detalle_pedido(id,folio,total_pedido){
 		//alert("Articulo ID= "+id);
@@ -1163,6 +1268,7 @@ function sumar3(){
 				$("#div_generador_reportes").hide();
 				$("#div_mis_pedidos_pend_aut").html("");	
 				$("#div_mis_pedidos").html("");	
+				$("#lista_spotby").hide();
 	};
     function mostrar_reportes(){
 		limpiardivs();
@@ -1184,6 +1290,7 @@ function sumar3(){
 	console.log("ejecutando");
     //window.open('entradas_excel.php?f1='+fecha_ini+'&f2='+fecha_fin, "nuevo", "directories=no, location=no, menubar=no, scrollbars=yes, statusbar=no, tittlebar=no, width=400, height=250");
 }
+
 
 function cargar_arti_reportes()
 	{	
@@ -1218,6 +1325,7 @@ function ver_partidas_traspaso(id_pedido_traspaso)
 </script>
 
 
+
 <!--Boton hacia arriba-->
 <a class="ir-arriba"  href="#" title="Volver arriba">
         <span class="fa-stack">
@@ -1230,6 +1338,7 @@ function ver_partidas_traspaso(id_pedido_traspaso)
 <?php echo $header_index; ?>
 <?php echo $container_index; ?>
 <?php echo $modal_orden_index; ?>
+<?php echo $modales_spotby; ?>
 <?php echo $modal_al_agregar_articulo; ?>
 <?php echo $modal_cc_recolector_oc_index; ?>
 <?php echo $modal_dir_fac_suc; ?>
@@ -1251,6 +1360,11 @@ function ver_partidas_traspaso(id_pedido_traspaso)
 	<script>
 	
 		$(document).ready(function(){
+			
+			
+			
+			
+			
 				  
 				$("#btn_guardar_orden").click(function(){
 					agregar_orden();
