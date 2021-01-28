@@ -687,7 +687,7 @@ $modales_spotby='<div class="modal fade" id="spotby" tabindex="-1" role="dialog"
 										</div>
 										<div class=" col-lg-6" >
 										<div class="form-group col-lg-12">
-											<label >Datos adicionales</label>
+											<label >Additional data</label>
 											<input class="form-control" type="text" id="a_datos_spotby">
 										</div>
 										
@@ -706,7 +706,7 @@ $modales_spotby='<div class="modal fade" id="spotby" tabindex="-1" role="dialog"
                                     <!-- Footer de la ventana -->
                                     <div class="modal-footer">
                                         
-                                        <button type="button" class="btn btn-primary " onclick="spotby_save();">Save</button>
+                                        <button type="button" class="btn btn-primary " onclick="spotby_save();">Send</button>
 										<button type="button" class="btn btn-primary " data-dismiss="modal">Close</button>
                                     </div>
 									</div>	
@@ -722,7 +722,7 @@ $modales_spotby='<div class="modal fade" id="spotby" tabindex="-1" role="dialog"
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                         <h3 class="modal-title" id="detalle_modal_titulo">
-                                           Imagen
+                                           Image
                                         </h3>
                                     </div>
                                     <!-- Contenido de la ventana -->

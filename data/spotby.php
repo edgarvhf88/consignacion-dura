@@ -27,6 +27,12 @@ else if($tipo==1)
 	lista_spotby();
 	
 }
+else if($tipo==4)
+{
+	$id = $_POST['id'];
+	verificar_spotby($id);
+	
+}
 function modal_spotby()//imprime el modal de spotby
 {	
 		echo '<script>$("#spotby").modal("show");</script>';						
@@ -62,7 +68,17 @@ function update_spotby($id, $nombre)
 		{}
 }
 
-
+function verificar_spotby($id)
+{
+	
+	global $conex;
+	$update = "UPDATE spotby SET 
+	estatus='2'
+	WHERE id = '$id'";
+	
+	if (mysql_query($update, $conex) or die(mysql_error()))
+		{echo '<script>spotby_lista();</script>';}
+}
 function lista_spotby()
 {
 	//lista 
@@ -85,6 +101,7 @@ function lista_spotby()
 					<th>Description</th>
 					<th>Quantity</th>
 					<th>Additional data</th>
+					<th>Status</th>
 					<th>Image</th>
 				</tr>
 			</thead><tbody>';
@@ -96,13 +113,40 @@ function lista_spotby()
 	$cantidad=$row['cantidad'];
 	$d_adicional = $row['d_adicional'];
 	$imagen = $row['imagen'];
+	$estatus = $row['estatus'];
+	$tipo_user=permisos();
+	if($tipo_user==3)
+	{
+		if($estatus==1)
+		{
+		$estatus='<div class="dropdown">
+		<button class="btn btn-danger btn-block dropdown-toggle btn_estatus" type="button" id="btnestatus_1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			Verificar
+			<span class="caret"></span>
+		</button><ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+		<li class="btn btn-info btn-block btn_solicitud_traspaso" id="btn_solicitudtraspaso_1" onclick="verificar_spot('.$id.');" >Verificar</li></div>';
+		}
+		else if($estatus==2)
+		{
+			$estatus="Attended";
+		}
+	}
+	else {
+		if($estatus==1)
+		{
+			$estatus="Process";
+		}
+		else if($estatus==2)
+		{
+			$estatus="Attended";
+		}
+	}
 		//aqui voy
-	$tabla .= '<tr >
-	
-			
+	$tabla .= '<tr>
 				<td>'.$descripcion.'</td>
 				<td>'.$cantidad.'</td>
 				<td>'.$d_adicional.'</td>
+				<td>'.$estatus.'</td>
 				<td><a onclick="ver_img_spotby(\''.$imagen.'\');" href="#"  >'.$imagen.' <i class="fa fa-check-square-o" aria-hidden="true"></i></a></td>
 			   </tr>';
 		
@@ -124,7 +168,25 @@ function lista_spotby()
 			echo $tabla;			
 }
 
+function permisos()
+{
+$id_user=$_SESSION["logged_user"];	
+global $database_conexion, $conex;
 
+$pedidos_nef = "
+SELECT tipo_usuario
+FROM usuarios
+WHERE id= '$id_user' ";
+$resultado_pednef= mysql_query($pedidos_nef, $conex) or die(mysql_error());
+$row = mysql_fetch_assoc($resultado_pednef);
+$total_pednef = mysql_num_rows($resultado_pednef);
+if ($total_pednef > 0)
+	{
+		$permiso=$row['tipo_usuario'];
+		
+	}
+	return $permiso;
+}
 
 
 ?>

@@ -60,6 +60,11 @@ switch($tipo_usuario)
                     </a>
 					
                 </li> 
+				<li style="background-color:rgba(192,192,192,0.8);">
+                    <a href="#" style="z-index:3;" onclick="spotby_lista();">
+                       Spot By
+                    </a>
+                </li> 
 				<li  style="background-color:rgba(192,192,192,0.8);">
                     <a href="#" onclick=" mostrar_articulos(11)">
                        <span class="fa fa-dropbox" aria-hidden="true"></span> Articulos
