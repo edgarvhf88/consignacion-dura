@@ -82,10 +82,10 @@ function lista_spotby()
 	$tabla = '<table id="tabla_spotby" class="table table-striped table-bordered table-hover table-responsive display" style="font-size:12px;">
 			<thead>
 				<tr class="bg-info">
-					<th>Descripcion</th>
-					<th>Cantidad</th>
-					<th>Datos</th>
-					<th>Imagen</th>
+					<th>Description</th>
+					<th>Quantity</th>
+					<th>Additional data</th>
+					<th>Image</th>
 				</tr>
 			</thead><tbody>';
 								

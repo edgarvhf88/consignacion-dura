@@ -137,19 +137,20 @@ function mostrar_user(){
 //*******************************//////SPOT BY//////*******************************************
 function spotby_lista(){
 			var tipo =1;
-			
+			limpiardivs();
+			$("#lista_spotby").show();
 			jQuery.ajax({ //
 				type: "POST",
 				url: "data/spotby.php",
 				data: {tipo:tipo},
 				success: function(response)
 				{
-					$('#lista_spotby').html(response);
+					$('#lista_spotby_tabla').html(response);
 				}
 			});
 		};
 		function spotby(){
-			var tipo =1;
+			var tipo =0;
 			
 			jQuery.ajax({ //
 				type: "POST",
@@ -1267,6 +1268,7 @@ function sumar3(){
 				$("#div_generador_reportes").hide();
 				$("#div_mis_pedidos_pend_aut").html("");	
 				$("#div_mis_pedidos").html("");	
+				$("#lista_spotby").hide();
 	};
     function mostrar_reportes(){
 		limpiardivs();
@@ -1321,88 +1323,8 @@ function ver_partidas_traspaso(id_pedido_traspaso)
 	};
 	
 </script>
-<div id="lista_spotby">
 
 
-
-</div>
-<div class="modal fade" id="spotby" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <!-- Header de la ventana -->
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h3 class="modal-title" id="detalle_modal_titulo">
-                                           SPOT BY
-                                        </h3>
-                                    </div>
-                                    <!-- Contenido de la ventana -->
-                                    <div class="modal-body" style="overflow:auto;">
-                                       
-									   <div class=" col-lg-12" >
-										<div class="form-group col-lg-8">
-											<label >Description</label>
-											<input class="form-control" id="descripcion_spotby">
-										</div>
-										<div class="form-group col-lg-3">
-											<label >Quantity</label>
-											<input type="number" class="form-control" id="cantidad_spotby">
-										</div>
-										</div>
-										<div class=" col-lg-6" >
-										<div class="form-group col-lg-12">
-											<label >Datos adicionales</label>
-											<input class="form-control" type="text" id="a_datos_spotby">
-										</div>
-										
-										</div>
-										<div class=" col-lg-6" >
-										
-										<div class="form-group col-lg-12">
-										<br>
-										<form id="formulario" method="post" enctype="multipart/form-data" >
-											<input id="file_input" type="file" name="file" accept="image/*, .docx, .pdf, .xlsx, .msg" />
-										</form>
-										</div>
-										</div>
-									</div>
-									<input type="hidden" id="nombre_imagen_spotby">
-                                    <!-- Footer de la ventana -->
-                                    <div class="modal-footer">
-                                        
-                                        <button type="button" class="btn btn-primary " onclick="spotby_save();">Save</button>
-										<button type="button" class="btn btn-primary " data-dismiss="modal">Close</button>
-                                    </div>
-									</div>	
-									</div>
-    </div>
-	
-	
-	
-	<div class="modal fade" id="spotby_imagen" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <!-- Header de la ventana -->
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h3 class="modal-title" id="detalle_modal_titulo">
-                                           Imagen
-                                        </h3>
-                                    </div>
-                                    <!-- Contenido de la ventana -->
-                                    <div class="modal-body" style="overflow:auto;" >
-                                       <div id="spotby_imagen_body" align="center">
-									   
-									   </div>
-									</div>
-									
-                                    <!-- Footer de la ventana -->
-                                    <div class="modal-footer">
-									<button type="button" class="btn btn-primary " data-dismiss="modal">Close</button>
-                                    </div>
-								</div>	
-							</div>
-    </div>
 
 <!--Boton hacia arriba-->
 <a class="ir-arriba"  href="#" title="Volver arriba">
@@ -1416,6 +1338,7 @@ function ver_partidas_traspaso(id_pedido_traspaso)
 <?php echo $header_index; ?>
 <?php echo $container_index; ?>
 <?php echo $modal_orden_index; ?>
+<?php echo $modales_spotby; ?>
 <?php echo $modal_al_agregar_articulo; ?>
 <?php echo $modal_cc_recolector_oc_index; ?>
 <?php echo $modal_dir_fac_suc; ?>
