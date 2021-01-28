@@ -165,9 +165,15 @@ echo '<table id="mostrar_articulos" class="table table-striped table-bordered ta
 							}	
 							$unidades_pedidas = unidades_pedidas($id_art,$id_empresa);
 							$total_cantidad_cobrada = cantidades_cobradas($id_art,$almacen_id);
+			
 		$total_consumido_nopagado = suma_diferencias($id_art,$almacen_id,1) - $total_cantidad_cobrada; // 1 = INV CERRADO
+		if ($total_consumido_nopagado > 0){
+			$existencia_actual = $existencia_val - $total_consumido_nopagado;		
+			}else
+			{
+			$existencia_actual = $existencia_val;	
+			}
 		
-		$existencia_actual = existencia_articulo($articulo_id,$almacen_id) - $total_consumido_nopagado;	
 		
 		$title_datos = "total cantidades cobradas=".$total_cantidad_cobrada." / diferencias=".suma_diferencias($id_art,$almacen_id,1)." / no pagado y consumido=".$total_consumido_nopagado;
 		$arr = explode('_',ultimo_inv_art($id_art));

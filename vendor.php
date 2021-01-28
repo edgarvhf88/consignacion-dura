@@ -679,6 +679,7 @@ function requerir_pedido_nef(id_pedido){
 				success:  function (response) {
 					$('#resultados_js').html(response); 
 					$("#modal_correo_dir").modal("hide");
+					$("#modal_cargando").modal("hide");
 				}
 			});
 	};
@@ -3076,7 +3077,7 @@ function requerir_pedido_nef(id_pedido){
 							   
                 });
 				$(".subirimagen").on("click", function(){
-							var id_element = $(this).id();
+							//var id_element = $(this).id();
 							var id_inventario = document.getElementById("txt_idinv_correo").value;
 							$("#modal_subir_imagen").modal("show");
 							$("#div_vista_imagen").html('');

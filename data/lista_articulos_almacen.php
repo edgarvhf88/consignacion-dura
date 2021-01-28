@@ -76,7 +76,7 @@ echo '
 				<th>Reorden</th> -->
 				<th>Existencia Sistema</th>
 				<th>Existencia Fisica</th>
-				<th>Existencia Fisica2</th>
+				<th>Exist. Ult. Inv.</th>
 				<th>Conteo</th>
 				<th class="hidden"></th>
 			</tr>
@@ -167,8 +167,15 @@ echo '
 				
 			$total_cantidad_cobrada = cantidades_cobradas($id_art,$almacen_id);
 			$total_consumido_nopagado = suma_diferencias($id_art,$almacen_id,1) - $total_cantidad_cobrada;
+		if ($total_consumido_nopagado > 0){
+			$existencia_actual = $existencia_val - $total_consumido_nopagado;	
+		}
+		else
+		{
+			$existencia_actual = $existencia_val;
+		}	
 		
-		$existencia_actual = existencia_articulo($articulo_id,$almacen_id) - $total_consumido_nopagado;		
+		
 			$arr = explode('_',ultimo_inv_art($id_art));
 			if (count($arr) > 1){
 			$ult_inv_act = $arr[0]; 
