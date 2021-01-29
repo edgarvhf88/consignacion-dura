@@ -10,54 +10,7 @@
 			pasar_pedido($id_pedido,$estatus,$id_user);
 	  }
 	  
-	  function cant_proces_tras($id_pedido_cliente){
-		  global $database_conexion, $conex;
-	
-		$lista_arts_tras_pend = array(); // cantidad en proceso de traspaso
-		
-		$sql = "SELECT  pd.id_articulo as id_articulo, pd.cantidad as cantidad, pd.surtido as surtido 
-		FROM pedido_traspaso pt
-		INNER JOIN pedido_traspaso_det pd ON pd.id_pedido = pt.id_pedido
-		WHERE pt.id_pedido_cliente = '$id_pedido_cliente' AND pt.estatus = '1'"; 
-		$cons = mysql_query($sql, $conex) or die(mysql_error());
-		//$row = mysql_fetch_assoc($cons);
-		$total_cons = mysql_num_rows($cons);
-
-		if ($total_cons > 0){
-			while($row = mysql_fetch_array($cons,MYSQL_BOTH)) 
-            { 
-				if($row['cantidad'] <> $row['surtido']){
-				$lista_arts_tras_pend[$row['id_articulo']] = $row['cantidad'];
-				}
-			}
-		}
-		return $lista_arts_tras_pend;
-			
-	  }
-	  function cant_proces_pednef($id_pedido_cliente){
-		  global $database_conexion, $conex;
-	
-		$lista_arts_pednef_pend = array(); // cantidad en proceso de traspaso
-		
-		$sql = "SELECT  pd.id_articulo as id_articulo, pd.cantidad as cantidad, pd.surtido as surtido 
-		FROM pedido_nef pt
-		INNER JOIN pedido_nef_det pd ON pd.id_pedido = pt.id_pedido
-		WHERE pt.id_pedido_cliente = '$id_pedido_cliente' AND pt.estatus = '1'"; 
-		$cons = mysql_query($sql, $conex) or die(mysql_error());
-		//$row = mysql_fetch_assoc($cons);
-		$total_cons = mysql_num_rows($cons);
-
-		if ($total_cons > 0){
-			while($row = mysql_fetch_array($cons,MYSQL_BOTH)) 
-            { 
-				if($row['cantidad'] <> $row['surtido']){
-				$lista_arts_pednef_pend[$row['id_articulo']] = $row['cantidad'];
-				}
-			}
-		}
-		return $lista_arts_pednef_pend;
-			
-	  }
+	  
 	  
 function Traspasar_lista_det($id_pedido,$id_pedido_traspaso){
 global  $conex;
@@ -102,6 +55,10 @@ global  $conex;
 			if (isset($cant_arts_proce_tras[$id_articulo])){
 			$cant_proces_tras = $cant_arts_proce_tras[$id_articulo];
 			$cant_pend_solicitar = $cant_pend_solicitar - $cant_proces_tras;
+			}
+			if (isset($cant_arts_proce_pednef[$id_articulo])){
+			$cant_proces_pednef = $cant_arts_proce_pednef[$id_articulo];
+			$cant_pend_solicitar = $cant_pend_solicitar - $cant_proces_pednef;
 			}
 			
 			if (($cant_pend_solicitar != "") && ($cant_pend_solicitar > 0))

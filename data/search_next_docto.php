@@ -110,7 +110,7 @@
 		recepciones='$recs'
 		WHERE orden_compra='$folio'";
 		
-		if ($estatus =='S')
+		if ($estatus =='R')
 		{
 			$remision = "UPDATE pedido_nef SET 
 			recepciones='$recs',

@@ -125,15 +125,15 @@ input[type=checkbox]
 			});
 		};
    function detalle_pedido_nef (id,folio,total_pedido){
-		jQuery('#pedido_detalle_nef').modal('show', {backdrop: 'static'});
-			
+		jQuery('#remision_detalle').modal('show', {backdrop: 'static'});
+			$("#detalle_modal_titulo").html('Detalle de Pedido Nef');
 			jQuery.ajax({ //
 				type: "POST",
 				url: "data/pedido_nef_det.php",
 				data: {id:id,folio:folio,total_pedido:total_pedido},
 				success: function(resultados)
 				{
-					jQuery('#pedido_detalle_nef .modal-body').html(resultados);
+					jQuery('#remision_detalle .modal-body').html(resultados);
 				}
 			});
 		};

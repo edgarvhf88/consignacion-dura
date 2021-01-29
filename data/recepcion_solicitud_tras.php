@@ -179,7 +179,7 @@ function requisitor($id)
 	
 }
 
-
+$id_pedido = "";
 
 $tipo = $_POST['tipo'];
 

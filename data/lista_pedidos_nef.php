@@ -70,6 +70,7 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 					$almacen = '';
 					$id_pedido = '';
 					$folio = '';
+					$orden_c_enviar ='';
 					$total_pedido = 0;
 					$validacion_btn_tracking = '';					
 					$pedido_nef = '';					
@@ -95,6 +96,10 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
                    	case 3: // en estado "Surtido" esto cuando ya se complete la recepcion al almacen correspondiente
                    	
                    	$estatus = 'Remisionado';
+                   	break;
+                   	case 4: // 
+                   	
+                   	$estatus = 'Recepcionado Allpart';
                    	break;
                    }
                    
@@ -157,14 +162,14 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 							<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 							<li class="btn btn-info btn-block btn_solicitud_traspaso" id="btn_solicitudtraspaso_1" onclick="buscar_remisiones(\''.$pedido_nef_original.'\', \'nef\', \'1\');" title="Busca en microsip si existen remisiones para ese pedido.">Buscar remisiones</li></div>';}
 				//YA SE REMISIONO COMPLETA ///////////////////////////////////////////
-				else if ($row2['estatus'] == 3)
+				else if ($row2['estatus'] >= 3)
 				{//contenido
 					$remisiones = array();
 					$remsiones = explode(",", $row2['rems']);
-					$orden_c_enciar =$row2['orden_compra'];
+					$orden_c_enviar =$row2['orden_compra'];
 					foreach ($remsiones as $rem)
 					{
-						$rowrems .='<a onclick="detalle_remision ('.$rem.', '.$orden_c_enciar.', '.$id_pedido.');">'.$rem.'</a> <br>' ;
+						$rowrems .='<a onclick="detalle_remision ('.$rem.', '.$orden_c_enviar.', '.$id_pedido.');">'.$rem.'</a> <br>' ;
 						
 					}
 					
@@ -176,10 +181,10 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 						
 						$remisiones = array();
 						$remsiones = explode(",", $row2['rems']);
-						$orden_c_enciar =$row2['orden_compra'];
+						$orden_c_enviar =$row2['orden_compra'];
 					foreach ($remsiones as $rem)
 						{
-							$rowrems .='<a onclick="detalle_remision ('.$rem.', '.$orden_c_enciar.', '.$id_pedido.');">'.$rem.'</a> <br>' ;
+							$rowrems .='<a onclick="detalle_remision ('.$rem.', '.$orden_c_enviar.', '.$id_pedido.');">'.$rem.'</a> <br>' ;
 						}
 						$pedido_nef_original =$row2['folio_pedmicro'];
 						
@@ -208,6 +213,7 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 					$recepciones = array();
 					$recepciones = explode(",", $row2['recepciones']);
 					$traspasos = "";
+					$orden_c_enviar =$row2['orden_compra'];
 					foreach ($recepciones as $rec)
 					{
 						$tras_rel_array = explode(",", obtener_traspaso($rec));
@@ -222,7 +228,7 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 						$print_rec = str_replace("RAP","",$rec);
 						$print_rec =str_replace("," , "", number_format($print_rec, 0));
 						$print_rec = 'RAP'.$print_rec;
-						$rowrec .='<a onclick="detalle_recepcion (\''.$rec.'\', '.$id_pedido.');">'.$print_rec.'</a> <br>' ;
+						$rowrec .='<a onclick="detalle_recepcion (\''.$rec.'\', '.$orden_c_enviar.', '.$id_pedido.');">'.$print_rec.'</a> <br>' ;
 						
 					}
 					
@@ -234,7 +240,7 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 						
 						$recepciones = array();
 						$recepciones = explode(",", $row2['recepciones']);
-						$orden_c_enciar =$row2['orden_compra'];
+						$orden_c_enviar =$row2['orden_compra'];
 						$traspasos = "";
 					foreach ($recepciones as $rec)
 						{
@@ -251,7 +257,7 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 						$print_rec =str_replace("," , "", number_format($print_rec, 0));
 						$print_rec = 'RAP'.$print_rec;
 						
-							$rowrec .='<a onclick="detalle_recepcion (\''.$rec.'\', '.$orden_c_enciar.', '.$id_pedido.');">'.$print_rec.'</a> <br>' ;
+							$rowrec .='<a onclick="detalle_recepcion (\''.$rec.'\', '.$orden_c_enviar.', '.$id_pedido.');">'.$print_rec.'</a> <br>' ;
 						}
 						$orden_compra_allpart =$row2['orden_compra'];
 						
@@ -297,9 +303,9 @@ echo '<table id="lista_pedidos_nef" class="table table-striped table-bordered ta
 					<td onclick="'.$detalle.'">'.$folio.'</td>
 					<td onclick="'.$detalle.'">'.$row2['fecha_pedido_oficial'].'</td>
 					<td onclick="">'.$pedido_nef.'</td>
-					<td onclick="'.$detalle.'">'.$rowrems.'</td>
-					<td onclick="'.$detalle.'">'.$roworden_c.'</td>
-					<td onclick="'.$detalle.'">'.$rowrec.'</td>
+					<td onclick="">'.$rowrems.'</td>
+					<td onclick="">'.$roworden_c.'</td>
+					<td onclick="">'.$rowrec.'</td>
 					<td onclick="" title="Folio Solicitud -> Folio Traspaso Microsip">'.$traspasos.'</td>
 					<td align="right" onclick="'.$detalle.'">$'.number_format($total_pedido,2).'</td>
 					<td align="right" onclick="'.$detalle.'" id="td_estatus_'.$id_pedido.'">'.$estatus.'</td>	

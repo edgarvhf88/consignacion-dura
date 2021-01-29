@@ -1156,7 +1156,58 @@ $total_rows = mysql_num_rows($resultado);
 		}
 return $id_empresa;
 }	  
+function cant_proces_tras($id_pedido_cliente){
+		  global $database_conexion, $conex;
+	
+		$lista_arts_tras_pend = array(); // cantidad en proceso de traspaso
+		
+		$sql = "SELECT  pd.id_articulo as id_articulo, SUM(pd.cantidad) as cantidad, SUM(pd.surtido) as surtido 
+		FROM pedido_traspaso pt
+		INNER JOIN pedido_traspaso_det pd ON pd.id_pedido = pt.id_pedido
+		WHERE pt.id_pedido_cliente = '$id_pedido_cliente' AND pt.estatus = '1'
+		GROUP BY pd.id_articulo "; 
+		$cons = mysql_query($sql, $conex) or die(mysql_error());
+		//$row = mysql_fetch_assoc($cons);
+		$total_cons = mysql_num_rows($cons);
 
+		if ($total_cons > 0){
+			while($row = mysql_fetch_array($cons,MYSQL_BOTH)) 
+            { 
+				if($row['cantidad'] <> $row['surtido']){
+				$lista_arts_tras_pend[$row['id_articulo']] = $row['cantidad'];
+				}
+			}
+		}
+		return $lista_arts_tras_pend;
+			
+	  }
+	  function cant_proces_pednef($id_pedido_nef){
+		  global $database_conexion, $conex;
+	
+		$lista_arts_pednef_pend = array(); // cantidad en proceso de traspaso
+		
+		$sql = "SELECT  pd.id_articulo as id_articulo, SUM(pd.cantidad) as cantidad, SUM(ptd.cantidad) as cant_traspaso, SUM(pd.surtido) as surtido
+		FROM pedido_nef pn
+		INNER JOIN pedido_nef_det pd ON pd.id_pedido = pn.id_pedido
+		INNER JOIN ligas_doctos lig ON lig.id_pedido = pn.id_pedido
+		LEFT JOIN pedido_traspaso_det ptd ON ptd.id_pedido = lig.id_pedido_traspaso AND ptd.id_articulo = pd.id_articulo
+		WHERE pn.id_pedido_cliente = '$id_pedido_nef' AND lig.id_pedido_traspaso <> '' AND pn.estatus <> '0'
+		GROUP BY pd.id_articulo"; 
+		$cons = mysql_query($sql, $conex) or die(mysql_error());
+		//$row = mysql_fetch_assoc($cons);
+		$total_cons = mysql_num_rows($cons);
+
+		if ($total_cons > 0){
+			while($row = mysql_fetch_array($cons,MYSQL_BOTH)) 
+            { 
+				
+				$lista_arts_pednef_pend[$row['id_articulo']] = $row['cantidad'] - $row['cant_traspaso'];
+				
+			}
+		}
+		return $lista_arts_pednef_pend;
+			
+	  }
 /// obtener folio de orden con el id_oc
 function folio_orden($orden_id)
 {
