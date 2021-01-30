@@ -367,7 +367,14 @@ else /// sin resultados
                            
                         </div>
                     </div>
-				</div>';		
+				</div><script>
+	
+	$(document).ready(function()
+	{
+		$("#modal_cargando").modal("hide");
+ 	});
+	 
+	</script>';		
 		
 
 

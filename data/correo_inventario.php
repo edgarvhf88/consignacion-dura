@@ -157,7 +157,7 @@ try {
     $mail->Host = 'allpart.mx';  						// Specify main and backup SMTP servers
     $mail->SMTPAuth = true;                               // Enable SMTP authentication
     $mail->Username = 'info@allpart.mx';                 // SMTP username
-    $mail->Password = 'Contrasena_123';                           // SMTP password
+    $mail->Password = 'Grupogarza2021';                           // SMTP password
     //$mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
 	$mail->SMTPAutoTLS = false;
     $mail->Port = 587;                                    // TCP port to connect to

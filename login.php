@@ -73,7 +73,7 @@ if ($_SESSION["logged_user"] <> ''){ header('Location: index.php'); }
                 <div class="form-content">
                     <div class="form-items">
                         <h3>Panel de acceso.</h3>
-                        <p>Digite su nombre de usuario o correo electrinico y contraseña.</p>
+                        <p>Digite su nombre de usuario o correo electronico y contraseña.</p>
                         <div class="page-links">
                             <a href="login.php" class="active">Login</a>
                         </div>
