@@ -1,21 +1,28 @@
+<?php include("data/conexion.php"); ?>
+
 <!DOCTYPE html>
 <html lang="es-mx">
 <head>
-<?php include("data/constructor.php"); 
+<?php  
 
-if ((isset($_SESSION["logged_user"])) &&($_SESSION["logged_user"] == '')){ header('Location: login.php'); }
+if ((isset($_SESSION["logged_user"])) &&($_SESSION["logged_user"] == '')){ 
+/*header('Location: login.php');*/ 
+echo '<script> window.location.replace("login.php"); </script>';
+}
 else { $tipo_usuario = validar_usuario($_SESSION["logged_user"]);}
 /// $tipo_usuario = 1 == requisitor
 switch($tipo_usuario)
 {
 	case 1:
-	header('Location: admin.php');
+	//header('Location: admin.php');
+	echo '<script> window.location.replace("admin.php"); </script>';
 	break;
 	case 2:
 	//header('Location: index.php');
 	break;
 	case 3:
-	header('Location: vendor.php');
+	//header('Location: vendor.php');
+	echo '<script> window.location.replace("vendor.php"); </script>';
 	break;
 	case 4:
 	//header('Location: index.php');
@@ -24,10 +31,10 @@ switch($tipo_usuario)
 	//header('Location: supervisor.php');
 	break;
 	case 11:
-	header('Location: cxc.php');
+	//header('Location: cxc.php');
 	break;
 	case 17:
-	header('Location: transfer.php');
+	//header('Location: transfer.php');
 	break;
 	
 }

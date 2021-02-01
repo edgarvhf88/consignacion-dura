@@ -1,8 +1,10 @@
+<?php include("data/conexion.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<?php include("data/constructor.php"); 
-if ((isset($_SESSION["logged_user"])) &&($_SESSION["logged_user"] == '')){ header('Location: login.php'); }
+<?php 
+if ((isset($_SESSION["logged_user"])) &&($_SESSION["logged_user"] == '')){ /* header('Location: login.php'); */
+echo '<script> window.location.replace("login.php"); </script>';}
 else { $tipo_usuario = validar_usuario($_SESSION["logged_user"]);}
 /// $tipo_usuario = 0 == admin
 switch($tipo_usuario)
@@ -11,16 +13,18 @@ switch($tipo_usuario)
 	//header('Location: admin.php');
 	break;
 	case 2:
-	header('Location: index.php');
+	//header('Location: index.php');
+	echo '<script> window.location.replace("index.php"); </script>';
 	break;
 	case 3:
-	header('Location: vendor.php');
+	//header('Location: vendor.php');
+	echo '<script> window.location.replace("vendor.php"); </script>';
 	break;
 	case 4:
-	header('Location: consultor.php');
+	//header('Location: consultor.php');
 	break;
 	case 5:
-	header('Location: supervisor.php');
+	//header('Location: supervisor.php');
 	break;
 }
 /////////////codigo para validar empresa y cargar pagina con su estilo ////////////////////////////////////////////////////////////////////

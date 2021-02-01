@@ -1,10 +1,12 @@
+<?php include("data/conexion.php"); 
+if ($_SESSION["logged_user"] <> ''){ /*  header('Location: index.php'); */ 
+echo '<script> window.location.replace("login.php"); </script>';}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<?php include("data/conexion.php"); 
-if ($_SESSION["logged_user"] <> ''){ header('Location: index.php'); }
 
-?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AllPart</title>

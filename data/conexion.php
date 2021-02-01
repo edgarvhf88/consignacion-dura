@@ -3,8 +3,7 @@ session_start();
 if (!isset($_SESSION["logged_user"])){
 	$_SESSION["logged_user"] = '';
 }
-/* */
-
+/* 
 $ruta = "10.0.0.9:C:\\microsip datos\\ALLPARTS.fdb";
 //$ruta = "10.0.0.9:C:\\microsip datos\\nef2011.fdb";
 $username = "SYSDBA";
@@ -28,17 +27,19 @@ try {
    print "Error!: " . $e->getMessage() . "<br/>";
    die();
 } 
+*/
 
  
 ///////////////////////////////////////////////////////
 
-$hostname_conexion = "localhost";
-//$hostname_conexion = "185.177.154.176:3306";
-$database_conexion = "consignacion_dura";
-$username_conexion = "root";
-$password_conexion = "fAMMA1234";
-//$username_conexion = "admin_dura";
-//$password_conexion = "Allpart*2020";
+$hostname_conexion = "162.214.184.221:3306"; // db hostgator
+//$hostname_conexion = "localhost:3306";	//
+//$database_conexion = "consignacion_dura";
+//$username_conexion = "root";
+//$password_conexion = "fAMMA1234";
+$database_conexion = "wwallp_consigna_dura";
+$username_conexion = "wwallp_admin";
+$password_conexion = "allpart2020";
 
 $conex = mysql_pconnect($hostname_conexion, $username_conexion, $password_conexion) or trigger_error(mysql_error(),E_USER_ERROR);
 mysql_select_db($database_conexion, $conex);

@@ -1,29 +1,31 @@
+<?php include("data/conexion.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<?php include("data/constructor.php"); 
-if ((isset($_SESSION["logged_user"])) &&($_SESSION["logged_user"] == '')){ header('Location: login.php'); }
+
+<?php
+if ((isset($_SESSION["logged_user"])) &&($_SESSION["logged_user"] == '')){ echo '<script> window.location.replace("login.php"); </script>'; }
 else { $tipo_usuario = validar_usuario($_SESSION["logged_user"]);}
 /// $tipo_usuario = 0 == admin
 switch($tipo_usuario)
 {
 	case 1:
-	header('Location: admin.php');
+	echo '<script> window.location.replace("admin.php"); </script>';
 	break;
 	case 2:
-	header('Location: index.php');
+	echo '<script> window.location.replace("index.php"); </script>';
 	break;
 	case 3:
 	//header('Location: vendor.php');
 	break;
 	case 4:
-	header('Location: index.php');
+	//header('Location: index.php');
 	break;
 	case 5:
-	header('Location: supervisor.php');
+	//header('Location: supervisor.php');
 	break;
 	case 17:
-	header('Location: transfer.php');
+	//header('Location: transfer.php');
 	break;
 }
 
