@@ -3,7 +3,7 @@ session_start();
 if (!isset($_SESSION["logged_user"])){
 	$_SESSION["logged_user"] = '';
 }
-/* 
+
 $ruta = "10.0.0.9:C:\\microsip datos\\ALLPARTS.fdb";
 //$ruta = "10.0.0.9:C:\\microsip datos\\nef2011.fdb";
 $username = "SYSDBA";
@@ -27,19 +27,19 @@ try {
    print "Error!: " . $e->getMessage() . "<br/>";
    die();
 } 
-*/
+
 
  
 ///////////////////////////////////////////////////////
 
-$hostname_conexion = "162.214.184.221:3306"; // db hostgator
-//$hostname_conexion = "localhost:3306";	//
-//$database_conexion = "consignacion_dura";
-//$username_conexion = "root";
-//$password_conexion = "fAMMA1234";
-$database_conexion = "wwallp_consigna_dura";
+/* $hostname_conexion = "162.214.184.221:3306"; */ // db hostgator
+$hostname_conexion = "localhost:3306";	//
+$database_conexion = "consignacion_dura";
+$username_conexion = "root";
+$password_conexion = "fAMMA1234";
+/* $database_conexion = "wwallp_consigna_dura";
 $username_conexion = "wwallp_admin";
-$password_conexion = "allpart2020";
+$password_conexion = "allpart2020"; */
 
 $conex = mysql_pconnect($hostname_conexion, $username_conexion, $password_conexion) or trigger_error(mysql_error(),E_USER_ERROR);
 mysql_select_db($database_conexion, $conex);
@@ -1447,7 +1447,7 @@ function ValidarPedidoCliente($id_pedido){
 function Articulo_Id($clave_articulo){
 	global $con_micro;		
 	$sql_clave = "SELECT 
-		A.ARTICULO_ID AS ARTICULO_ID	
+	A.ARTICULO_ID AS ARTICULO_ID	
 	FROM  CLAVES_ARTICULOS A 	
 	WHERE (A.CLAVE_ARTICULO = '$clave_articulo')";
 $consulta = $con_micro->prepare($sql_clave);
