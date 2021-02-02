@@ -33,7 +33,7 @@ try {
 ///////////////////////////////////////////////////////
 
 /* $hostname_conexion = "162.214.184.221:3306"; */ // db hostgator
-$hostname_conexion = "localhost:3306";	//
+$hostname_conexion = "localhost";	//
 $database_conexion = "consignacion_dura";
 $username_conexion = "root";
 $password_conexion = "fAMMA1234";

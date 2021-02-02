@@ -44,19 +44,19 @@ $total_rows = mysql_num_rows($resultado);
 
 
 if ($total_rows > 0){ // con resultados
-
+$tipo_usuario = validar_usuario($_SESSION["logged_user"]);
 
 echo '<table id="mis_carritos_pendientes" class="display table table-striped table-bordered table-hover table-responsive">
                     	<thead>
                     		<tr class="info">
                     			<th>'.$fecha_tabla_mis_pedidos.'</th>
                     			<th>'.$folio_tabla_mis_pedidos.'</th>
-                    			<th>'.$estatus_tabla_mis_pedidos.'</th>
-                    			
-                    			<th>'.$total_tabla_mis_pedidos.'</th>
-                    			<th></th>
-                    			
-                    			
+                    			<th>'.$estatus_tabla_mis_pedidos.'</th>';
+                    			if ($tipo_usuario==2){
+                    			echo '<th>'.$total_tabla_mis_pedidos.'</th>';
+								}
+								else {'<th hidden >'.$total_tabla_mis_pedidos.'</th>';}
+                    			echo '<th></th>
                     		</tr>
                     	</thead><tbody>';
                     		$estatus = '';						
@@ -100,12 +100,17 @@ echo '<table id="mis_carritos_pendientes" class="display table table-striped tab
                     									</td>
                     			<td onclick="detalle_pedido('.$row2['id'].',0,'.$row2['total_pedido'].');" '.$clase_td.' align="center">
                     									'.$estatus.'
-                    									</td>
-                    			
-                    			<td align="right" onclick="detalle_pedido('.$row2['id'].',0,'.$row2['total_pedido'].');">
+                    									</td>';
+                    			if ($tipo_usuario==2){
+                    			echo '<td align="right" onclick="detalle_pedido('.$row2['id'].',0,'.$row2['total_pedido'].');">
                     									$'.number_format($row2['total_pedido'],2).'
-                    									</td>
-                    			<td align="right" style="width:120px;">
+								</td>';}
+								else{
+                    			echo '<td hidden align="right" onclick="detalle_pedido('.$row2['id'].',0,'.$row2['total_pedido'].');">
+                    									$'.number_format($row2['total_pedido'],2).'
+								</td>';}
+														
+                    			echo '<td align="right" style="width:120px;">
                     									<input type="hidden" id="txt_folio_pedido_'.$row2['id'].'" value="-"/>
                     										<button class="btn btn-success btn_resume_cart" id="btnresumepedido_'.$row2['id'].'" >
                     										'.$retomar_carrito.'		

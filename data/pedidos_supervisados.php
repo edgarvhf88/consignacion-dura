@@ -51,9 +51,10 @@ echo '<table id="pedidos_personal" class="table table-striped table-bordered tab
                             <th>'.$comprador_tabla_mis_pedidos.'</th>
                             <th>'.$folio_tabla_mis_pedidos.'</th>
 							<th>'.$fecha_tabla_mis_pedidos.'</th>
-                            <th>'.$orden_cliente_tabla_mis_pedidos.'</th>
-                            <th>'.$total_tabla_mis_pedidos.'</th>
-                            <th>'.$estatus_tabla_mis_pedidos.'</th>
+                            <th>'.$orden_cliente_tabla_mis_pedidos.'</th>';
+                            if ($tipo_usuario==2){echo '<th>'.$total_tabla_mis_pedidos.'</th>';}
+							else {echo '<th hidden>'.$total_tabla_mis_pedidos.'</th>';}
+                            echo '<th>'.$estatus_tabla_mis_pedidos.'</th>
                             
 							
                     	</tr>
@@ -99,9 +100,13 @@ switch($row2['estatus'])
                    	
                    	<td style="width:10%;" align="right" onclick="detalle_pedido('.$row2['id_pedido'].','.$row2['folio'].','.$row2['total_pedido'].');">'.$row2['folio'].'</td>
 					<td style="width:10%;" align="right" onclick="detalle_pedido('.$row2['id_pedido'].','.$row2['folio'].','.$row2['total_pedido'].');">'.$row2['fecha_pedido_oficial'].'</td>
-					<td style="width:10%;" align="right" onclick="detalle_pedido('.$row2['id_pedido'].','.$row2['folio'].','.$row2['total_pedido'].');">'.$row2['orden_compra'].'</td>
-                   	<td  style="width:10%;" align="right" onclick="detalle_pedido('.$row2['id_pedido'].','.$row2['folio'].','.$row2['total_pedido'].');" >$'.number_format($row2['total_pedido'],2).'</td>
-                   	<td style="width:10%;" align="center" id="td_estatus_'.$row2['id_pedido'].'" '.$clase_td.' onclick="detalle_pedido('.$row2['id_pedido'].','.$row2['folio'].','.$row2['total_pedido'].');">'.$estatus.'
+					<td style="width:10%;" align="right" onclick="detalle_pedido('.$row2['id_pedido'].','.$row2['folio'].','.$row2['total_pedido'].');">'.$row2['orden_compra'].'</td>';
+                   	if ($tipo_usuario==2){
+					echo '<td  style="width:10%;" align="right" onclick="detalle_pedido('.$row2['id_pedido'].','.$row2['folio'].','.$row2['total_pedido'].');" >$'.number_format($row2['total_pedido'],2).'</td>';}
+					else 
+					{echo '<td hidden style="width:10%;" align="right" onclick="detalle_pedido('.$row2['id_pedido'].','.$row2['folio'].','.$row2['total_pedido'].');" >$'.number_format($row2['total_pedido'],2).'</td>';}
+					
+                   	echo '<td style="width:10%;" align="center" id="td_estatus_'.$row2['id_pedido'].'" '.$clase_td.' onclick="detalle_pedido('.$row2['id_pedido'].','.$row2['folio'].','.$row2['total_pedido'].');">'.$estatus.'
 					<input type="hidden" id="txt_folio_pedido_'.$row2['id_pedido'].'" value="'.$row2['folio'].'"/></td>
 					
 					 </tr>

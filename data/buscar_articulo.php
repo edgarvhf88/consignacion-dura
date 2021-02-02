@@ -162,8 +162,12 @@ $existencia = number_format($existencia, 2);
 if ($tipo_usuario == 4){
 	$precio_addbtn = '';
 }else{
-	$precio_addbtn = '<p>$'.$precio_format.'</p>
-								<input id="art_precio_'.$row['id'].'" type="hidden" value="'.$row['precio'].'"/> 
+	//solo los compradores pueden ver precios
+	if ($tipo_usuario == 2)
+	{$precio_addbtn = '<p>$'.$precio_format.'</p>';}
+	else {$precio_addbtn = '<p></p>';}
+	
+	$precio_addbtn .='<input id="art_precio_'.$row['id'].'" type="hidden" value="'.$row['precio'].'"/> 
 								<!----><p>
 									<div class="input-spinner">
 										<button type="button" class="btn btn-sm menos" id="menos_'.$row['id'].'" onclick="restar('.$row['id'].')">-</button>
@@ -219,8 +223,13 @@ $count = 0;
 if ($tipo_usuario == 4){
 	$precio_addbtn_mdl = '';
 }else{
-	$precio_addbtn_mdl = '<p class="h4" > Precio: <span id="max_precio"></span>    </p><p>
-										<div class="input-spinner">
+	if($tipo_usuario == 2)
+	{
+	$precio_addbtn_mdl = '<p class="h4" > Precio: <span id="max_precio"></span></p>';
+	}
+else {$precio_addbtn_mdl = '<p class="h4" > </p>';}	
+		
+	$precio_addbtn_mdl .='<p><div class="input-spinner">
 											<button type="button" class="btn btn-sm menos" >-</button>
 										<input type="number" id="txt_cantidad3" size="10" class="input-sm cant_preview_busq" align="center" value="1" data-min="" />
 											<button type="button" class="btn btn-sm mas">+</button>

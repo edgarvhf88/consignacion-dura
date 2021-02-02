@@ -75,7 +75,7 @@ $div_btn_solicit_auto = '
 </div> ';	
 }
  
- 
+ $tipo_usuario = validar_usuario($_SESSION["logged_user"]);
 echo '
 '.$div_btn_solicit_auto.'
 <table id="lista_pedido" class="table table-striped table-bordered table-hover responsive display">
@@ -84,11 +84,19 @@ echo '
                     	<th>'.$remover_lista_pedido_index.'</th>
                     	<th>'.$clave_lista_pedido_index.'</th>
                     	<th>'.$nombre_articulo_lista_pedido_index.'</th>
-                    	<th>'.$cantidad_lista_pedido_index.'</th>
-                    	                   	<th>'.$precio_unitario_lista_pedido_index.'</th>
-                    	                   <th>'.$total_lista_pedido_index.'</th>
+                    	<th>'.$cantidad_lista_pedido_index.'</th>';
+						//**********precios solo para compradores *********************
+						if ($tipo_usuario==2){
+						echo '<th>'.$precio_unitario_lista_pedido_index.'</th>
+						<th>'.$total_lista_pedido_index.'</th>';
+						}
+						else {
+						echo '<th hidden >'.$precio_unitario_lista_pedido_index.'</th>
+						<th hidden >'.$total_lista_pedido_index.'</th>';
+						}
+						//*************************************************************
                     			
-                    		</tr>
+                    	echo '</tr>
                     </thead><tbody>';
                     	while($row2 = mysql_fetch_array($resultado_lista,MYSQL_BOTH)) // html de articulos a mostrar
                     	{
@@ -98,8 +106,8 @@ echo '
                     	 echo ' <tr>
                     			<td>
                     				<label>
-                    									<input class="btn btn-primary" type="button" id="remover" onclick="remover_articulo_oc('.$row2['id'].');" value="'.$btn_remover_lista_pedido_index.'">
-                    									</label>
+                    					<input class="btn btn-primary" type="button" id="remover" onclick="remover_articulo_oc('.$row2['id'].');" value="'.$btn_remover_lista_pedido_index.'">
+                    					</label>
                     			</td>
                     			<td>'.$row2['clave_empresa'].'</td>
                     			<td>'.$row2['articulo'].'</td>
@@ -108,13 +116,21 @@ echo '
                     											<button type="button" class="btn btn-sm menos" id="menos_'.$row2['id'].'" onclick="restar2('.$row2['id'].')">-</button>
                     											<input type="number" id="txt_cantidad2_'.$row2['id'].'" size="10" class="input-sm cantidad_pedido" align="center" value="'.$row2['cantidad'].'" data-min="'.$minimo.'" />
                     											<button type="button" class="btn btn-sm mas" id="mas_'.$row2['id'].'" onclick="sumar2('.$row2['id'].')">+</button>
-                    			</td>
-                    			<td align="right">$'.number_format($row2['precio_unitario'],2).' 
-                    								<input type="hidden" id="txt_precio_'.$row2['id'].'" value="'.$row2['precio_unitario'].'"></td>
-                    								<td align="right" id="td_total_'.$row2['id'].'">$'.number_format($row2['precio_total'],2,".","").'
-                    								<input type="hidden" id="txt_precio_total_'.$row2['id'].'" value="'.number_format($row2['precio_total'],2,".","").'"></td>
-                    		</tr>
-                    						';
+                    			</td>';
+								if ($tipo_usuario==2){
+                    			echo '<td  align="right">$'.number_format($row2['precio_unitario'],2).' 
+                    							<input type="hidden" id="txt_precio_'.$row2['id'].'" value="'.$row2['precio_unitario'].'"></td>
+                    			<td  align="right" id="td_total_'.$row2['id'].'">$'.number_format($row2['precio_total'],2,".","").'
+                    							<input type="hidden" id="txt_precio_total_'.$row2['id'].'" value="'.number_format($row2['precio_total'],2,".","").'"></td>
+												
+								</tr>';}
+								else{
+                    			echo '<td hidden align="right">$'.number_format($row2['precio_unitario'],2).' 
+                    							<input type="hidden" id="txt_precio_'.$row2['id'].'" value="'.$row2['precio_unitario'].'"></td>
+                    			<td hidden align="right" id="td_total_'.$row2['id'].'">$'.number_format($row2['precio_total'],2,".","").'
+                    							<input type="hidden" id="txt_precio_total_'.$row2['id'].'" value="'.number_format($row2['precio_total'],2,".","").'"></td>
+												
+								</tr>';}
                     						
                     						
                     				
@@ -123,9 +139,11 @@ echo '
                     	}				
                     	 echo ' </tbody></table>
 	<div class="row">
-		<div class="col-sm-8 col-xs-3"></div>
-		<div class="col-sm-4 col-xs-8"><p><h3 id="div_total_pedido">Total = $'.number_format($total_total,2,".","").'  </h3></p></div>
-	</div>
+		<div class="col-sm-8 col-xs-3"></div>';
+		if ($tipo_usuario==2){
+		echo '<div class="col-sm-4 col-xs-8"><p><h3 id="div_total_pedido">Total = $'.number_format($total_total,2,".","").'  </h3></p></div>';}
+		
+	echo '</div>
  <div class="row">
 	<div class="col-sm-12">
 	<a href="#" class="btn btn-primary" data-toggle="modal" onclick="seleccionar_opciones();">'.$btn_ordenar_pedido.'</a>
