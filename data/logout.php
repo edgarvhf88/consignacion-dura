@@ -1,9 +1,9 @@
 <?php include("../data/conexion.php"); 
 if ($_SESSION["logged_user"] <> ''){ 
 $_SESSION["logged_user"] = '';
-header('Location: ../index.php'); }
+echo '<script> window.location.replace("../index.php"); </script>';}
 else{
-	header('Location: ../index.php');
+	echo '<script> window.location.replace("../index.php"); </script>';
 }
 
 ?>

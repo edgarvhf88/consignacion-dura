@@ -20,10 +20,15 @@
 global $database_conexion, $conex;
 
 
-$delete_articulo = "DELETE FROM articulos WHERE id_empresa = $id_empresa ";
+$delete_articulo = "DELETE FROM articulos WHERE id_empresa = '$id_empresa'";
 		if (mysql_query($delete_articulo, $conex) or die(mysql_error()))
 		{
 			echo "Se eliminaron los articulos de la empresa ".EMPRESA_NOMBRE($id_empresa)." <a href='../updata'> regresar </a>";
+		}
+$delete_existencia = "DELETE FROM existencias";
+		if (mysql_query($delete_existencia, $conex) or die(mysql_error()))
+		{
+			echo "Se eliminaron las existencias ";
 		}
 		
 
