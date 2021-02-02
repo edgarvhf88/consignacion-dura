@@ -1,54 +1,12 @@
 <?php include("conexion.php");
 
-if (isset($_POST['id_pedido_trapaso'])){
-	
-	$id_pedido_trapaso = $_POST['id_pedido_trapaso'];
-	generar_traspaso($id_pedido_trapaso);
-	
-}
 
-function recalc_saldo($articulo_id){
-	global $conex, $con_micro;
-			$del_saldo_in = "DELETE FROM SALDOS_IN WHERE ARTICULO_ID ='".$articulo_id."'";
- 				try {
-					$query_del = $con_micro->prepare($del_saldo_in);
-					$query_del->execute();
-				} 
-				catch (PDOException $e){ print "DEL - Error!: " . $e->getMessage() . "<br/>"; die(); }
-				if (!$query_del)
-				{
-					echo '<script> console.log("No se actualizo el siguiente folio"); </script>';
-					exit;
-				}
-				else
-				{
-					//echo '<script> console.log("SE ELIMINO SALDOS_IN DE ARTICULO_ID"); </script>';
-					$recal = "EXECUTE PROCEDURE RECALC_SALDOS_ART_IN('".$articulo_id."')";
-					try {
-						$query_recal = $con_micro->prepare($recal);
-						$query_recal->execute();
-					} 
-					catch (PDOException $e){ print "RECALC - Error!: " . $e->getMessage() . "<br/>"; die(); }
-					if (!$query_recal)
-					{
-						echo '<script> console.log("No se actualizo el siguiente folio"); </script>';
-						exit;
-					}
-					else
-					{
-						//echo '<script> console.log("SE RECALCULO LA EXISTENCIA"); </script>';
-					}	
-				}
-				
-}	
-function generar_traspaso($id_pedido_trapaso){
+generar_traspaso();
+
+
+function generar_traspaso(){
 	global $conex, $con_micro;
 //// Obtener datos para la remision 
-	$consulta_pedido = "SELECT * 
-						FROM pedido_traspaso WHERE id_pedido = '$id_pedido_trapaso' ";
-		$resultado_pedido = mysql_query($consulta_pedido, $conex) or die(mysql_error());
-		$row_pedido = mysql_fetch_assoc($resultado_pedido);
-		$total_rows = mysql_num_rows($resultado_pedido);
 
 date_default_timezone_set('America/Mexico_City');
 $fecha_actual = date("d.m.Y");
@@ -78,40 +36,39 @@ $(document).ready(function()
 });
 
 </script>';
-if ($total_rows > 0){
-	$id_pedido_cliente = $row_pedido['id_pedido_cliente'];
-//// inicia bucle con articulos de la solicitud de traspsaso
-	$consulta_articulos = "SELECT indet.clave_microsip as clave, indet.cantidad as cantidad,  indet.precio_unitario as precio_unitario, indet.precio_total as precio_total, indet.id_microsip as id_microsip  
-				FROM pedido_traspaso_det indet 
-				WHERE indet.id_pedido = '$id_pedido_trapaso' ";
+
+	
+	$consulta_articulos = "SELECT * FROM inventario_inicial WHERE existe='S'";
 	$resultado_articulos = mysql_query($consulta_articulos, $conex) or die(mysql_error());
 	$total_row = mysql_num_rows($resultado_articulos);
 	$lista_invdet = array();
 	$suma_totales = 0;
 	while($row_arti = mysql_fetch_array($resultado_articulos,MYSQL_BOTH)) 
 	{
-		$lista_invdet[] = array("value" => $row_arti['clave'], 
-							   "clave" => $row_arti['clave'], 
-							   "id_microsip" => $row_arti['id_microsip'], 
-							   "cantidad" => $row_arti['cantidad'], 
-							   "costo_unitario" => $row_arti['precio_unitario'], 
-							   "costo_total" => $row_arti['precio_total']);
+		$clave = ClaveArticulo($row_arti['id']);
+		
+		$lista_invdet[] = array("value" => $clave, 
+							   "clave" => $clave, 
+							   "id_microsip" => $row_arti['id'], 
+							   "cantidad" => $row_arti['planta_3'], 
+							   "costo_unitario" => "0", 
+							   "costo_total" => "0");
 	
-		$suma_totales +=  $row_arti['precio_total'];
+		//$suma_totales +=  $row_arti['precio_total'];
 	}
-	$total_total = $suma_totales;
+	$total_total = 0;
 
 
 $docto_id = -1; // existe un triger en la base que convierte el -1 en un ID irrepetible y consecutivo
 $almacen_destino_id = ""; // dura P3 = 11142	dura P4 = 11143	
-$almacen_id = 19;
+$almacen_id = 11142;
 $centro_costo_id = "";
-$folio = ObtenerFolioTraspaso();
+$folio = ObtenerFolioAjusteEntrada();
 $naturaleza_concepto = 'E';
 $fecha = $fecha_actual; //"04.11.2019"; // GETDATE()
 $hora =  $hora_actual; //"14:00:00";
-$concepto_in_id = 27; // 36 es traspaso de salida
-//$concepto_in_id_e = 25; // 25 es traspaso de entrada
+$concepto_in_id = 27; // 27 es ajuste de entrada
+
 $descripcion = 'Ajuste inicial';
 $importe_neto = $total_total;
 $sistema_origen = 'IN';
@@ -136,7 +93,7 @@ try {
 	$query_insert->bindValue(':sucursal_id', $sucursal_id, PDO::PARAM_INT);
 	$inserta = $query_insert->execute();
 	
-	$docto_in_id = ObtenerIdTraspaso($folio); 
+	$docto_in_id = ObtenerIdEntrada($folio); 
    // print_r($query_insert);
   // echo $inserta;
 } 
@@ -165,7 +122,7 @@ echo '<script> console.log("No se inserto Traspaso"); </script>';
 		$clave_articulo = $row_articulos['clave'];
 		$articulo_id = $row_articulos['id_microsip'];
 		$unidades = $row_articulos['cantidad'];
-		$unidades_a_surtir = $row_articulos['cantidad'];
+		
 		$costo_unitario = $row_articulos['costo_unitario'];
 		$costo_total = $row_articulos['costo_total'];
 			
@@ -181,15 +138,16 @@ echo '<script> console.log("No se inserto Traspaso"); </script>';
 			$query_insert_det_e->bindParam(':unidades', $unidades, PDO::PARAM_STR, 18);
 			$query_insert_det_e->bindParam(':costo_unitario', $costo_unitario, PDO::PARAM_STR, 18);
 			$query_insert_det_e->bindParam(':costo_total', $costo_total, PDO::PARAM_STR, 15);
-			$query_insert_det_e->bindParam(':almacen_id', $almacen_destino_id, PDO::PARAM_INT);
-			$query_insert_det_e->bindParam(':concepto_in_id', $concepto_in_id_e, PDO::PARAM_INT);
+			$query_insert_det_e->bindParam(':almacen_id', $almacen_id, PDO::PARAM_INT);
+			$query_insert_det_e->bindParam(':concepto_in_id', $concepto_in_id, PDO::PARAM_INT);
 			$query_insert_det_e->bindParam(':tipo_movto', $tipo_movto_e, PDO::PARAM_STR);
 			$query_insert_det_e->bindParam(':metodo_costeo', $metodo_costeo, PDO::PARAM_STR);
 			$query_insert_det_e->bindParam(':centro_costo_id', $centro_costo_id, PDO::PARAM_INT);
 			$query_insert_det_e->bindParam(':aplicado', $aplicado, PDO::PARAM_STR);
 			$query_insert_det_e->bindParam(':rol', $tipo_movto_e, PDO::PARAM_STR);
 			$query_insert_det_e->execute();
-			$sub_movto_id = ObtenerIdTraspasoDet($articulo_id,$docto_in_id,$concepto_in_id_e);
+			
+			
 		} 
 		catch (PDOException $e){ print "Error!: " . $e->getMessage() . "<br/>"; die(); }	
 		if (!$query_insert_det_e){
@@ -199,32 +157,6 @@ echo '<script> console.log("No se inserto Traspaso"); </script>';
 		}
 		else
 		{	
-			foreach($array_list_det_id as $ids){
-				if ($ids['articulo_id'] == $articulo_id)
-				{	// al encontrar el id del articulo tomara el id_det_art del articulo
-					// y lo insertara en la tabla SUB_MOVTOS_IN(DOCTO_IN_DET_ID,SUB_MOVTO_ID)
-					$docto_in_det_id = $ids['docto_in_det_id'];
-					$update_smi = "INSERT INTO SUB_MOVTOS_IN (DOCTO_IN_DET_ID,SUB_MOVTO_ID) VALUES (:docto_in_det_id,:sub_movto_id)";
- 
-					try {
-						$query_smi = $con_micro->prepare($update_smi);
-						$query_smi->bindValue(':docto_in_det_id', $docto_in_det_id, PDO::PARAM_INT);
-						$query_smi->bindValue(':sub_movto_id', $sub_movto_id, PDO::PARAM_INT);
-						$query_smi->execute();
-					} 
-					catch (PDOException $e){ print "Error!: " . $e->getMessage() . "<br/>"; die(); }
-					if (!$query_smi)
-					{
-							echo '<script> console.log("No se actualizo el siguiente folio"); </script>';
-						exit;
-					}
-					else
-					{
-						
-						//echo '<script> console.log("Exito"); </script>';
-					}
-				}
-			}
 			
 			//	echo '<script> console.log("Se inserto el articulo "); </script>';
 			
@@ -236,7 +168,7 @@ echo '<script> console.log("No se inserto Traspaso"); </script>';
 	
 	$folio_cosecutivo = $folio + 1;
 	$consecutivo = Format9digit($folio_cosecutivo);
-	$update_folio = "UPDATE FOLIOS_CONCEPTOS SET CONSECUTIVO = :consecutivo WHERE CONCEPTO_ID = '36'";
+	$update_folio = "UPDATE FOLIOS_CONCEPTOS SET CONSECUTIVO = :consecutivo WHERE CONCEPTO_ID = '27'";
  
 	try {
 		$query_update_folio = $con_micro->prepare($update_folio);
@@ -253,27 +185,8 @@ echo '<script> console.log("No se inserto Traspaso"); </script>';
 	{
 		//echo '<script> console.log("Se actualizo el folio a: '.$consecutivo.'"); </script>';
 	}
-	////// // INSERTA DOCTO_IN_ID EN TABLA LIBRES_SALIDAS_IN ///////
 	
-	$update_LIB = "INSERT INTO LIBRES_SALIDAS_IN (DOCTO_IN_ID) VALUES (:docto_in_id)";
- 
-	try {
-		$query_LIB = $con_micro->prepare($update_LIB);
-		$query_LIB->bindValue(':docto_in_id', $docto_in_id, PDO::PARAM_INT);
-		$query_LIB->execute();
-	} 
-	catch (PDOException $e){ print "Error!: " . $e->getMessage() . "<br/>"; die(); }
-	if (!$query_LIB)
-	{
-			echo '<script> console.log("No se actualizo el siguiente folio"); </script>';
-		exit;
-	}
-	 else
-	{
-		//echo '<script> console.log("Exito"); </script>';
-	}
-	
-	 ///////////   APLICA EL DOCUMENTO PARA QUE SE DESCUENTE EL INVENTARIO  ///////// 
+	 ///////////   APLICA EL DOCUMENTO PARA QUE SE modifique EL INVENTARIO  ///////// 
 	$integracion = 'S';
 	$costeo = 'C';
 	$aplicar = "EXECUTE PROCEDURE APLICA_DOCTO_IN(:V_DOCTO_IN_ID)";
@@ -293,35 +206,11 @@ echo '<script> console.log("No se inserto Traspaso"); </script>';
 	}
 	 else
 	{
-			foreach($lista_invdet as $row_articulos) // foreacha de movimientos de entrada
-			{
-				
-				$articulo_id = $row_articulos['id_microsip'];
-				// codigo para recalculo de saldos de los articulos /*/*//*/*/*/*/*-/-*/-/-*/*-/-/-*/*/
-					//$articulo_id = 6230;
-				recalc_saldo($articulo_id);
-				//echo '<script> SyncInvArt('.$articulo_id.','.$almacen_destino_id.'); </script>';
-			}
-			//// se cambioa el estatus de la solicitud de traspaso
-			$sql_upfolio = "UPDATE pedido_traspaso SET folio_traspaso = '$folio', estatus = '2' WHERE id_pedido = '$id_pedido_trapaso' ";
-			if (mysql_query($sql_upfolio, $conex) or die(mysql_error())){}
-			//// se cambioa el estatus de pedido cliente a enviando delivering para que el almacenista se le active la opcion de recibirlo, despues de recibir confirmara su estatus y si no esta al 100 lo marcara de nuevo a estatus 1 de  lo contrario si esta al 100 entonces se cambiara a estatus 3
-			$sql_upped = "UPDATE pedidos SET estatus = '2' WHERE id = '$id_pedido_cliente' ";
-			if (mysql_query($sql_upped, $conex) or die(mysql_error())){
-				// 
-			}
-
-		echo '<script> console.log("SE APLICO EL TRASPASO CORRECTAMENTE FOLIO: '.$folio.'"); 
-		     
-			
+		
+		echo '<script> 
 			$("#modal_cargando").modal("hide");
-			SincronizarInventario('.$id_pedido_cliente.','.$almacen_destino_id.');
-			 setTimeout(function(){
-							$("#traspaso_detalle").modal("hide");
-						},200,"JavaScript");
-			 setTimeout(function(){
-							 lista_solicitudes_traspaso();
-						},200,"JavaScript");
+			
+			 
 			 
 			 </script>';
 			 
@@ -329,6 +218,6 @@ echo '<script> console.log("No se inserto Traspaso"); </script>';
   
 } /// si se inserta el pedido en microsip
 
-} /// validacion de totalrows
+ /// validacion de totalrows
 }  //funcion
 ?>

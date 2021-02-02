@@ -63,10 +63,16 @@ else if ($almacen_id=='11142')
 				
 				//uso los datos
 				$existencia = $datos[7];
+			if (is_numeric ($existencia))
+			{
+				//
+			}
+			else {$existencia=0;}
+				
 				$existe = 'S';
 				//inserto
 					{
-						$insert_existencia = "INSERT INTO inventario_inicial (id, ".$planta.", existe) 
+						$insert_existencia = "INSERT INTO inventario_inicial (id, planta_3, existe) 
 						VALUES ('$articulo_id', '$existencia', '$existe' )";
 						if (mysql_query($insert_existencia, $conex) or die(mysql_error())){}
 					}
@@ -78,6 +84,11 @@ else if ($almacen_id=='11142')
 				$articulo_id = $datos[0];
 				//uso los datos
 				$existencia = $datos[7];
+				if (is_numeric ($existencia))
+			{
+				//
+			}
+			else {$existencia=0;}
 				$existe = 'N';
 				//inserto
 					{

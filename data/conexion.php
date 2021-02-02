@@ -1726,6 +1726,24 @@ if (!$consulta){
 $folio_siguiente = $row_result['CONSECUTIVO'];
 return $folio_siguiente;
 }
+
+function ObtenerFolioAjusteEntrada(){ 
+global $con_micro;
+$folio_siguiente = "";	
+$valor = 27; // ID DE CONCEPTO TRASPASO SALIDA
+$sql = "SELECT DI.CONSECUTIVO AS CONSECUTIVO	
+FROM FOLIOS_CONCEPTOS DI
+WHERE (DI.CONCEPTO_ID = '".$valor."')";
+
+$consulta = $con_micro->prepare($sql);
+$consulta->execute();
+$consulta->setFetchMode(PDO::FETCH_OBJ);
+$row_result = $consulta->fetch(PDO::FETCH_ASSOC);
+if (!$consulta){
+	 	 exit;}	
+$folio_siguiente = $row_result['CONSECUTIVO'];
+return $folio_siguiente;
+}
 function ObtenerFolio(){ 
 global $con_micro;
 $folio = "";	
@@ -1759,6 +1777,25 @@ if (!$consulta){
 $docto_in_id = $row_result['DOCTO_IN_ID'];
 return $docto_in_id;
 }
+
+
+function ObtenerIdEntrada($folio){ 
+global $con_micro;
+$id_concepto = 27; // concepto de traspaso salida	
+$sql = "SELECT A.DOCTO_IN_ID AS DOCTO_IN_ID	
+FROM DOCTOS_IN A
+WHERE (A.FOLIO = '".$folio."' AND A.CONCEPTO_IN_ID = '".$id_concepto."')";
+$consulta = $con_micro->prepare($sql);
+$consulta->execute();
+$consulta->setFetchMode(PDO::FETCH_OBJ);
+$row_result = $consulta->fetch(PDO::FETCH_ASSOC);
+if (!$consulta){
+	 exit;}	
+$docto_in_id = $row_result['DOCTO_IN_ID'];
+return $docto_in_id;
+}
+
+
 function ObtenerIdTraspasoDet($articulo_id,$docto_in_id,$concepto_in_id){ 
 // edgar del futuro cuando vayas a modificar la lista de los articulos requeridos limita a que no puedan agregar 2 o mas veces la misma clave(articulo)
 
