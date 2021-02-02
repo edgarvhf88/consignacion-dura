@@ -49,7 +49,7 @@ $total_rows = mysql_num_rows($resultado);
 
 
 if ($total_rows > 0){ // con resultados
-
+$tipo_usuario = validar_usuario($_SESSION["logged_user"]);
 // <th>'.$traking_tabla_mis_pedidos.'</th>
 echo '<table id="mis_pedidos" class="table table-striped table-bordered table-hover responsive display">
                     	<thead>
@@ -59,9 +59,13 @@ echo '<table id="mis_pedidos" class="table table-striped table-bordered table-ho
                     			<th>'.$folio_tabla_mis_pedidos.'</th>
                     			<th>'.$estatus_tabla_mis_pedidos.'</th>
                     			<th hidden>'.$cc_tabla_mis_pedidos.'</th>
-                    			<th hidden>'.$recolector_tabla_mis_pedidos.'</th>
-                    			<th>'.$total_tabla_mis_pedidos.'</th>
-                    			<th hidden>'.$orden_cliente_tabla_mis_pedidos.'</th>
+                    			<th hidden>'.$recolector_tabla_mis_pedidos.'</th>';
+								//precios*********************************
+                    			if ($tipo_usuario==2){
+								echo '<th>'.$total_tabla_mis_pedidos.'</th>';}
+								else{
+								echo '<th hidden>'.$total_tabla_mis_pedidos.'</th>';}
+                    			echo '<th hidden>'.$orden_cliente_tabla_mis_pedidos.'</th>
                     			
                     		</tr>
                     	</thead><tbody>';
@@ -144,11 +148,17 @@ echo '<table id="mis_pedidos" class="table table-striped table-bordered table-ho
                     									</td>
                     			<td hidden onclick="detalle_pedido('.$row2['id'].','.$row2['folio'].','.$row2['total_pedido'].');">
                     									'.$nombre_recolector.'
-                    									</td>
-                    			<td align="right" onclick="detalle_pedido('.$row2['id'].','.$row2['folio'].','.$row2['total_pedido'].');">
+                    									</td>';
+									if ($tipo_usuario==2){					
+                    			echo '<td align="right" onclick="detalle_pedido('.$row2['id'].','.$row2['folio'].','.$row2['total_pedido'].');">
                     									$'.number_format($row2['total_pedido'],2).'
-                    									</td>
-                    			<td  hidden align="right" style="width:120px;">
+									</td>';}
+									else{					
+                    			echo '<td hidden align="right" onclick="detalle_pedido('.$row2['id'].','.$row2['folio'].','.$row2['total_pedido'].');">
+                    									$'.number_format($row2['total_pedido'],2).'
+									</td>';}
+														
+                    			echo '<td  hidden align="right" style="width:120px;">
                     									<input type="hidden" id="txt_folio_pedido_'.$row2['id'].'" value="'.$row2['folio'].'"/>
                     									'.$orden_compra.'
                     									</td>

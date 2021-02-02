@@ -49,6 +49,7 @@ include("../displays/".$Display.".php");
 		  echo 0;
 	  }
      function busca_pedido($id_pedido,$segundos,$folio,$total_pedido,$tipo_usuario){ 
+	 
 global $database_conexion, $conex, $folio_tabla_mis_pedidos, $clave_lista_pedido_index, $nombre_articulo_lista_pedido_index, $cantidad_lista_pedido_index, $precio_unitario_lista_pedido_index, $total_lista_pedido_index, $btn_recibir, $btn_imagen ;
 if ($segundos != '')
 {
@@ -112,7 +113,7 @@ $consulta_lista = "SELECT pd.clave_empresa as clave_empresa, pd.id_articulo as i
 $resultado_lista = mysql_query($consulta_lista, $conex) or die(mysql_error());
 $total_rows2 = mysql_num_rows($resultado_lista);
 if ($total_rows2 > 0){
-if ($tipo_usuario == 4){
+if ($tipo_usuario != 2){
 	//tipo usuario almacenista no puede ver el td de totales
 	//ni precios	
 	$ocultar_precio_unitario = 'hidden';
@@ -128,11 +129,13 @@ $tabla = '<table id="pedido_det" class="table table-striped table-bordered table
                                 <th>'.$nombre_articulo_lista_pedido_index.'</th>
                                 <th>'.$cantidad_lista_pedido_index.'</th>
                                 <th class="elementos_recibir">Por Recibir</th>
-                                <th class="elementos_recibidos">Recibidos</th>
-                                <th '.$ocultar_precio_unitario.' >'.$precio_unitario_lista_pedido_index.'</th>
-                                <th '.$ocultar_precio_total.' >'.$total_lista_pedido_index.'</th>
+                                <th class="elementos_recibidos">Recibidos</th>';
                                 
-                            </tr>
+								
+						$tabla .= '<th '.$ocultar_precio_unitario.' >'.$precio_unitario_lista_pedido_index.'</th>
+                                <th '.$ocultar_precio_total.' >'.$total_lista_pedido_index.'</th>';
+                                
+                         $tabla .= '   </tr>
                         </thead><tbody>';
                             while($row2 = mysql_fetch_array($resultado_lista,MYSQL_BOTH)) // html de articulos a mostrar
                             {
