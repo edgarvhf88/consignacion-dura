@@ -113,7 +113,7 @@ $consulta_lista = "SELECT pd.clave_empresa as clave_empresa, pd.id_articulo as i
 $resultado_lista = mysql_query($consulta_lista, $conex) or die(mysql_error());
 $total_rows2 = mysql_num_rows($resultado_lista);
 if ($total_rows2 > 0){
-if ($tipo_usuario != 2){
+if ($tipo_usuario == 4){
 	//tipo usuario almacenista no puede ver el td de totales
 	//ni precios	
 	$ocultar_precio_unitario = 'hidden';

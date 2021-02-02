@@ -86,7 +86,7 @@ echo '
                     	<th>'.$nombre_articulo_lista_pedido_index.'</th>
                     	<th>'.$cantidad_lista_pedido_index.'</th>';
 						//**********precios solo para compradores *********************
-						if ($tipo_usuario==2){
+						if ($tipo_usuario!=4){
 						echo '<th>'.$precio_unitario_lista_pedido_index.'</th>
 						<th>'.$total_lista_pedido_index.'</th>';
 						}
@@ -117,7 +117,7 @@ echo '
                     											<input type="number" id="txt_cantidad2_'.$row2['id'].'" size="10" class="input-sm cantidad_pedido" align="center" value="'.$row2['cantidad'].'" data-min="'.$minimo.'" />
                     											<button type="button" class="btn btn-sm mas" id="mas_'.$row2['id'].'" onclick="sumar2('.$row2['id'].')">+</button>
                     			</td>';
-								if ($tipo_usuario==2){
+								if ($tipo_usuario!=4){
                     			echo '<td  align="right">$'.number_format($row2['precio_unitario'],2).' 
                     							<input type="hidden" id="txt_precio_'.$row2['id'].'" value="'.$row2['precio_unitario'].'"></td>
                     			<td  align="right" id="td_total_'.$row2['id'].'">$'.number_format($row2['precio_total'],2,".","").'
@@ -140,7 +140,7 @@ echo '
                     	 echo ' </tbody></table>
 	<div class="row">
 		<div class="col-sm-8 col-xs-3"></div>';
-		if ($tipo_usuario==2){
+		if ($tipo_usuario!=4){
 		echo '<div class="col-sm-4 col-xs-8"><p><h3 id="div_total_pedido">Total = $'.number_format($total_total,2,".","").'  </h3></p></div>';}
 		
 	echo '</div>

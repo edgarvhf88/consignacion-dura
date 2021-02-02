@@ -159,11 +159,11 @@ if ($row['existencia'] != ""){
 $existencia = $row['existencia'] - cantidad_traspaso($row['id']);	
 $existencia = number_format($existencia, 2);		
 }else{ $existencia = "0";	}
-if ($tipo_usuario == 4){
-	$precio_addbtn = '';
-}else{
+
+	
+
 	//solo los compradores pueden ver precios
-	if ($tipo_usuario == 2)
+	if ($tipo_usuario != 4)
 	{$precio_addbtn = '<p>$'.$precio_format.'</p>';}
 	else {$precio_addbtn = '<p></p>';}
 	
@@ -180,7 +180,7 @@ if ($tipo_usuario == 4){
 							
 							</p> ';
 
-}
+
 
 
  echo '  <div class="col-sm-6 col-md-3">
@@ -220,10 +220,8 @@ $count = 0;
 					
 }	// while end	
 
-if ($tipo_usuario == 4){
-	$precio_addbtn_mdl = '';
-}else{
-	if($tipo_usuario == 2)
+
+	if($tipo_usuario != 4)
 	{
 	$precio_addbtn_mdl = '<p class="h4" > Precio: <span id="max_precio"></span></p>';
 	}
@@ -242,7 +240,7 @@ else {$precio_addbtn_mdl = '<p class="h4" > </p>';}
 										<input type="hidden" id="id_articulo_modal" value="" />
                             
                                 </p>';
-}		
+	
 echo '';
 
     echo '<!-- Modal zoom -->

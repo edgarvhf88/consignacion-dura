@@ -61,7 +61,7 @@ echo '<table id="mis_pedidos" class="table table-striped table-bordered table-ho
                     			<th hidden>'.$cc_tabla_mis_pedidos.'</th>
                     			<th hidden>'.$recolector_tabla_mis_pedidos.'</th>';
 								//precios*********************************
-                    			if ($tipo_usuario==2){
+                    			if ($tipo_usuario!=4){
 								echo '<th>'.$total_tabla_mis_pedidos.'</th>';}
 								else{
 								echo '<th hidden>'.$total_tabla_mis_pedidos.'</th>';}
@@ -149,7 +149,7 @@ echo '<table id="mis_pedidos" class="table table-striped table-bordered table-ho
                     			<td hidden onclick="detalle_pedido('.$row2['id'].','.$row2['folio'].','.$row2['total_pedido'].');">
                     									'.$nombre_recolector.'
                     									</td>';
-									if ($tipo_usuario==2){					
+									if ($tipo_usuario!=4){					
                     			echo '<td align="right" onclick="detalle_pedido('.$row2['id'].','.$row2['folio'].','.$row2['total_pedido'].');">
                     									$'.number_format($row2['total_pedido'],2).'
 									</td>';}

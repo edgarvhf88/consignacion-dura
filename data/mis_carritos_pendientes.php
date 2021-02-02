@@ -52,7 +52,7 @@ echo '<table id="mis_carritos_pendientes" class="display table table-striped tab
                     			<th>'.$fecha_tabla_mis_pedidos.'</th>
                     			<th>'.$folio_tabla_mis_pedidos.'</th>
                     			<th>'.$estatus_tabla_mis_pedidos.'</th>';
-                    			if ($tipo_usuario==2){
+                    			if ($tipo_usuario!=4){
                     			echo '<th>'.$total_tabla_mis_pedidos.'</th>';
 								}
 								else {'<th hidden >'.$total_tabla_mis_pedidos.'</th>';}
@@ -101,7 +101,7 @@ echo '<table id="mis_carritos_pendientes" class="display table table-striped tab
                     			<td onclick="detalle_pedido('.$row2['id'].',0,'.$row2['total_pedido'].');" '.$clase_td.' align="center">
                     									'.$estatus.'
                     									</td>';
-                    			if ($tipo_usuario==2){
+                    			if ($tipo_usuario!=4){
                     			echo '<td align="right" onclick="detalle_pedido('.$row2['id'].',0,'.$row2['total_pedido'].');">
                     									$'.number_format($row2['total_pedido'],2).'
 								</td>';}
