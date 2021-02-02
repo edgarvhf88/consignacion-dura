@@ -52,7 +52,7 @@ $lista_categorias = categorias_lista($id_empresa);
 					$existencia = ExistenciaMicrosip($articulo_id,$almacen_id);
 				}
 				
-				$arr_pr = explode("_",MinMaxReorden($articulo_id));
+				$arr_pr = explode("_",MinMaxReorden($articulo_id,$almacen_id));
 				if ($datos[8] != ""){
 					$max = $datos[8];
 				}else{
@@ -82,6 +82,13 @@ $lista_categorias = categorias_lista($id_empresa);
 				}else {
 					$precio_articulo = $datos[6];
 				}
+				if ($datos[2] == ""){
+					$nombre_articulo = NombreArticulo($articulo_id);	
+				}else {
+					$nombre_articulo = $datos[2];
+				}
+				$nombre_articulo = str_replace("\"", '&#34', $nombre_articulo); 
+				$nombre_articulo = str_replace("'", '&#39', $nombre_articulo); 
 				
 				$sql_verif = "SELECT * FROM articulos WHERE id_microsip = '$articulo_id' AND id_empresa = '$id_empresa'";
 				$res_sql_verif = mysql_query($sql_verif, $conex) or die(mysql_error());
@@ -91,7 +98,7 @@ $lista_categorias = categorias_lista($id_empresa);
 				{ // si encuentra el articulo lo edita con update
 					$id_art = $row_art['id'];
 					
-					$sql_art_update = "UPDATE articulos SET clave_microsip='$datos[0]', clave_empresa='$datos[1]', nombre='$datos[2]', descripcion='$datos[3]', descripcion='$datos[3]', precio='$precio_articulo', src_img='$datos[5]', unidad_medida='$unidad_medida' WHERE id ='$id_art'";
+					$sql_art_update = "UPDATE articulos SET clave_microsip='$datos[0]', clave_empresa='$datos[1]', nombre='$nombre_articulo', descripcion='$datos[3]',  precio='$precio_articulo', src_img='$datos[5]', unidad_medida='$unidad_medida' WHERE id ='$id_art'";
 					if (mysql_query($sql_art_update, $conex) or die(mysql_error())){}
 					 
 					$sql_exis_verif = "SELECT * FROM existencias WHERE id_articulo = '$id_art' AND almacen_id = '$almacen_id'";
@@ -116,7 +123,7 @@ $lista_categorias = categorias_lista($id_empresa);
 				{  /// inserta nuevo articulo
 					
 					$query = "INSERT INTO articulos 	(id_empresa,clave_microsip,clave_empresa,nombre,descripcion,precio,src_img,unidad_medida,id_microsip) 
-					VALUES ('$id_empresa','$datos[0]','$datos[1]','$datos[2]','$datos[3]','$precio_articulo','$datos[5]','$unidad_medida','$articulo_id')";
+					VALUES ('$id_empresa','$datos[0]','$datos[1]','$nombre_articulo','$datos[3]','$precio_articulo','$datos[5]','$unidad_medida','$articulo_id')";
 					if (mysql_query($query, $conex) or die(mysql_error())){
 						$id_articulo =  mysql_insert_id();	
 						

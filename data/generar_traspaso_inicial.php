@@ -61,7 +61,7 @@ $(document).ready(function()
 
 $docto_id = -1; // existe un triger en la base que convierte el -1 en un ID irrepetible y consecutivo
 $almacen_destino_id = ""; // dura P3 = 11142	dura P4 = 11143	
-$almacen_id = 11142;
+$almacen_id = 11143;
 $centro_costo_id = "";
 $folio = ObtenerFolioAjusteEntrada();
 $naturaleza_concepto = 'E';

@@ -30,24 +30,24 @@ $consulta_articulos = "SELECT a.id as id,
 			$id_arti = $row_articulos['id'];
 			//$existencia_actual = $row_articulos['existencia_actual'];
 			$existencia_microsip = ExistenciaMicrosip($row_articulos['id_microsip'],$almacen_id);
-			$min_max_reorden = explode("_",MinMaxReorden($row_articulos['id_microsip'],$almacen_id));
-			$maximo = $min_max_reorden[0];
-			$minimo = $min_max_reorden[1];
-			$reorden = $min_max_reorden[2];
-			$udm = UDMArticulo($row_articulos['id_microsip']);
-			$precio = PrecioArticulo($row_articulos['id_microsip']);
+			// $min_max_reorden = explode("_",MinMaxReorden($row_articulos['id_microsip'],$almacen_id));
+			// $maximo = $min_max_reorden[0];
+			// $minimo = $min_max_reorden[1];
+			// $reorden = $min_max_reorden[2];
+			// $udm = UDMArticulo($row_articulos['id_microsip']);
+			// $precio = PrecioArticulo($row_articulos['id_microsip']);
+			// min='$minimo', max='$maximo', reorden='$reorden',  
 			
-			
-			$update = "UPDATE existencias SET min='$minimo', max='$maximo', reorden='$reorden', existencia_actual='$existencia_microsip' WHERE id_articulo='$id_arti' and almacen_id = '$almacen_id'";
+			$update = "UPDATE existencias SET  existencia_actual='$existencia_microsip' WHERE id_articulo='$id_arti' and almacen_id = '$almacen_id'";
 			if (mysql_query($update, $conex) or die(mysql_error()))
 			{		
-					$updateart = "UPDATE articulos SET precio='$precio', unidad_medida='$udm' WHERE id = $id_arti";
+					/* $updateart = "UPDATE articulos SET precio='$precio', unidad_medida='$udm' WHERE id = $id_arti";
 					if (mysql_query($updateart, $conex) or die(mysql_error()))
 					{ 	
 						echo '<script> console.log("Se actualizo precio");
 							</script>';  
-					}
-				echo '<script> console.log("Se Aplico sincronizacion de inventario de Articulo");
+					} */
+				echo '<script> console.log("Se Actualizo Existencia de Articulo");
 							
 							</script>';
 			}
@@ -65,23 +65,23 @@ $consulta_articulos = "SELECT a.id as id,
 			}
 			
 			$existencia_microsip = ExistenciaMicrosip($id_articulo,$almacen_id);
-			$min_max_reorden = explode("_",MinMaxReorden($id_articulo,$almacen_id));
-			$maximo = $min_max_reorden[0];
-			$minimo = $min_max_reorden[1];
-			$reorden = $min_max_reorden[2];
-			
+			//$min_max_reorden = explode("_",MinMaxReorden($id_articulo,$almacen_id));
+			//$maximo = $min_max_reorden[0];
+			//$minimo = $min_max_reorden[1];
+			//$reorden = $min_max_reorden[2];
+			//min,max,reorden,  '$minimo','$maximo','$reorden',
 			$udm = UDMArticulo($id_articulo);
-			$precio = PrecioArticulo($id_articulo);
+			//$precio = PrecioArticulo($id_articulo);
 		
-		$insert_punto = "INSERT INTO existencias (min,max,reorden,existencia_actual,id_articulo,almacen_id)
-				VALUES ('$minimo','$maximo','$reorden','$existencia_microsip','$id_arti','$almacen_id')";
+		$insert_punto = "INSERT INTO existencias (existencia_actual,id_articulo,almacen_id)
+				VALUES ('$existencia_microsip','$id_arti','$almacen_id')";
 							if (mysql_query($insert_punto, $conex) or die(mysql_error())){}
 		
-		$updateart = "UPDATE articulos SET precio='$precio', unidad_medida='$udm' WHERE id = $id_arti";
+		/* $updateart = "UPDATE articulos SET precio='$precio', unidad_medida='$udm' WHERE id = $id_arti";
 					if (mysql_query($updateart, $conex) or die(mysql_error()))
 					{ 	
 						
-					}
+					} */
 	}	
 }	
 	

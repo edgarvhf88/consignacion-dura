@@ -8,7 +8,7 @@ $folio_pedido_index = "1";
 $btns_menu = '';
 $reportes = '	<li style="">
                     <a href="#" style="z-index:3;" onclick="spotby_lista();">
-                      <span class="fa fa-bars" aria-hidden="true"></span> Spot By
+                      <span class="fa fa-bars" aria-hidden="true"></span> Spot Buy
                     </a>
                 </li> 
 

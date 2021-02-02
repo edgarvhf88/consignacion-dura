@@ -32,14 +32,16 @@ try {
  
 ///////////////////////////////////////////////////////
 
-/* $hostname_conexion = "162.214.184.221:3306"; */ // db hostgator
-$hostname_conexion = "localhost:3306";	//
-$database_conexion = "consignacion_dura";
+
+/*$hostname_conexion = "localhost:3306";*/	//
+/*$database_conexion = "consignacion_dura";
 $username_conexion = "root";
 $password_conexion = "fAMMA1234";
-/* $database_conexion = "wwallp_consigna_dura";
+*/ 
+ $hostname_conexion = "162.214.184.221:3306";  // db hostgator
+$database_conexion = "wwallp_consigna_dura";
 $username_conexion = "wwallp_admin";
-$password_conexion = "allpart2020"; */
+$password_conexion = "allpart2020"; 
 
 $conex = mysql_pconnect($hostname_conexion, $username_conexion, $password_conexion) or trigger_error(mysql_error(),E_USER_ERROR);
 mysql_select_db($database_conexion, $conex);

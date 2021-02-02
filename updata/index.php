@@ -34,7 +34,7 @@ $("#div_id_empresa").html(id_empresa);
    </script>  
     <center><strong><label class="titulo">Subir lista de articulos por empresa</label></strong></center>
     <p>
-        <form action="subir_art_gen_dura.php" method="POST" enctype="multipart/form-data">
+        <form action="subir_art_gen.php" method="POST" enctype="multipart/form-data">
             <center>
 			<h5>El archivo CSV deve contener 11 columnas(Clave microsip, Clave Cliente, Nombre, Descripcion, precio, nombre de la imagen, unidad de medida, Existencia, Maximo, Minimo y Reorden) <h6><a href='formato_lista_articulos_subir.csv'>Descargar csv en blanco</a></h6> </h5>
 			<select class="form-control" name="select_empresa" id="select_empresa">
