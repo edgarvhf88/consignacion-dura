@@ -48,7 +48,7 @@ $consulta_articulos = "SELECT a.id as id,
 							</script>';  
 					} */
 				echo '<script> console.log("Se Actualizo Existencia de Articulo");
-							
+							$("#tdexistencia_'.$id_arti.'").html("'.$existencia_microsip.'");
 							</script>';
 			}
 		}
@@ -70,7 +70,7 @@ $consulta_articulos = "SELECT a.id as id,
 			//$minimo = $min_max_reorden[1];
 			//$reorden = $min_max_reorden[2];
 			//min,max,reorden,  '$minimo','$maximo','$reorden',
-			$udm = UDMArticulo($id_articulo);
+		//	$udm = UDMArticulo($id_articulo);
 			//$precio = PrecioArticulo($id_articulo);
 		
 		$insert_punto = "INSERT INTO existencias (existencia_actual,id_articulo,almacen_id)

@@ -25,7 +25,7 @@ global  $conex;
 		inv.fecha_hora_creacion as fecha_hora_creacion,
 		alm.almacen as almacen
 					FROM inventarios_det indet 
-					INNER JOIN articulos art ON art.id_microsip = indet.articulo_id
+					INNER JOIN articulos art ON art.id = indet.id_articulo
 					INNER JOIN inventarios inv ON inv.id_inventario = indet.id_inventario
 					INNER JOIN almacenes alm ON alm.almacen_id = inv.almacen_id
 					WHERE indet.id_inventario = '$id_inventario' 

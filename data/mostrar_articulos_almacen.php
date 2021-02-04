@@ -73,7 +73,7 @@ echo '<table id="mostrar_articulos" class="table table-striped table-bordered ta
 				<th>Min</th>
 				<th>Max</th>
 				<th>Reorden</th>
-				<th>En sistema</th>
+				<th>En Consigna</th>
 				<th>En Fisico</th>
 				<th hidden>Conteo Inv.</th>
 				<th>Sync</th>
@@ -235,6 +235,7 @@ echo '<table id="mostrar_articulos" class="table table-striped table-bordered ta
  
  echo '<script> 
 	$(document).ready(function(){
+				var tabla_articulos = $("#mostrar_articulos").DataTable();
 				$("#mostrar_articulos").DataTable({
 						"order": [[ 1, "asc" ]]
 					});
@@ -322,7 +323,7 @@ echo '<table id="mostrar_articulos" class="table table-striped table-bordered ta
 						var id_articulo = arr_id[1];
 					
 						SincronizarInventarioArticulo(id_articulo);
-						mostrar_articulos(11);
+						//mostrar_articulos(11);
 							
 				 });
 				 

@@ -154,7 +154,7 @@ try {
     //Server settings
     $mail->SMTPDebug = 0;                                 // Enable verbose debug output 0 1 2
     $mail->isSMTP();                                      // Set mailer to use SMTP
-    $mail->Host = 'allpart.mx';  						// Specify main and backup SMTP servers
+    $mail->Host = 'mail.allpartmysupplies.com';  						// Specify main and backup SMTP servers
     $mail->SMTPAuth = true;                               // Enable SMTP authentication
     $mail->Username = 'system@allpartmysupplies.com';                 // SMTP username
     $mail->Password = 'Allpart_2021';                           // SMTP password
