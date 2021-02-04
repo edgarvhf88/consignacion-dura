@@ -236,8 +236,20 @@ echo '<table id="mostrar_articulos" class="table table-striped table-bordered ta
  echo '<script> 
 	$(document).ready(function(){
 				var tabla_articulos = $("#mostrar_articulos").DataTable();
-				$("#mostrar_articulos").DataTable({
-						"order": [[ 1, "asc" ]]
+				
+					$("#mostrar_articulos").dataTable().fnSettings().aoDrawCallback.push({
+					"fn": function () {
+						$(".btn_actualiza").click(function(){
+						var tr_id = $(this).attr("id")
+						var arr_id = tr_id.split("_");
+						var id_articulo = arr_id[1];
+					
+						SincronizarInventarioArticulo(id_articulo);
+						
+							
+						});
+						},
+					"order": [[ 1, "asc" ]]
 					});
 		
                 $(".lista_articulos").on("dblclick", function(){

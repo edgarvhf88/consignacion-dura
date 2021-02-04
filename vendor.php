@@ -3038,6 +3038,7 @@ function requerir_pedido_nef(id_pedido){
 					agregar_tracking();
 				});
 				
+				
 			
 				$('#txt_buscar_art_microsip').keypress(function(event){
 					var keycode = (event.keyCode ? event.keyCode : event.which);
