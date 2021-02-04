@@ -263,9 +263,10 @@ else
 			$precio_total = $row_rec['TOTAL'];
 			//consulta a consigna
 			global $database_conexion, $conex;
-			$sql = "SELECT nombre, unidad_medida, id	
-			FROM articulos 
-			WHERE (id_microsip = '".$id_microsip."')";
+			$sql = "SELECT a.nombre as nombre, a.unidad_medida as unidad_medida, a.id as id	
+			FROM articulos a
+			INNER JOIN existencias ex ON ex.id_articulo = a.id and ex.almacen_id = '$almacen_id'
+			WHERE (a.id_microsip = '".$id_microsip."' and a.id_empresa = '".$id_empresa."')";
 			$resultado= mysql_query($sql, $conex) or die(mysql_error());
 			$row = mysql_fetch_assoc($resultado);
 			$total = mysql_num_rows($resultado);
@@ -275,10 +276,7 @@ else
 					$unidad_medida = $row['unidad_medida'];	
 					$id_articulo = $row['id'];	
 				}
-			
-			
-			
-			
+						
 			$traspaso = "INSERT INTO pedido_traspaso_det
 			(id_pedido, id_articulo, clave_microsip, id_microsip, articulo, cantidad, precio_unitario, precio_total, unidad_medida) 
 			VALUES ('$id_pedido_tras', '$id_articulo', '$clave_microsip', '$id_microsip', '$articulo', '$cantidad', '$precio_unitario', '$precio_total', '$unidad_medida')";

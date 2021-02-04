@@ -25,10 +25,11 @@ function cancelar($id_pedido)
 					if (mysql_query($delete_ped, $conex) or die(mysql_error())){}
 					
 					echo '<script> 
-						$("#modal_cargando").modal("hide");
-							pedido_nuevo();
-							$("#txt_requisitor_pedido").val("");
+						//$("#modal_cargando").modal("hide");
+							//pedido_nuevo();
 							
+							$("#txt_requisitor_pedido").val("");
+							lista_pedidos();
 						</script>';
 				}
 			}

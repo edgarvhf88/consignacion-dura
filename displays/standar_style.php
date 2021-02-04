@@ -58,7 +58,7 @@ switch($tipo_usuario)
 	//si es Almacenista
 	//$reportes = '';  //para no mostrar ningun reportes
 	echo '<script> </script>';
-	$btns_menu = '<!-- <li style="background-color:rgba(192,192,192,0.8);">
+	$btns_menu = '<!-- --><li style="background-color:rgba(192,192,192,0.8);">
                     <a href="#" style="z-index:3;" onclick="mostrar_pedido();">
                       <span class="fa fa-bars" aria-hidden="true"></span>  Current request
                     </a>
@@ -67,7 +67,7 @@ switch($tipo_usuario)
                     <a href="#"  style="z-index:4;" onclick="mis_carritos_pendientes();">
                       <span class="fa fa-pause" aria-hidden="true"></span> Paused requests
                     </a>
-                </li> -->
+                </li> 
                 <li style="background-color:rgba(192,192,192,0.8);">
                     <a href="#"  style="z-index:5;" onclick="lista_requis_almacen();">
                      <span class="fa fa-list-alt" aria-hidden="true"></span>   Requests

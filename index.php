@@ -32,9 +32,11 @@ switch($tipo_usuario)
 	break;
 	case 11:
 	//header('Location: cxc.php');
+	echo '<script> window.location.replace("cxc.php"); </script>';
 	break;
 	case 17:
 	//header('Location: transfer.php');
+	echo '<script> window.location.replace("transfer.php"); </script>';
 	break;
 	
 }

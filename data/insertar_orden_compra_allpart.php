@@ -65,7 +65,7 @@ if ((isset($_POST['folio'])) && ($_POST['folio'] != "")){
 	$descripcion="Orden generada por el sistema de consigancion Dura";
 	$usuario_creacion="ELIZABETHO";
 	$almacen_id = 19; // SE ASIGNA ABAJO
-	$sucursal_id = 14059; // SE ASIGNA ABAJO
+	$sucursal_id = Sucursal_Allpart(); // SE ASIGNA ABAJO
 	$proveedor_id = 1768; //cliente_id de AllPart matamoros
 	$clave_prov = "NEFMAT";
 	$cond_pago_id = 1624; // 30 dias de credito para 0 dias = 209

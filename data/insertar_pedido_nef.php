@@ -84,7 +84,7 @@ if ((isset($_POST['id_pedido'])) && ($_POST['id_pedido'] != "")){
 	$docto_ve_id = "";	
 	$docto_id = -1; // existe un triger en la base que convierte el -1 en un ID irrepetible y consecutivo
 	$almacen_id = 19; // SE ASIGNA ABAJO
-	$sucursal_id = 431195; // SE ASIGNA ABAJO
+	$sucursal_id = Sucursal_Nef();  //431195; 
 	$cliente_id = 307461; //cliente_id de AllPart matamoros
 	$clave_cliente = "ALLMAT";
 	$vendedor_id = 327296;  //// VENDEDOR ALEJANDRO GARCIA
@@ -157,7 +157,6 @@ if ((isset($_POST['id_pedido'])) && ($_POST['id_pedido'] != "")){
 		$query_insert->bindParam(':folio', $folio, PDO::PARAM_STR, 9);
 		$query_insert->bindParam(':fecha', $fecha, PDO::PARAM_STR);
 		$query_insert->bindParam(':hora', $hora, PDO::PARAM_STR);
-		$query_insert->bindParam(':hora', $hora, PDO::PARAM_STR);
 		$query_insert->bindParam(':estatus', $estatus, PDO::PARAM_STR, 1);
 		$query_insert->bindParam(':orden_compra', $orden_compra, PDO::PARAM_STR, 35);
 		$query_insert->bindParam(':importe_neto', $importe_neto, PDO::PARAM_STR, 15);
@@ -181,6 +180,8 @@ if ((isset($_POST['id_pedido'])) && ($_POST['id_pedido'] != "")){
 		else 
 		{
 			$docto_ve_id = ObtenerIdPed($folio);
+			if ($docto_ve_id != '')
+			{	
 			echo '<script> console.log("pedido nuevo insertado '.$docto_ve_id .'"); </script>'; 
 			
 			///// TAMBIEN SE TIENE QUE INSERTAR LOS DATOS ADICIONALES 
@@ -331,6 +332,15 @@ if ((isset($_POST['id_pedido'])) && ($_POST['id_pedido'] != "")){
 						},1000,"JavaScript");   </script>';
 				
 				}
+			}
+			else
+			{
+				echo '<script> 
+						setTimeout(function(){
+							lista_pedidos_nef();
+							alert("Erro al generar pedido nef");
+						},1000,"JavaScript");   </script>';
+			}
 		}/// insert success
 	}
 

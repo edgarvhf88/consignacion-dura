@@ -255,14 +255,14 @@ try {
     $mail->isSMTP();                                      // Set mailer to use SMTP
     $mail->Host = 'allpart.mx';  						// Specify main and backup SMTP servers
     $mail->SMTPAuth = true;                               // Enable SMTP authentication
-    $mail->Username = 'info@allpart.mx';                 // SMTP username
-    $mail->Password = 'Contrasena_123';                           // SMTP password
+    $mail->Username = 'system@allpartmysupplies.com';                 // SMTP username
+    $mail->Password = 'Allpart_2021';                           // SMTP password
     //$mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
 	$mail->SMTPAutoTLS = false;
     $mail->Port = 587;                                    // TCP port to connect to
 
     //Recipients
-    $mail->setFrom('info@allpart.mx', $nombre_from_mail);
+    $mail->setFrom('system@allpartmysupplies.com', $nombre_from_mail);
     $mail->addAddress($correo_destino, $nombre_destino);     // Add a recipient
     //$mail->addAddress('ellen@example.com');               // Name is optional
     //$mail->addReplyTo('info@example.com', 'Information');

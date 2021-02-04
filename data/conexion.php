@@ -1,5 +1,6 @@
-<?php 
+<?php  
 session_start();
+// error_reporting(0);
 if (!isset($_SESSION["logged_user"])){
 	$_SESSION["logged_user"] = '';
 }
@@ -22,7 +23,7 @@ $ruta_nef = "10.0.0.9:C:\\microsip datos\\nef2011.fdb";
 try {
    $con_micro_nef = new PDO("firebird:dbname=$ruta_nef", "$username", "$password");
    $con_micro_nef->exec("SET CHARACTER SET utf8_decode"); 
-   
+    $con_micro_nef->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
    print "Error!: " . $e->getMessage() . "<br/>";
    die();
@@ -1388,18 +1389,19 @@ function CantRecibir($id_articulo,$id_pedido_cliente){
 	
 	$sql = "SELECT SUM(ptd.cantidad) as cantidad 
 	FROM pedido_traspaso pt
-	LEFT JOIN pedido_traspaso_det ptd ON ptd.id_pedido = pt.id_pedido
+	INNER JOIN pedido_traspaso_det ptd ON ptd.id_pedido = pt.id_pedido
 	WHERE pt.id_pedido_cliente = '$id_pedido_cliente' AND ptd.id_articulo = '$id_articulo' AND pt.estatus = '2'";
 	$res = mysql_query($sql, $conex) or die(mysql_error());
 	$row = mysql_fetch_assoc($res);
 	$tot_rows = mysql_num_rows($res);
+	$variable = 0;
 	if($tot_rows > 0){
-		return $row['cantidad'];
+		$variable = $row['cantidad'];
 	}else{
-		return 0;
+		$variable = 0;
 	}
 	
-	
+	return $variable;
 }
 function ValidarPedidoCliente($id_pedido){
 	global $conex;
@@ -1842,6 +1844,20 @@ global $con_micro;
 $sql = "SELECT SUC.SUCURSAL_ID AS SUCURSAL_ID	
 FROM SUCURSALES SUC";
 $consulta = $con_micro->prepare($sql);
+$consulta->execute();
+$consulta->setFetchMode(PDO::FETCH_OBJ);
+$row_result = $consulta->fetch(PDO::FETCH_ASSOC);
+if (!$consulta){
+	 exit;}	
+$SUCURSAL_ID = $row_result['SUCURSAL_ID'];
+return $SUCURSAL_ID;
+}
+function Sucursal_Nef(){ 
+global $con_micro_nef;
+
+$sql = "SELECT SUC.SUCURSAL_ID AS SUCURSAL_ID	
+FROM SUCURSALES SUC";
+$consulta = $con_micro_nef->prepare($sql);
 $consulta->execute();
 $consulta->setFetchMode(PDO::FETCH_OBJ);
 $row_result = $consulta->fetch(PDO::FETCH_ASSOC);

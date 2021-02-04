@@ -40,7 +40,7 @@ echo '<script> window.location.replace("login.php"); </script>';}
 						}
 						else if (response == 1) // acceso consedido
 						{
-						$(location).attr('href','index.php'); 
+						window.location.replace("index.php");
 						}
 						else if (response == 2) // contrasena incorrecta
 						{

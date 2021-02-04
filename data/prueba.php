@@ -1,7 +1,7 @@
 <?php
 include("conexion.php"); 
 
-$folio = "000198975";
+$folio = "000217734";
 
 function ObtenerIdPedi($folio){ 
 global $con_micro_nef;
@@ -20,6 +20,8 @@ $docto_ve_id = $row_result['DOCTO_VE_ID'];
 return $docto_ve_id;
 }
 
+// echo ObtenerIdPedi($folio);
+ echo CantRecibir(335,4);
 
-echo ObtenerIdPedi($folio);
+
 ?>

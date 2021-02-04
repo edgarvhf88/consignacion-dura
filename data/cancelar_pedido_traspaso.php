@@ -25,7 +25,8 @@ function cancelar($id_pedido)
 					if (mysql_query($delete_ped, $conex) or die(mysql_error())){}
 					
 					echo '<script> 
-							traspaso_nuevo();
+							//traspaso_nuevo();
+							lista_pedidos();
 							$("#txt_requisitor_traspaso").val("");
 						</script>';
 				}
