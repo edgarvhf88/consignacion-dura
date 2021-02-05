@@ -43,15 +43,13 @@ echo '
 <table id="tabla_oc_det" class="table table-striped table-bordered table-hover table-responsive display" >
 		<thead>
 			<tr class="bg-info">
-				<th>#</th>
+				<th>#Parte</th>
+				<th>Articulo Microsip</th>
+				<th>Descripcion</th>
 				<th>Cant.</th>
 				<th>Unid. Med.</th>
-				<th>#Parte</th>
-				<th>Descripcion</th>
 				<th>Precio Unitario</th>
 				<th>Precio Total</th>
-				<th>Articulo Microsip</th>
-				<th><i class="fa fa-trash" aria-hidden="true"></i></th>
 			</tr>
 		</thead><tbody >';
 						
@@ -60,16 +58,14 @@ echo '
 		$id_oc_det = $row2['id_oc_det'];
 		$arti_microsip = $row2['clave_microsip'].' - '.$row2['nombre'];
 	echo '<tr>
-	<td class="reg_ocdet" id="tdcd_'.$id_oc_det.'">'.$row2['posicion'].' </td>
+	<td class="reg_ocdet" id="tdet_'.$id_oc_det.'">'.$row2['numero_parte'].'</td>
+	<td class="reg_ocdet" id="tdus_'.$id_oc_det.'">'.$arti_microsip.'</td>
+	<td class="reg_ocdet" id="tdal_'.$id_oc_det.'">'.$row2['descripcion'].'</td>
 	<td class="reg_ocdet" id="tdca_'.$id_oc_det.'">'.$row2['cantidad'].'</td>
 	<td class="reg_ocdet" id="tdfo_'.$id_oc_det.'">'.$row2['udm'].'</td>
-	<td class="reg_ocdet" id="tdet_'.$id_oc_det.'">'.$row2['numero_parte'].'</td>
-	<td class="reg_ocdet" id="tdal_'.$id_oc_det.'">'.$row2['descripcion'].'</td>
 	<td class="reg_ocdet" id="tdcl_'.$id_oc_det.'">'.$row2['precio_unitario'].' </td>
 	<td class="reg_ocdet" id="tdus_'.$id_oc_det.'">'.$row2['precio_total'].'</td>
-	<td class="reg_ocdet" id="tdus_'.$id_oc_det.'">'.$arti_microsip.'</td>
-	<td class="reg_ocdet" id="tdts_'.$id_oc_det.'" align="center">
-	<i class="fa fa-trash btn btn-danger btn-sm delpartoc" aria-hidden="true" id="btndel_'.$id_oc_det.'"></i></td>
+	
 	';                    							
 		    
 						

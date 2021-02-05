@@ -1,5 +1,5 @@
 <?php  $nombre_usuario = 'Usuario no registrado';
-if ((isset($_SESSION["logged_user"])) &&($_SESSION["logged_user"] == '')){ header('Location: login.php'); }
+if ((isset($_SESSION["logged_user"])) &&($_SESSION["logged_user"] == '')){ echo '<script> window.location.replace("login.php"); </script>'; }
 else {
 $nombre_usuario = '<a href="login.php">'.Nombre($_SESSION["logged_user"]).'</a>';
 $tipo_usuario = validar_usuario($_SESSION["logged_user"]); 
@@ -62,7 +62,7 @@ switch($tipo_usuario)
                 </li> 
 				<li style="background-color:rgba(192,192,192,0.8);">
                     <a href="#" style="z-index:3;" onclick="spotby_lista();">
-                       Spot By
+                       Spot Buy
                     </a>
                 </li> 
 				<li  style="background-color:rgba(192,192,192,0.8);">

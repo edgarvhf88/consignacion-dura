@@ -36,18 +36,20 @@ echo '<div class="col-md-12">
 				                    			<th>Apellido</th>
 				                    			<th>Nombre de usuario</th>
 				                    			<th>Correo</th>
-				                    			<th>Puesto</th>
+				                    			<th>Correo</th>
+				                    			<th>Contraseña</th>
 				                    			<th>Departamento</th>
 				                    		</tr>
 				                    	</thead><tbody>';
 				                    		$tipo_usuario = '';						
 				                    		while($row2 = mysql_fetch_array($resultado,MYSQL_BOTH)) // html de articulos a mostrar
 				                    		{
-				                    		
+				                    		$contrasena = $row2['contrasena'];
 				                    		switch($row2['tipo_usuario'])
 				                    		{
 				                    			case 1:
 				                    			$tipo_usuario = "Admin";
+												$contrasena = "************";
 				                    			break;
 				                    			case 2:
 				                    			$tipo_usuario = "Comprador(Requisitor)";
@@ -61,6 +63,12 @@ echo '<div class="col-md-12">
 				                    			case 5:
 				                    			$tipo_usuario = "Supervisor";
 				                    			break;
+				                    			case 11:
+				                    			$tipo_usuario = "Facturacion";
+				                    			break;
+				                    			case 17:
+				                    			$tipo_usuario = "Admin Traspasos"; // Facturacion y Traspasos
+				                    			break;
 				                    			
 				                    		}
 				                    			
@@ -72,6 +80,7 @@ echo '<div class="col-md-12">
 				                    			<td>'.$row2['apellido'].'</td>
 				                    			<td>'.$row2['username'].'</td>
 				                    			<td>'.$row2['correo'].'</td>
+				                    			<td>'.$contrasena.'</td>
 				                    			<td>'.PUESTO_NOMBRE($row2['id_puesto']).'</td>
 				                    			<td>'.DEPARTAMENTO_NOMBRE($row2['id_departamento']).'</td>
 				                    		</tr>

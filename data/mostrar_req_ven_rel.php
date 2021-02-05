@@ -20,8 +20,7 @@ global $database_conexion, $conex;
 
 $query = "SELECT a.nombre as nombre_usuario, a.apellido as apellido, a.id as id_usuario, b.nombre as nombre_empresa FROM usuarios a
 INNER JOIN empresas b on a.id_empresa = b.id_empresa 
-WHERE a.tipo_usuario = '2' or a.tipo_usuario = '5'
-			";
+WHERE a.tipo_usuario = '2' or a.tipo_usuario = '5' or a.tipo_usuario = '4' ";
 $resultado = mysql_query($query, $conex) or die(mysql_error());
 //$row = mysql_fetch_assoc($resultado);
 $totalRows = mysql_num_rows($resultado);

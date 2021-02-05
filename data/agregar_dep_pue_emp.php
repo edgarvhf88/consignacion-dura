@@ -96,12 +96,12 @@
 	  $id_empresa = $_POST['id_empresa'];
       $empresa = $_POST['empresa'];
       $rfc = $_POST['rfc'];
-      }
+      
 	  if ($id_empresa != ''){
 	  
 			modificar_empresa($id_empresa,$empresa,$rfc);
 	  }
-	  
+	  }
 	  
 	  
 	  

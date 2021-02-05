@@ -888,7 +888,7 @@ function requerir_pedido_nef(id_pedido){
 		
 		function ver_img_spotby(imagen)
 		{	
-			var mostrar ='<img src="spotby_img/imagenes/'+imagen+'" width="600" height="500">';
+			var mostrar ='<img src="https://allpartmysupplies.com/spotby_img/imagenes/'+imagen+'" width="600" height="500">';
 		
 			$('#spotby_imagen_body').html(mostrar);
 			
