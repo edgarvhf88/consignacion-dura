@@ -83,12 +83,19 @@ $lista_categorias = categorias_lista($id_empresa);
 					$precio_articulo = $datos[6];
 				}
 				if ($datos[2] == ""){
+					$descripcion = NombreArticulo($articulo_id);	
+				}else {
+					$descripcion = $datos[2];
+				}
+				if ($datos[3] == ""){
 					$nombre_articulo = NombreArticulo($articulo_id);	
 				}else {
-					$nombre_articulo = $datos[2];
+					$nombre_articulo = $datos[3];
 				}
 				$nombre_articulo = str_replace("\"", '&#34', $nombre_articulo); 
 				$nombre_articulo = str_replace("'", '&#39', $nombre_articulo); 
+				$descripcion = str_replace("\"", '&#34', $nombre_articulo); 
+				$descripcion = str_replace("'", '&#39', $nombre_articulo); 
 				
 				$sql_verif = "SELECT * FROM articulos WHERE id_microsip = '$articulo_id' AND id_empresa = '$id_empresa'";
 				$res_sql_verif = mysql_query($sql_verif, $conex) or die(mysql_error());
@@ -98,7 +105,7 @@ $lista_categorias = categorias_lista($id_empresa);
 				{ // si encuentra el articulo lo edita con update
 					$id_art = $row_art['id'];
 					
-					$sql_art_update = "UPDATE articulos SET clave_microsip='$datos[0]', clave_empresa='$datos[1]', nombre='$nombre_articulo', descripcion='$datos[3]',  precio='$precio_articulo', src_img='$datos[5]', unidad_medida='$unidad_medida' WHERE id ='$id_art'";
+					$sql_art_update = "UPDATE articulos SET clave_microsip='$datos[0]', clave_empresa='$datos[1]', nombre='$nombre_articulo', descripcion='$descripcion',  precio='$precio_articulo', src_img='$datos[5]', unidad_medida='$unidad_medida' WHERE id ='$id_art'";
 					if (mysql_query($sql_art_update, $conex) or die(mysql_error())){}
 					 
 					$sql_exis_verif = "SELECT * FROM existencias WHERE id_articulo = '$id_art' AND almacen_id = '$almacen_id'";
