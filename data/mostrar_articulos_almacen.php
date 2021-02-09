@@ -92,9 +92,6 @@ if($resul && $resul->num_rows>0){
 				<th>Pend. Orden.</th>
 				<th>Sync</th>
 				<th hidden>estatus</th>
-				<th hidden>estatus</th>
-				<th hidden>estatus</th>
-				<th hidden>estatus</th>
 			</tr>
 		</thead><tbody id="tbody_articulos">';
 		$articulo = '';						
@@ -244,7 +241,7 @@ foreach($resul as $row2){
 			<input id="art_existencia_'.$row2['id'].'" type="hidden" value="'.$existencia_val.'"/>
 			<input id="art_existenciaactual_'.$row2['id'].'" type="hidden" value="'.$existencia_actual.'"/>
 			</td>
-			<td id="tdminmaxreorden_'.$row2['id'].'">Min: '.$min_val.' <br/> Max: '.$max_val.' <br/> Reorden: '.$reorden_val.'</td>
+			<td id="tdminmaxreorden_'.$row2['id'].'">Min: '.$min_val.' <br/> Max: '.$max_val.' <br/> Re-ord: '.$reorden_val.'</td>
 			<!-- <td id="tdmin_'.$row2['id'].'">'.$min_val.'</td>
 			<td id="tdmax_'.$row2['id'].'">'.$max_val.'</td>
 			<td id="tdreorden_'.$row2['id'].'">'.$reorden_val.'</td> -->
@@ -254,9 +251,6 @@ foreach($resul as $row2){
 			<td id="tdunidpendord_'.$row2['id'].'"  >'.$unidades_pend_orden.'</td>
 			<td id="td_actualizar_'.$row2['id'].'"><input type="button" class="btn btn-info btn_actualiza" id="btnact_'.$row2['id_microsip'].'" value="Sincronizar" /></td>
 			<td id="tdestatus1" hidden>'.$clase_func.'</td>
-			<td id="tdestatus2" hidden>'.$clase_func.'</td>
-			<td id="tdestatus3" hidden>'.$clase_func.'</td>
-			<td id="tdestatus4" hidden>'.$clase_func.'</td>
 			</tr>
 				';
 	
@@ -269,7 +263,7 @@ echo ' </tbody></table>';
 		
 		
 				var tabla_articulos = $("#mostrar_articulos").DataTable();
-				
+				validar_mostrar();
 					$("#mostrar_articulos").dataTable().fnSettings().aoDrawCallback.push({
 					"fn": function () 
 						{
@@ -402,27 +396,27 @@ echo ' </tbody></table>';
 					var valor_sobreinventario = $("#chk_sobreinventario").prop("checked");
 					var valor_bien = $("#chk_bien").prop("checked");
 					
-					var valor_search1 = "";
-					var valor_search2 = "";
-					var valor_search3 = "";
-					var valor_search4 = "";
+					var valor_search = "";
+				
+					tabla_articulos.columns(11).search("").draw();
 					
-					if (valor_reorden == true){	valor_search1 = "list_reorden";	}
-					else
-					{valor_search1 = "";}
-					if (valor_urgentes == true){ valor_search2 = "list_urgente"; }
-					else
-					{valor_search2 = "";}
-					if (valor_sobreinventario == true){valor_search3 = "list_sobreinventario"; }
-					else
-					{valor_search3 = "";}
-					if (valor_bien == true){ valor_search4 = "list_bien"; }
-					else
-					{valor_search4 = "";}
-					tabla_articulos.columns(11).search(valor_search1).draw(false);
-					tabla_articulos.columns(12).search(valor_search2).draw(false);
-					tabla_articulos.columns(13).search(valor_search3).draw(false);
-					tabla_articulos.columns(14).search(valor_search4).draw(false);
+					if (valor_reorden == true){	valor_search = "list_reorden";	}
+				
+					if (valor_urgentes == true){ 
+						if (valor_search == ""){ valor_search = "list_urgente";  } else { valor_search += "|list_urgente"; }
+					}
+					if (valor_sobreinventario == true){
+						if (valor_search == ""){ valor_search = "list_sobreinventario";  } else { valor_search += "|list_sobreinventario"; }
+					}
+				
+					if (valor_bien == true){  
+						if (valor_search == ""){ valor_search = "list_bien";  } else { valor_search += "|list_bien"; }
+					}
+					if (valor_search == ""){ valor_search = "list_sinminmaxreo";  } else { valor_search += "|list_sinminmaxreo"; }
+				
+					tabla_articulos.columns(11).search(valor_search, true, false).draw();
+					
+					
 				} 
 				 
                  
