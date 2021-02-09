@@ -9,9 +9,10 @@
 	  }	
 	 
      function mostrar_articulos_almacen($id_empresa,$almacen_id){ 
-global  $conex;
+global  $conex, $conex_sqli;
 
 if($id_empresa == 0){
+	$resul = $conex_sqli->query("call mostrar_articulos()");
 $consulta_usuarios = "
 					SELECT 
 					a.id as id,
@@ -31,7 +32,11 @@ $consulta_usuarios = "
 					  FROM articulos a 
 					  INNER JOIN empresas e on a.id_empresa = e.id_empresa	
 					  LEFT JOIN existencias exis on exis.id_articulo = a.id ";	
-}else {
+}
+else 
+{
+	
+	$resul = $conex_sqli->query("call mostrar_articulos_almacen(".$id_empresa.",".$almacen_id.")");
 $consulta_usuarios = "
 					SELECT 
 					a.id as id,
@@ -55,12 +60,19 @@ $consulta_usuarios = "
 					  WHERE a.id_empresa = '$id_empresa'  AND exis.almacen_id = '$almacen_id'";	
 }
 
-$resultado = mysql_query($consulta_usuarios, $conex) or die(mysql_error());
+//$resultado = mysql_query($consulta_usuarios, $conex) or die(mysql_error());
 //$row = mysql_fetch_assoc($resultado);
-$total_rows = mysql_num_rows($resultado);
+//$total_rows = mysql_num_rows($resultado);
+$total_rows = 0;
 
-if ($total_rows > 0){ // con resultados
-echo '<table id="mostrar_articulos" class="table table-striped table-bordered table-hover table-responsive display" >
+
+
+//$resul->fetch_assoc();
+
+
+if($resul && $resul->num_rows>0){ 
+    $resul->fetch_all(MYSQLI_ASSOC);
+	echo '<table id="mostrar_articulos" class="table table-striped table-bordered table-hover table-responsive display" >
 		<thead>
 			<tr class="bg-info">
 				<!-- <th>Select</th> 
@@ -70,12 +82,14 @@ echo '<table id="mostrar_articulos" class="table table-striped table-bordered ta
 				<th>Unidad Medida</th>
 				<th>Precio</th>
 				<th>Imagen</th>
-				<th>Min</th>
+				<th>Min-Max-Reorden</th>
+				<!-- <th>Min</th>
 				<th>Max</th>
-				<th>Reorden</th>
+				<th>Reorden</th> -->
 				<th>En Consigna</th>
 				<th>En Fisico</th>
-				<th hidden>Conteo Inv.</th>
+				<th>Cant. Solicitado</th>
+				<th>Pend. Orden.</th>
 				<th>Sync</th>
 			</tr>
 		</thead><tbody id="tbody_articulos">';
@@ -85,98 +99,109 @@ echo '<table id="mostrar_articulos" class="table table-striped table-bordered ta
 		$desc_clase = "";
 		$clase_func = "";
 		$title_datos = "";
-				
-		while($row2 = mysql_fetch_array($resultado,MYSQL_BOTH)) // html de articulos a mostrar
-		{
-									$id_empresa = $row2['id_empresa']; 	
-									$articulo_id = $row2['id_microsip']; 	
-									$id_art = $row2['id']; 	
-									if ($row2['imagen'] != ""){
-									$src_img = $row2['imagen'];	
-									$ruta = "assets/images/productos/emp-".$id_empresa."/".$src_img;	
-									}else{
-									$src_img = "sin_imagen.jpg";
-									$ruta = "assets/images/".$src_img;	}	
-				                  	$articulo = str_replace(['"', "'"], '', $row2['articulo']);
-				                  	$descripcion = str_replace(['"', "'"], '', $row2['descip']);
+foreach($resul as $row2){
+	$id_empresa = $row2['id_empresa']; 	
+				$articulo_id = $row2['id_microsip']; 	
+				$id_art = $row2['id']; 	
+				if ($row2['imagen'] != ""){
+				$src_img = $row2['imagen'];	
+				$ruta = "assets/images/productos/emp-".$id_empresa."/".$src_img;	
+				}else{
+				$src_img = "sin_imagen.jpg";
+				$ruta = "assets/images/".$src_img;	}	
+				              $articulo = str_replace(['"', "'"], '', $row2['articulo']);
+				              $descripcion = str_replace(['"', "'"], '', $row2['descip']);
 								
-							if ($row2['min'] != ""){
-							$min_val = $row2['min'];	
-							}else{
-							//$min_val = '<a href="#" id="art_min_'.$row2['id'].'" onclick=""> Asignar </a> ';
-							//$min_val = '<input id="art_min_'.$row2['id'].'" type="text" value="0" size="5"/>';
-							$min_val = '';
-							}	
-							if ($row2['max'] != ""){
-							$max_val = $row2['max'];	
-							}else{
-							$max_val = 0;
-							}	
-							if ($row2['reorden'] != ""){
-							$reorden_val = $row2['reorden'];	
-							}else{
-							$reorden_val = 0;
-							}	
-							if ($row2['existencia'] != ""){
-							$existencia_val = $row2['existencia'];	
-							}else{
-							$existencia_val = 0;
-							}	
+				if ($row2['min'] != ""){
+				$min_val = $row2['min'];	
+				}else{
+				//$min_val = '<a href="#" id="art_min_'.$row2['id'].'" onclick=""> Asignar </a> ';
+				//$min_val = '<input id="art_min_'.$row2['id'].'" type="text" value="0" size="5"/>';
+				$min_val = '';
+				}	
+				if ($row2['max'] != ""){
+				$max_val = $row2['max'];	
+				}else{
+				$max_val = 0;
+				}	
+				if ($row2['reorden'] != ""){
+				$reorden_val = $row2['reorden'];	
+				}else{
+				$reorden_val = 0;
+				}	
+				if ($row2['existencia'] != ""){
+				$existencia_val = $row2['existencia'];	
+				}else{
+				$existencia_val = 0;
+				}	
+				
+				$check_box = '<div class="checkboxbtn lg col-lg-12" id="checkboxbtn_'.$row2['id'].'">
+								<label>
+									<input type="checkbox" id="checkboxart_'.$row2['id'].'" checked class="chk_art_select" style=""/> 
+								</label>
+							</div>';
+				if (($reorden_val != 0) && ($max_val != 0) && ($min_val != 0))
+				{			
+					if ($existencia_val <= $reorden_val){
+						if ($existencia_val <= $min_val){
+							$clase = "danger"; /// URGENTE pedir	
+							$desc_clase = "Urgente Surtir Material";
+							$clase_func = "list_urgente";
 							
-							$check_box = '<div class="checkboxbtn lg col-lg-12" id="checkboxbtn_'.$row2['id'].'">
-											<label>
-												<input type="checkbox" id="checkboxart_'.$row2['id'].'" checked class="chk_art_select" style=""/> 
-											</label>
-										</div>';
-							if (($reorden_val != 0) && ($max_val != 0) && ($min_val != 0))
-							{			
-								if ($existencia_val <= $reorden_val){
-									if ($existencia_val <= $min_val){
-										$clase = "danger"; /// URGENTE pedir	
-										$desc_clase = "Urgente Surtir Material";
-										$clase_func = "list_urgente";
-										
-									}else {
-										$clase = "warning"; /// reordenar	
-										$desc_clase = "Es Necesario Reordenar";
-										$clase_func = "list_reorden";
-									}
-								}
-								else if ($existencia_val > $max_val)
-								{
-									$clase = "info";// sobreInventariado
-									$desc_clase = "Este Articulo se encuentra Sobre-Inventariado";
-									$clase_func = "list_sobreinventario";
-									$check_box = '';
-								}
-								else
-								{
-									$clase = "success";// Se encuentra en buen estatus dentro de los parametros
-									$desc_clase = "Articulo Dentro de los Parametros";
-									$clase_func = "list_bien";
-								}
-							}
-							else
-							{ /// si el min,max,reorden = 0 , no se han especificador los puntos de reorden
-								$clase = "light text-danger";// sobreInventariado
-									$desc_clase = "Nesesita actualizar los datos de Minimo, Maximo y Reorden para ayudar a mantener en stock";
-									$clase_func = "list_sinminmaxreo";
-									$check_box = '';
-							}	
-							$unidades_pedidas = unidades_pedidas($id_art,$id_empresa);
-							$total_cantidad_cobrada = cantidades_cobradas($id_art,$almacen_id);
+						}else {
+							$clase = "warning"; /// reordenar	
+							$desc_clase = "Es Necesario Reordenar";
+							$clase_func = "list_reorden";
+						}
+					}
+					else if ($existencia_val > $max_val)
+					{
+						$clase = "info";// sobreInventariado
+						$desc_clase = "Este Articulo se encuentra Sobre-Inventariado";
+						$clase_func = "list_sobreinventario";
+						$check_box = '';
+					}
+					else
+					{
+						$clase = "success";// Se encuentra en buen estatus dentro de los parametros
+						$desc_clase = "Articulo Dentro de los Parametros";
+						$clase_func = "list_bien";
+					}
+				}
+				else
+				{ /// si el min,max,reorden = 0 , no se han especificador los puntos de reorden
+					$clase = "light text-danger";// sobreInventariado
+						$desc_clase = "Nesesita actualizar los datos de Minimo, Maximo y Reorden para ayudar a mantener en stock";
+						$clase_func = "list_sinminmaxreo";
+						$check_box = '';
+				}	
+				if ($row2['cant_pedidas'] != ""){
+					$unidades_pedidas = $row2['cant_pedidas'];
+				}else{$unidades_pedidas = 0;}
+				
+				if ($row2['cant_ord_rem'] != ""){
+					$total_cantidad_cobrada = $row2['cant_ord_rem']; //cantidades_cobradas($id_art,$almacen_id);
+				}else{$total_cantidad_cobrada =0;}
+				
+				if ($row2['consumido'] != ""){
+					$consumido = $row2['consumido'];
+				}else{ $consumido = 0;}
 			
-		$total_consumido_nopagado = suma_diferencias($id_art,$almacen_id,1) - $total_cantidad_cobrada; // 1 = INV CERRADO
+		$total_consumido_nopagado = $consumido - $total_cantidad_cobrada; // 1 = INV CERRADO
 		if ($total_consumido_nopagado > 0){
-			$existencia_actual = $existencia_val - $total_consumido_nopagado;		
+			$existencia_actual = $existencia_val - $total_consumido_nopagado;
+			$unidades_pend_orden = $total_consumido_nopagado;			
 			}else
 			{
-			$existencia_actual = $existencia_val;	
+			$existencia_actual = $existencia_val;
+			$unidades_pend_orden = 0;		
 			}
 		
 		
-		$title_datos = "total cantidades cobradas=".$total_cantidad_cobrada." / diferencias=".suma_diferencias($id_art,$almacen_id,1)." / no pagado y consumido=".$total_consumido_nopagado;
-		$arr = explode('_',ultimo_inv_art($id_art));
+		
+		$title_datos = "total cantidades cobradas=".$total_cantidad_cobrada." / consumido=".$consumido." / no pagado y consumido=".$total_consumido_nopagado;
+		
+		/* $arr = explode('_',ultimo_inv_art($id_art));
 		if (count($arr) > 1){
 			$ult_inv_act = $arr[0]; 
 		$fecha_inventario = $arr[1]; 	
@@ -185,7 +210,7 @@ echo '<table id="mostrar_articulos" class="table table-striped table-bordered ta
 		{
 			$ult_inv_act = ""; 
 		$fecha_inventario = ""; 	
-		}
+		} */
 			
 								
 		echo '<tr id="trarticulo_'.$row2['id'].'"  class="'.$clase.' '.$clase_func.'" title="'.$desc_clase.'">
@@ -215,39 +240,79 @@ echo '<table id="mostrar_articulos" class="table table-striped table-bordered ta
 			<input id="art_existencia_'.$row2['id'].'" type="hidden" value="'.$existencia_val.'"/>
 			<input id="art_existenciaactual_'.$row2['id'].'" type="hidden" value="'.$existencia_actual.'"/>
 			</td>
-			<td id="tdmin_'.$row2['id'].'">'.$min_val.'</td>
+			<td id="tdminmaxreorden_'.$row2['id'].'">Min: '.$min_val.' <br/> Max: '.$max_val.' <br/> Reorden: '.$reorden_val.'</td>
+			<!-- <td id="tdmin_'.$row2['id'].'">'.$min_val.'</td>
 			<td id="tdmax_'.$row2['id'].'">'.$max_val.'</td>
-			<td id="tdreorden_'.$row2['id'].'">'.$reorden_val.'</td>
-			<td id="tdexistencia_'.$row2['id'].'">'.$existencia_val.'</td>
+			<td id="tdreorden_'.$row2['id'].'">'.$reorden_val.'</td> -->
+			<td id="tdexistencia_'.$row2['id'].'" title="'.$title_datos.'">'.$existencia_val.'</td>
 			<td id="tdexistenciaactual_'.$row2['id'].'" title="Es la cantidad que hay fisicamente">'.$existencia_actual.'</td>
-			<td id="tdunidped_'.$row2['id'].'" hidden >'.$unidades_pedidas.'</td>
+			<td id="tdunidped_'.$row2['id'].'"  >'.$unidades_pedidas.'</td>
+			<td id="tdunidpendord_'.$row2['id'].'"  >'.$unidades_pend_orden.'</td>
 			<td id="td_actualizar_'.$row2['id'].'"><input type="button" class="btn btn-info btn_actualiza" id="btnact_'.$row2['id_microsip'].'" value="Sincronizar" /></td>
 			
 			</tr>
 				';
-				                    							
-				                    							
-				                    					
-				                    		
-				                    							
-		}				
-		echo ' </tbody></table>';
+	
+	
+}
+echo ' </tbody></table>';
  
  echo '<script> 
 	$(document).ready(function(){
 				var tabla_articulos = $("#mostrar_articulos").DataTable();
 				
 					$("#mostrar_articulos").dataTable().fnSettings().aoDrawCallback.push({
-					"fn": function () {
-						$(".btn_actualiza").click(function(){
-						var tr_id = $(this).attr("id")
-						var arr_id = tr_id.split("_");
-						var id_articulo = arr_id[1];
-					
-						SincronizarInventarioArticulo(id_articulo);
+					"fn": function () 
+						{
+							$(".btn_actualiza").click(function(){
+							var tr_id = $(this).attr("id")
+							var arr_id = tr_id.split("_");
+							var id_articulo = arr_id[1];
 						
+							SincronizarInventarioArticulo(id_articulo);
 							
-						});
+								
+							});
+						
+							var valor_reorden = $("#chk_reorden").prop("checked");
+							if (valor_reorden == true){
+								$(".list_reorden").show();
+							}
+							else
+							{
+								$(".list_reorden").hide();
+							}
+					
+						
+							var valor_urgentes = $("#chk_urgentes").prop("checked");
+							if (valor_urgentes == true){
+								$(".list_urgente").show();
+							}
+							else
+							{
+								$(".list_urgente").hide();
+							}
+						
+						
+							var valor_sobreinventario = $("#chk_sobreinventario").prop("checked");
+							if (valor_sobreinventario == true){
+								$(".list_sobreinventario").show();
+							}
+							else
+							{
+								$(".list_sobreinventario").hide();
+							}
+						
+						
+							var valor_bien = $("#chk_bien").prop("checked");
+							if (valor_bien == true){
+								$(".list_bien").show();
+							}
+							else
+							{
+								$(".list_bien").hide();
+							}
+                
 						},
 					"order": [[ 1, "asc" ]]
 					});
@@ -392,11 +457,9 @@ echo '<table id="mostrar_articulos" class="table table-striped table-bordered ta
 		});
 </script>';  
 
- 
-} 
-else /// sin resultados
-{
-	echo ' <div class="row"> 
+
+}else{
+echo ' <div class="row"> 
                     <div class="col-md-12">
                         <div class="topics-list">
                             <h3><a href="#">No existen Articulos del almacen selccionado</a></h3>
@@ -404,10 +467,9 @@ else /// sin resultados
                         </div>
                     </div>
 				</div>';		
-		
-
-
 }
+
+
 
 }
 

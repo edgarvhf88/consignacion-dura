@@ -40,7 +40,7 @@ $ocultar;
 
 
 echo '	
-<table id="tabla_oc_det" class="table table-striped table-bordered table-hover table-responsive display" >
+<table id="tabla_oc_det_view" class="table table-striped table-bordered table-hover table-responsive display" >
 		<thead>
 			<tr class="bg-info">
 				<th>#Parte</th>
@@ -50,7 +50,6 @@ echo '
 				<th>Unid. Med.</th>
 				<th>Precio Unitario</th>
 				<th>Precio Total</th>
-				<th><i class="fa fa-trash" aria-hidden="true"></i></th>
 			</tr>
 		</thead><tbody >';
 						
@@ -66,8 +65,7 @@ echo '
 	<td class="reg_ocdet" id="tdfo_'.$id_oc_det.'">'.$row2['udm'].'</td>
 	<td class="reg_ocdet" id="tdcl_'.$id_oc_det.'">'.$row2['precio_unitario'].' </td>
 	<td class="reg_ocdet" id="tdus_'.$id_oc_det.'">'.$row2['precio_total'].'</td>
-	<td class="reg_ocdet" id="tdts_'.$id_oc_det.'" align="center">
-	<i class="fa fa-trash btn btn-danger btn-sm delpartoc" aria-hidden="true" id="btndel_'.$id_oc_det.'"></i></td>
+	
 	';                    							
 		    
 						
@@ -79,7 +77,7 @@ echo '
 	$(document).ready(function(){
 				
 				
-				$("#tabla_oc_det").DataTable({
+				$("#tabla_oc_det_view").DataTable({
 					});
 				
                 $(".reg_ocdet").on("click", function(){

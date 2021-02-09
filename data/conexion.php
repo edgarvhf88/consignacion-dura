@@ -29,8 +29,10 @@ try {
    die();
 } 
 
+// mysql pdo
 
- 
+
+$conex_sqli = new mysqli('162.214.184.221','wwallp_admin','allpart2020','wwallp_consigna_dura','3306') or die(mysqli_error());
 ///////////////////////////////////////////////////////
 
 
@@ -1064,7 +1066,7 @@ else if ($estatus == 2)
 $consulta = "SELECT SUM(invdet.diferencia) as cantidad_sumada 
 				FROM inventarios_det invdet 
 			INNER JOIN inventarios inv ON inv.id_inventario = invdet.id_inventario
-			WHERE invdet.id_articulo = '$id_articulo' AND inv.almacen_id = '$almacen_id' AND inv.cancelado='N' ".$sql_estatus;
+			WHERE invdet.id_articulo = '$id_articulo' AND inv.almacen_id = '$almacen_id' AND inv.cancelado='N' ";
 $resultado = mysql_query($consulta, $conex) or die(mysql_error());
 $row = mysql_fetch_assoc($resultado);
 $total_rows = mysql_num_rows($resultado);
@@ -1117,7 +1119,7 @@ $cantidad_contada = 0;
 $consulta = "SELECT SUM(odet.cantidad) as cantidad_sumada 
 				FROM ordenes_det odet
 			INNER JOIN ordenes ord ON ord.id_oc = odet.id_oc
-			WHERE odet.articulo_id = '$id_articulo' AND ord.almacen_id = '$almacen_id' AND folio_remision <> '' ";
+			WHERE odet.articulo_id = '$id_articulo' AND ord.almacen_id = '$almacen_id' AND ord.folio_remision <> '' ";
 $resultado = mysql_query($consulta, $conex) or die(mysql_error());
 $row = mysql_fetch_assoc($resultado);
 $total_rows = mysql_num_rows($resultado);
@@ -2048,25 +2050,22 @@ $consulta->setFetchMode(PDO::FETCH_OBJ);
 if (!$consulta){
  //echo "sin resultados";
 	 exit;}	
-	 $sql_tipocambio = "SELECT *
+	 $sql_tipocambio = "SELECT TIPO_CAMBIO AS TIPO_CAMBIO
   FROM HISTORIA_CAMBIARIA
- WHERE MONEDA_ID = '41560'
- ORDER BY FECHA ASC";
+ WHERE (MONEDA_ID = '41560') AND (HISTORIA_CAMB_ID = (SELECT MAX(HISTORIA_CAMB_ID) FROM HISTORIA_CAMBIARIA))";
   // Dolares = 41560
 $consulta_cambio = $con_micro_nef->prepare($sql_tipocambio);
 $consulta_cambio->execute();
 $consulta_cambio->setFetchMode(PDO::FETCH_OBJ);
+$row_cambio = $consulta_cambio->fetch(PDO::FETCH_ASSOC);
 
 if (!$consulta_cambio){
  //echo "sin resultados";
 	 exit;}	
 	$tipocambio = 0; 
-while($row_cambio=$consulta_cambio->fetch())	
-{
-	$tipocambio = $row_cambio->TIPO_CAMBIO;
-}
-	 
-	 
+
+$tipocambio = $row_cambio["TIPO_CAMBIO"];
+
 $precio = 0;	 
 
 while($row_exis=$consulta->fetch())	

@@ -75,11 +75,11 @@ function verif_orden($id_usuario_activo,$folio_orden,$fecha_orden,$requisitor,$c
 			{ 
 				if ($almacen_id != "")
 				{
-					$mostrar_btn = '$("#btn_add_partida").show(); $("#btn_guardar_oc").show();    $("#btn_guardar_oc_abierta").show();           $("#btn_adjuntar_file").show();';
+					$mostrar_btn = '$("#btn_add_partida").show(); $("#btn_guardar_oc").show();    $("#btn_guardar_oc_abierta").show();    $("#btn_adjuntar_file").show(); $("#div_add_art_rem").show(); ';
 				}
 				else
 				{
-					$mostrar_btn = '$("#btn_add_partida").hide();      $("#btn_guardar_oc").hide();    $("#btn_guardar_oc_abierta").hide();           $("#btn_adjuntar_file").hide();';
+					$mostrar_btn = '$("#btn_add_partida").hide();      $("#btn_guardar_oc").hide();    $("#btn_guardar_oc_abierta").hide();           $("#btn_adjuntar_file").hide(); $("#div_add_art_rem").hide();';
 				}
 				echo '<script> 
 					var mostrar_dat = confirm("Ya se ha capturado este numero de orden, Desea continuar capturandola?");
@@ -195,11 +195,11 @@ function verif_orden($id_usuario_activo,$folio_orden,$fecha_orden,$requisitor,$c
 			if (mysql_query($update_oc, $conex) or die(mysql_error()))
 			{
 				if ($almacen != ""){
-					echo '<script> $("#btn_add_partida").show();$("#btn_guardar_oc").show();$("#btn_guardar_oc_abierta").show();$("#btn_adjuntar_file").show(); </script>';
+					echo '<script> $("#btn_add_partida").show();$("#btn_guardar_oc").show();$("#btn_guardar_oc_abierta").show();$("#btn_adjuntar_file").show(); $("#div_add_art_rem").show(); </script>';
 				}
 				else
 				{
-					echo '<script> $("#btn_add_partida").hide();$("#btn_guardar_oc").hide();$("#btn_guardar_oc_abierta").hide();$("#btn_adjuntar_file").hide(); </script>';
+					echo '<script> $("#btn_add_partida").hide();$("#btn_guardar_oc").hide();$("#btn_guardar_oc_abierta").hide();$("#btn_adjuntar_file").hide(); $("#div_add_art_rem").hide();</script>';
 				}
 				
 				echo '<script> $("#td_estatus_oc").html("Capturando"); </script>';

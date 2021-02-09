@@ -137,14 +137,22 @@ if (isset($_POST['tipo_periodo']))
                     	</thead><tbody>';
 						//$total = 0;
 						$consumo = 0;
+						$existencia_fisica = 0;
 			while($row = mysql_fetch_array($res,MYSQL_BOTH)) 
 			{
-				$consumo = $row['existencia_sistema'] - $row['existencia_fisica'];
+				if ($row['existencia_fisica'] != ""){
+					$consumo = $row['existencia_sistema'] - $row['existencia_fisica'];
+					$existencia_fisica = $row['existencia_fisica'];
+				}else{
+					$consumo = 0;
+					$existencia_fisica = $row['existencia_sistema'];
+				}
+				
 			$tabla .= '<tr>
 							<td>'.$row['clave_empresa'].'</td>
 							<td>'.$row['articulo'].'</td>
 							<td>'.$row['existencia_sistema'].'</td>
-							<td>'.$row['existencia_fisica'].'</td>
+							<td>'.$existencia_fisica.'</td>
 							<td>'.$consumo.'</td>
 						</tr>';	
 			//$total += $row['total'];			
@@ -203,16 +211,23 @@ if (isset($_POST['tipo_periodo']))
 						//$total = 0;
 						$consumo = 0;
 						$estatus = 0;
+						$existencia_fisica = 0;
 			while($row = mysql_fetch_array($res,MYSQL_BOTH)) 
 			{	
+				if ($row['existencia_fisica'] != ""){
+					$consumo = $row['existencia_sistema'] - $row['existencia_fisica'];
+					$existencia_fisica = $row['existencia_fisica'];
+				}else{
+					$consumo = 0;
+					$existencia_fisica = $row['existencia_sistema'];
+				}
 				
-				$consumo = $row['existencia_sistema'] - $row['existencia_fisica'];
 				if ($row['max'] == ""){
 					$estatus = "-";
 				}else if ($row['max'] == 0){
 					$estatus = "-";
 				}else if ($row['max'] > 0){
-					$estatus = $row['existencia_fisica'] / $row['max'];
+					$estatus = $existencia_fisica / $row['max'];
 					$estatus = number_format($estatus,2);
 					if ($estatus >= 1){
 						$estatus = str_replace(".","",$estatus);
@@ -232,7 +247,7 @@ if (isset($_POST['tipo_periodo']))
 							<td>'.$row['min'].'</td>
 							<td>'.$row['reorden'].'</td>
 							<td>'.$row['max'].'</td>
-							<td>'.$row['existencia_fisica'].'</td>
+							<td>'.$existencia_fisica.'</td>
 							<td>'.$estatus.'</td>
 						</tr>';	
 			//$total += $row['total'];			

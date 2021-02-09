@@ -6,8 +6,9 @@
 	  $id_orden = $_POST['orden_id'];
       $cantidad = $_POST['unidades'];
       $iduser = $_SESSION["logged_user"];
-      $precio = $_POST['precio'];
-      $precio_total = $_POST['precio_total'];
+	  $precio = str_replace(",","",$_POST['precio']);
+	  $precio_total = str_replace(",","",$_POST['precio_total']);
+	
       $udm = $_POST['udm'];
 	  $parte=clave_consigna($id_consigna);
 	  $descripcion= descripcion_empresa($id_consigna);
@@ -25,6 +26,7 @@ function agregar($id_consigna, $cantidad,$iduser,$precio,$precio_total,$udm, $id
 	$precio_unitario = $precio;
 	$unidad_medida = $udm;
 	$precio_total = number_format($precio_total, 2);
+	$precio_total = str_replace(",","",$precio_total);
 
 				//// consulta para verificar si existe el mismo articulo en la lista y asi lo sume en lugar de agregarlo de nuevo.
 				$consulta_art_list = "SELECT pd.cantidad as cantidad, pd.id_oc_det as id_det

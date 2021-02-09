@@ -4,10 +4,10 @@ if (!isset($_SESSION["logged_user"])){
 	$_SESSION["logged_user"] = '';
 }
 
-$hostname_conexion = "localhost";
-$database_conexion = "consignacion_dura";
-$username_conexion = "root";
-$password_conexion = "fAMMA1234";
+$hostname_conexion = "localhost:3306";
+$database_conexion = "wwallp_consigna_dura";
+$username_conexion = "wwallp_admin";
+$password_conexion = "allpart2020"; 
 
 /*
 $hostname_conexion = "localhost";
@@ -170,17 +170,24 @@ if (isset($_GET['tipo_periodo'])){
 		if ($totalrows > 0){
 			//$total = 0;
 			$consumo = 0;
+			$existencia_fisica = 0;
 			while($row = mysql_fetch_array($res,MYSQL_BOTH)) 
 			{
 			
-			$consumo = $row['existencia_sistema'] - $row['existencia_fisica'];
+				if ($row['existencia_fisica'] != ""){
+					$consumo = $row['existencia_sistema'] - $row['existencia_fisica'];
+					$existencia_fisica = $row['existencia_fisica'];
+				}else{
+					$consumo = 0;
+					$existencia_fisica = $row['existencia_sistema'];
+				}
 			
 			$lista_resultados[] = array(
 								"value" => $row['id_articulo'], 
 								"clave" => $row['clave_empresa'], 
 							    "articulo" =>  $row['articulo'], 
 							    "existencia_sistema" => $row['existencia_sistema'], 
-							    "existencia_fisica" => $row['existencia_fisica'], 
+							    "existencia_fisica" => $existencia_fisica, 
 							    "total" => $consumo);	
 					
 			}
@@ -223,16 +230,22 @@ if (isset($_GET['tipo_periodo'])){
 			//$total = 0;
 			$consumo = 0;
 			$estatus = 0;
+			$existencia_fisica = 0;
 			while($row = mysql_fetch_array($res,MYSQL_BOTH)) 
 			{	
-				
-				$consumo = $row['existencia_sistema'] - $row['existencia_fisica'];
+				if ($row['existencia_fisica'] != ""){
+					$consumo = $row['existencia_sistema'] - $row['existencia_fisica'];
+					$existencia_fisica = $row['existencia_fisica'];
+				}else{
+					$consumo = 0;
+					$existencia_fisica = $row['existencia_sistema'];
+				}
 				if ($row['max'] == ""){
 					$estatus = "-";
 				}else if ($row['max'] == 0){
 					$estatus = "-";
 				}else if ($row['max'] > 0){
-					$estatus = $row['existencia_fisica'] / $row['max'];
+					$estatus = $existencia_fisica / $row['max'];
 					$estatus = number_format($estatus,2);
 					if ($estatus >= 1){
 						$estatus = str_replace(".","",$estatus);
@@ -252,7 +265,7 @@ if (isset($_GET['tipo_periodo'])){
 							    "min" => $row['min'], 
 							    "reorden" => $row['reorden'], 
 							    "max" => $row['max'], 
-							    "existencia_fisica" => $row['existencia_fisica'], 
+							    "existencia_fisica" => $existencia_fisica, 
 							    "total" => $estatus);	
 					
 			}

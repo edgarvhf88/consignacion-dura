@@ -110,7 +110,8 @@ echo '
 		$folio_factura = $row['folio_factura'];
 		if ($row['total'] > 0)
 		{
-			$total = number_format($row['total'],2);
+			$total = str_replace(",","",$row['total']);
+			$total = number_format($total,2);
 		}
 		else
 		{

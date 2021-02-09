@@ -31,6 +31,7 @@ function cancel_oc($orden_id)
 			$("#div_detalle_orden").html("");
 			$("#btn_add_partida").hide();
 			$("#btn_adjuntar_file").hide();
+			$("#div_add_art_rem").hide();
 			$("#btn_guardar_oc").hide();
 			$("#btn_guardar_oc_abierta").hide();
 			$("#btn_cancelar_oc").hide();</script> ';

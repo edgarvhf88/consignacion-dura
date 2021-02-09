@@ -64,6 +64,7 @@ function guardar($id_articulo,$articulo_id,$id_inventario,$cantidad_contada)
 		$existencia_actual = existencia_articulo($articulo_id,$almacen_id) - $total_consumido_nopagado;
 		$diferencia = $existencia_actual - $cantidad_contada;
 		$cantidad_contada_total = $cantidad_contada;
+		echo '<script> console.log("total_consumido suma diferencias = '.$total_consumido_nopagado.'"); </script>';
 		$insert_invdet = "INSERT INTO inventarios_det (id_inventario,id_articulo,articulo_id,cantidad_contada,existencia_actual,diferencia,fecha_hora_creacion,id_usuario_creador) VALUES 
 		('$id_inventario','$id_articulo','$articulo_id','$cantidad_contada','$existencia_actual','$diferencia','$fecha_hora_creacion','$id_usuario_creador')";
 		if (mysql_query($insert_invdet, $conex) or die(mysql_error()))

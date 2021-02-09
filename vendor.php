@@ -740,7 +740,7 @@ function requerir_pedido_nef(id_pedido){
 		//var id_inventario = document.getElementById("txt_idinv_correo").value;
 		
 		$("#div_datos_ordenes").show();
-		$("#div_add_art_rem").show();
+		//$("#div_add_art_rem").show();
 		$("#txt_orden").val("");
 		//$("#txt_orden").focus();
 		$("#txt_fecha_orden").val("");
@@ -755,7 +755,7 @@ function requerir_pedido_nef(id_pedido){
 		$("#btn_adjuntar_file").hide();
 		$('#div_detalle_orden').html("");
 		$("#div_lista_ordenes").hide();
-		
+		$("#div_add_art_rem").hide();
 		
 	};
 	
@@ -1284,7 +1284,7 @@ function requerir_pedido_nef(id_pedido){
 		jQuery('#modal_orden_det').modal('show', {backdrop: 'static'});
 		$.ajax({
 		type: "post",
-		url: "data/lista_ordenes_det.php",
+		url: "data/lista_ordenes_det_view.php",
 		data: {orden_id:orden_id},
 		dataType: "html",
         success:  function (response) {

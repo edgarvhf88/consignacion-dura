@@ -102,8 +102,8 @@ if ((isset($_POST['id'])) && ($_POST['id'] != "")){
 		
 		$orden_compra = $row_p['folio'];
 		$almacen_id = $row_p['almacen_id'];
-		$importe_neto = $row_p['total'];
-		$total_impuestos = $row_p['total'] * 0.08; 
+		$importe_neto = str_replace(",","",$row_p['total']);
+		$total_impuestos = $importe_neto * 0.08; 
 		
 		$insertar = "INSERT INTO DOCTOS_VE 
 		(DOCTO_VE_ID, ALMACEN_ID, SUCURSAL_ID, CLIENTE_ID, CLAVE_CLIENTE, COND_PAGO_ID, DIR_CLI_ID, DIR_CONSIG_ID, MONEDA_ID, TIPO_DOCTO, FOLIO, FECHA, HORA, ESTATUS, ORDEN_COMPRA, IMPORTE_NETO, TOTAL_IMPUESTOS, SISTEMA_ORIGEN, TIPO_DSCTO, VENDEDOR_ID) VALUES (:docto_id,:almacen_id,:sucursal_id,:cliente_id,:clave_cliente,:cond_pago_id,:dir_cli_id,:dir_consig_id,:moneda_id,:tipo_docto,:folio,:fecha,:hora,:estatus,:orden_compra,:importe_neto,:total_impuestos,:sistema_origen,:tipo_dscto,:vendedor_id)";
@@ -181,8 +181,8 @@ if ((isset($_POST['id'])) && ($_POST['id'] != "")){
 					$articulo_id = $row['id_microsip'];
 					$clave_articulo = $row['clave_microsip'];
 					$unidades = $row['cantidad'];
-					$precio_unitario = $row['precio_unitario'];
-					$precio_total_neto = $row['precio_total'];
+					$precio_unitario = str_replace(",","",$row['precio_unitario']);
+					$precio_total_neto = str_replace(",","",$row['precio_total']);
 					$posicion++;
 					/// insertara las partidas del de la remision en allpart
 					$insertar_det = "INSERT INTO DOCTOS_VE_DET (DOCTO_VE_DET_ID, DOCTO_VE_ID, CLAVE_ARTICULO, ARTICULO_ID, UNIDADES, UNIDADES_A_SURTIR, PRECIO_UNITARIO, PRECIO_TOTAL_NETO, POSICION) VALUES (:docto_id,:docto_ve_id,:clave_articulo,:articulo_id,:unidades,:unidades_a_surtir,:precio_unitario,:precio_total_neto, :posicion)";

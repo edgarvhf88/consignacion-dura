@@ -74,12 +74,22 @@ function cargar_remision($id_orden)
                         </thead><tbody>';
 		while($row = mysql_fetch_array($resultado,MYSQL_BOTH)) // html de articulos a mostrar
 		{
+			if ($row['precio_total'] > 0)
+		{
+			$total = str_replace(",","",$row['precio_total']);
+			$total = number_format($total,2);
+		}
+		else
+		{
+			$total = "";
+		}
+			
          $tabla .=' <tr>
              <td>'.$row['clave_microsip'].'</td>
              <td>'.$row['nombre'].'</td>
              <td>'.$row['cantidad'].'</td>
              <td align="right">$'.number_format($row['precio_unitario'],2).' </td>
-             <td align="right">$'.number_format($row['precio_total'],2).'</td>
+             <td align="right">$'.$total.'</td>
          </tr>';
       
 			//*******************************************************************

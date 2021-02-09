@@ -49,7 +49,7 @@ $id_pedido = '';
 		$consulta = "SELECT a.nombre as nombre, a.clave_microsip as clave_microsip, a.precio as precio, a.clave_empresa as clave_empresa, a.id as id, a.unidad_medida as unidad_medida, exis.existencia_actual as existencia, exis.almacen_id as almacen_id  
 		FROM articulos a
 		LEFT JOIN existencias exis on exis.id_articulo = a.id
-		WHERE a.id = '$id_articulo' ";
+		WHERE a.id = '$id_articulo' and exis.almacen_id = '$id_almacen'";
 		$resultado = mysql_query($consulta, $conex) or die(mysql_error());
 		$row = mysql_fetch_assoc($resultado);
 		$total_rows = mysql_num_rows($resultado);
@@ -66,8 +66,8 @@ $id_pedido = '';
 				$almacen_id = $row['almacen_id'];
 				
 			}
-			$cantidades_pedidos = cantidad_pedidas($id_articulo);
-			$existencia_preventiva = $existencia_actual - $cantidades_pedidos;
+			//$cantidades_pedidos = cantidad_pedidas($id_articulo);
+			//$existencia_preventiva = $existencia_actual - $cantidades_pedidos;
 			
 			/* if ($existencia_preventiva < $cantidad)  ///  
 			{  // si la existencia preventiva es menor a la cantidad solicitada denegara peticion
@@ -96,7 +96,7 @@ $id_pedido = '';
 					
 					
 					$insert_pedido = "INSERT INTO pedidos (id_usuario,folio,id_empresa,estatus,id_departamento,id_sucursal)
-											VALUES ('$iduser','$folio','$id_empresa','0','$id_departamento','$almacen_id')";
+											VALUES ('$iduser','$folio','$id_empresa','0','$id_departamento','$id_almacen')";
 					if (mysql_query($insert_pedido, $conex) or die(mysql_error()))
 					{
 						$id_pedido =  mysql_insert_id();
