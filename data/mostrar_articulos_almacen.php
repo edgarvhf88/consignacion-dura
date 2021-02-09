@@ -91,6 +91,10 @@ if($resul && $resul->num_rows>0){
 				<th>Cant. Solicitado</th>
 				<th>Pend. Orden.</th>
 				<th>Sync</th>
+				<th hidden>estatus</th>
+				<th hidden>estatus</th>
+				<th hidden>estatus</th>
+				<th hidden>estatus</th>
 			</tr>
 		</thead><tbody id="tbody_articulos">';
 		$articulo = '';						
@@ -249,7 +253,10 @@ foreach($resul as $row2){
 			<td id="tdunidped_'.$row2['id'].'"  >'.$unidades_pedidas.'</td>
 			<td id="tdunidpendord_'.$row2['id'].'"  >'.$unidades_pend_orden.'</td>
 			<td id="td_actualizar_'.$row2['id'].'"><input type="button" class="btn btn-info btn_actualiza" id="btnact_'.$row2['id_microsip'].'" value="Sincronizar" /></td>
-			
+			<td id="tdestatus1" hidden>'.$clase_func.'</td>
+			<td id="tdestatus2" hidden>'.$clase_func.'</td>
+			<td id="tdestatus3" hidden>'.$clase_func.'</td>
+			<td id="tdestatus4" hidden>'.$clase_func.'</td>
 			</tr>
 				';
 	
@@ -259,6 +266,8 @@ echo ' </tbody></table>';
  
  echo '<script> 
 	$(document).ready(function(){
+		
+		
 				var tabla_articulos = $("#mostrar_articulos").DataTable();
 				
 					$("#mostrar_articulos").dataTable().fnSettings().aoDrawCallback.push({
@@ -268,51 +277,10 @@ echo ' </tbody></table>';
 							var tr_id = $(this).attr("id")
 							var arr_id = tr_id.split("_");
 							var id_articulo = arr_id[1];
-						
-							SincronizarInventarioArticulo(id_articulo);
 							
-								
-							});
-						
-							var valor_reorden = $("#chk_reorden").prop("checked");
-							if (valor_reorden == true){
-								$(".list_reorden").show();
-							}
-							else
-							{
-								$(".list_reorden").hide();
-							}
-					
-						
-							var valor_urgentes = $("#chk_urgentes").prop("checked");
-							if (valor_urgentes == true){
-								$(".list_urgente").show();
-							}
-							else
-							{
-								$(".list_urgente").hide();
-							}
-						
-						
-							var valor_sobreinventario = $("#chk_sobreinventario").prop("checked");
-							if (valor_sobreinventario == true){
-								$(".list_sobreinventario").show();
-							}
-							else
-							{
-								$(".list_sobreinventario").hide();
-							}
-						
-						
-							var valor_bien = $("#chk_bien").prop("checked");
-							if (valor_bien == true){
-								$(".list_bien").show();
-							}
-							else
-							{
-								$(".list_bien").hide();
-							}
-                
+							SincronizarInventarioArticulo(id_articulo);
+							});						
+							
 						},
 					"order": [[ 1, "asc" ]]
 					});
@@ -404,53 +372,58 @@ echo ' </tbody></table>';
 							
 				 });
 				 
-				 $("#chk_reorden").change(function(){
-					var valor = $(this).prop("checked");
-					if (valor == true){
-						$(".list_reorden").show();
-					}
-					else
-					{
-						$(".list_reorden").hide();
-					}
+				 
+				$("#chk_reorden").change(function(){
+					validar_mostrar();
+				
                 });
 				$("#chk_urgentes").change(function(){
-					var valor = $(this).prop("checked");
-					if (valor == true){
-						$(".list_urgente").show();
-					}
-					else
-					{
-						$(".list_urgente").hide();
-					}
+					validar_mostrar();
+				
                 });
 				$("#chk_sobreinventario").change(function(){
-					var valor = $(this).prop("checked");
-					if (valor == true){
-						$(".list_sobreinventario").show();
-					}
-					else
-					{
-						$(".list_sobreinventario").hide();
-					}
+					
+					validar_mostrar();
+				
                 });
 				$("#chk_bien").change(function(){
-					var valor = $(this).prop("checked");
-					if (valor == true){
-						$(".list_bien").show();
-					}
-					else
-					{
-						$(".list_bien").hide();
-					}
-                });
+					validar_mostrar();
+					
+                }); 
 			
 				$(".btn_solicitar_compra").click(function(){
 					//alert("ok");
 					solicitar_compra();
                 });
 			
-				 
+				function validar_mostrar(){
+					var valor_reorden = $("#chk_reorden").prop("checked");
+					var valor_urgentes = $("#chk_urgentes").prop("checked");
+					var valor_sobreinventario = $("#chk_sobreinventario").prop("checked");
+					var valor_bien = $("#chk_bien").prop("checked");
+					
+					var valor_search1 = "";
+					var valor_search2 = "";
+					var valor_search3 = "";
+					var valor_search4 = "";
+					
+					if (valor_reorden == true){	valor_search1 = "list_reorden";	}
+					else
+					{valor_search1 = "";}
+					if (valor_urgentes == true){ valor_search2 = "list_urgente"; }
+					else
+					{valor_search2 = "";}
+					if (valor_sobreinventario == true){valor_search3 = "list_sobreinventario"; }
+					else
+					{valor_search3 = "";}
+					if (valor_bien == true){ valor_search4 = "list_bien"; }
+					else
+					{valor_search4 = "";}
+					tabla_articulos.columns(11).search(valor_search1).draw(false);
+					tabla_articulos.columns(12).search(valor_search2).draw(false);
+					tabla_articulos.columns(13).search(valor_search3).draw(false);
+					tabla_articulos.columns(14).search(valor_search4).draw(false);
+				} 
 				 
                  
 				
