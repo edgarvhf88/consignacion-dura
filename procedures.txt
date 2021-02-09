@@ -1,0 +1,94 @@
+DELIMITER $$
+CREATE DEFINER=`cpses_wwynqelt73`@`localhost` PROCEDURE `lista_inventarios`(IN `id_empresa` INT(11))
+    NO SQL
+SELECT inv.id_inventario as id_inventario,inv.fecha_hora_creacion as fecha_hora_creacion, inv.id_usuario_creador as id_usuario_creador,inv.folio as folio,inv.estatus as estatus ,inv.cancelado as cancelado ,inv.id_usuario_cierre as id_usuario_cierre,inv.fecha_hora_cierre as fecha_hora_cierre,inv.id_usuario_cancelacion as id_usuario_cancelacion,inv.fecha_hora_cancelacion as fecha_hora_cancelacion, alm.almacen as almacen 
+					FROM inventarios inv 
+					INNER JOIN almacenes alm ON alm.almacen_id = inv.almacen_id
+					WHERE alm.id_empresa = id_empresa 
+					AND inv.estatus <> 'A'$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrar_articulos`()
+SELECT a.id as id,
+					a.id_empresa as id_empresa,
+					a.clave_microsip as c_microsip,
+					a.id_microsip as id_microsip,
+					a.clave_empresa as c_empresa, 
+					a.nombre as articulo, 
+					a.descripcion as descip, 
+					a.precio as precio, 
+					a.unidad_medida as udm,  
+					a.src_img as imagen, 
+					e.nombre as empresa,
+					exis.min as min,
+					exis.max as max,
+					exis.reorden as reorden,
+					exis.existencia_actual as existencia
+					  FROM articulos a 
+					  INNER JOIN empresas e on a.id_empresa = e.id_empresa	
+					  LEFT JOIN existencias exis on exis.id_articulo = a.id$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`cpses_wwynqelt73`@`localhost` PROCEDURE `lista_invdet_art`(IN `id_empresa` INT(11))
+    NO SQL
+SELECT 
+		art.id as id_articulo,
+		art.clave_microsip as clave_microsip,
+		art.clave_empresa as clave_empresa,
+		art.unidad_medida as unidad_medida,
+		art.nombre as nombre,
+		SUM(indet.diferencia) as consumido,
+		exis.existencia_actual as existencia_sistema,
+		alm.almacen as almacen
+		FROM articulos art 
+		
+		LEFT JOIN inventarios_det indet ON indet.id_articulo = art.id
+		LEFT JOIN inventarios inv ON inv.id_inventario = indet.id_inventario
+		INNER JOIN existencias exis ON exis.id_articulo = art.id AND exis.almacen_id = inv.almacen_id
+		LEFT JOIN almacenes alm ON alm.almacen_id = inv.almacen_id
+		WHERE inv.id_empresa = id_empresa AND inv.estatus <> 'A' AND inv.cancelado = 'N' 
+		GROUP BY art.id$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrar_articulos_almacen`(IN `id_empresa` INT(11), IN `almacen_id` INT(11))
+    NO SQL
+SELECT a.id as id,
+	a.id_empresa as id_empresa,
+	a.clave_microsip as c_microsip,
+	a.id_microsip as id_microsip,
+	a.clave_empresa as c_empresa, 
+	a.nombre as articulo, 
+	a.descripcion as descip, 
+	a.precio as precio, 
+	a.unidad_medida as udm,  
+	a.src_img as imagen, 
+	e.nombre as empresa,
+	exis.min as min,
+	exis.max as max,
+	exis.reorden as reorden,
+	exis.existencia_actual as existencia,
+    (SELECT SUM(odet.cantidad) as cantidad_sumada 
+FROM ordenes_det odet 
+INNER JOIN ordenes ord ON ord.id_oc = odet.id_oc 
+WHERE odet.articulo_id = a.id AND ord.almacen_id = almacen_id AND ord.folio_remision <> '') as cant_ord_rem,
+(SELECT SUM(invdet.diferencia) as cantidad_sumada 
+				FROM inventarios_det invdet 
+			INNER JOIN inventarios inv ON inv.id_inventario = invdet.id_inventario
+			WHERE invdet.id_articulo = a.id AND inv.almacen_id = almacen_id AND inv.cancelado='N' ) as consumido,
+(SELECT SUM(pd.cantidad) as cantidad_pedidas 
+					FROM pedidos_det pd
+					INNER JOIN pedidos p ON p.id = pd.id_pedido 
+					WHERE pd.id_articulo = a.id 
+					 AND p.estatus = '1'
+					 AND p.id_empresa = a.id_empresa OR
+					 pd.id_articulo = a.id 
+					 AND p.estatus = '2'
+					 AND p.id_empresa = a.id_empresa) as cant_pedidas            
+		FROM articulos a 
+	 INNER JOIN empresas e on a.id_empresa = e.id_empresa	
+	 LEFT JOIN existencias exis on exis.id_articulo = a.id
+     WHERE a.id_empresa = id_empresa AND exis.almacen_id = almacen_id$$
+DELIMITER ;
