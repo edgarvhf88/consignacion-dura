@@ -319,6 +319,7 @@ function requerir_pedido_nef(id_pedido){
 	};
 	function lista_inventarios_reg(id_empresa){
 		$("#modal_cargando").modal("show");	
+		$("#div_lista_indetart").html("");		
 		jQuery.ajax({ 
 				type: "POST",
 				url: "data/lista_inventarios.php",
@@ -335,7 +336,7 @@ function requerir_pedido_nef(id_pedido){
 	}
 	function lista_inventarios_art(id_empresa){
 		$("#modal_cargando").modal("show");	
-		
+		$("#div_lista_inventarios").html("");
 		jQuery.ajax({ 
 				type: "POST",
 				url: "data/lista_invdet_art.php",
@@ -363,7 +364,7 @@ function requerir_pedido_nef(id_pedido){
 				{ 	
 				$('#div_detalle_orden').html("");				
 				$("#div_lista_ordenes").html(resultados);
-				$("#modal_cargando").modal("hide");			
+						
 			
 				}
 			});
@@ -1838,7 +1839,7 @@ function requerir_pedido_nef(id_pedido){
 							</label>
 						</div>
 					</div>
-					<div class="col-lg-3  col-md-6 col-sm-6 col-xs-12" > 
+					<!-- <div class="col-lg-3  col-md-6 col-sm-6 col-xs-12" > 
 						<div class="checkbox btn-warning  btn col-lg-12 col-md-12 col-sm-12 col-xs-12" >
 							<label class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 								<input type="checkbox" id="chk_invpend" checked />  Pendientes O.C. 
@@ -1858,7 +1859,7 @@ function requerir_pedido_nef(id_pedido){
 								<input type="checkbox" id="chk_invliq" checked /> Liquidados
 							</label>
 						</div>
-					</div>
+					</div> -->
 				</div>
 				<div class="col-lg-12">&nbsp;</div>
 				<div  class="col-lg-12 table-responsive" id="div_lista_inventarios"></div>

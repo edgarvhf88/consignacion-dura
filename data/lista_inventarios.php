@@ -7,28 +7,18 @@
 	  }	
 	 
      function list_invent($id_empresa){ 
-global  $conex;
-		
-		$consulta = "SELECT inv.id_inventario as id_inventario,inv.fecha_hora_creacion as fecha_hora_creacion, inv.id_usuario_creador as id_usuario_creador,inv.folio as folio,inv.estatus as estatus ,inv.cancelado as cancelado ,inv.id_usuario_cierre as id_usuario_cierre,inv.fecha_hora_cierre as fecha_hora_cierre,inv.id_usuario_cancelacion as id_usuario_cancelacion,inv.fecha_hora_cancelacion as fecha_hora_cancelacion, alm.almacen as almacen 
-					FROM inventarios inv 
-					INNER JOIN almacenes alm ON alm.almacen_id = inv.almacen_id
-					WHERE alm.id_empresa = '$id_empresa' 
-					AND inv.estatus <> 'A'
-					";			
+global  $conex, $conex_sqli;
 
 
-////  NOTA:: RECALCULARA EXISTENCIAS CON REGISTRO ESPEJO DE INVENTARIOS / -*/-* /-* /-*/ -/*
+$resul = $conex_sqli->query("call lista_inventarios(".$id_empresa.")");
 
-$resultado = mysql_query($consulta, $conex) or die(mysql_error());
-//$row = mysql_fetch_assoc($resultado);
-$total_rows = mysql_num_rows($resultado);
-
-if ($total_rows > 0){ // con resultados
+if($resul && $resul->num_rows>0){ 
+$resul->fetch_all(MYSQLI_ASSOC);
 $estatus;
 $cancelado;
 
-echo '
-<table id="tabla_inv" class="table table-striped table-bordered table-hover table-responsive display" >
+	echo '
+	<table id="tabla_inv" class="table table-striped table-bordered table-hover table-responsive display" >
 		<thead>
 			<tr class="bg-primary">
 				
@@ -45,11 +35,8 @@ echo '
 				<th class=" hidden-xs hidden-sm hidden-md hidden-lg">Fecha Cancelacion</th>
 			</tr>
 		</thead><tbody >';
-						
-	while($row2 = mysql_fetch_array($resultado,MYSQL_BOTH)) // html de articulos a mostrar
-	{
-			
-		                    							
+		
+	foreach($resul as $row2){
 		if ($row2['estatus'] == "A"){
 			$estatus= "ABIERTO";
 		} else if ($row2['estatus'] == "C"){
@@ -98,13 +85,10 @@ echo '
 			</tr>';                    							
 		     
 		}
-		               					
-		                    		
-		                    							
-	}				
+	}
 	echo ' </tbody></table>';
  
- echo '<script> 
+	echo '<script> 
 	$(document).ready(function(){
 				$("#tabla_inv").DataTable({
 						"order": [[ 1, "asc" ]]
@@ -121,12 +105,11 @@ echo '
 							$("#modal_listadet").modal("show");
 							   
                 });
+				$("#modal_cargando").modal("hide");	
 			
 		});
 </script>';  
-
- 
-} 
+}
 else /// sin resultados
 {
 	echo ' <div class="row"> 
@@ -136,11 +119,20 @@ else /// sin resultados
                            
                         </div>
                     </div>
-				</div>';		
+				</div>
+				<script> 
+	$(document).ready(function(){
+			$("#modal_cargando").modal("hide");	
+			
+			});
+		</script>
+				';		
 		
 
 
 }
+	
+
 
 }
 

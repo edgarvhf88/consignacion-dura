@@ -13,61 +13,13 @@ global  $conex, $conex_sqli;
 
 if($id_empresa == 0){
 	$resul = $conex_sqli->query("call mostrar_articulos()");
-$consulta_usuarios = "
-					SELECT 
-					a.id as id,
-					a.id_empresa as id_empresa,
-					a.clave_microsip as c_microsip,
-					a.clave_empresa as c_empresa, 
-					a.nombre as articulo, 
-					a.descripcion as descip, 
-					a.precio as precio, 
-					a.unidad_medida as udm,  
-					a.src_img as imagen, 
-					e.nombre as empresa,
-					exis.min as min,
-					exis.max as max,
-					exis.reorden as reorden,
-					exis.existencia_actual as existencia
-					  FROM articulos a 
-					  INNER JOIN empresas e on a.id_empresa = e.id_empresa	
-					  LEFT JOIN existencias exis on exis.id_articulo = a.id ";	
+
 }
 else 
 {
-	
 	$resul = $conex_sqli->query("call mostrar_articulos_almacen(".$id_empresa.",".$almacen_id.")");
-$consulta_usuarios = "
-					SELECT 
-					a.id as id,
-					a.id_empresa as id_empresa,
-					a.clave_microsip as c_microsip,
-					a.id_microsip as id_microsip,
-					a.clave_empresa as c_empresa, 
-					a.nombre as articulo, 
-					a.descripcion as descip, 
-					a.precio as precio, 
-					a.unidad_medida as udm, 
-					a.src_img as imagen, 
-					e.nombre as empresa,
-					exis.min as min,
-					exis.max as max,
-					exis.reorden as reorden,
-					exis.existencia_actual as existencia
-					  FROM articulos a 
-					  INNER JOIN empresas e on e.id_empresa = a.id_empresa
-					  LEFT JOIN existencias exis on exis.id_articulo = a.id
-					  WHERE a.id_empresa = '$id_empresa'  AND exis.almacen_id = '$almacen_id'";	
+
 }
-
-//$resultado = mysql_query($consulta_usuarios, $conex) or die(mysql_error());
-//$row = mysql_fetch_assoc($resultado);
-//$total_rows = mysql_num_rows($resultado);
-$total_rows = 0;
-
-
-
-//$resul->fetch_assoc();
 
 
 if($resul && $resul->num_rows>0){ 

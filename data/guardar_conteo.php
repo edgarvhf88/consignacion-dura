@@ -15,11 +15,34 @@ function guardar($id_articulo,$articulo_id,$id_inventario,$cantidad_contada)
 		$id_usuario_creador = $_SESSION['logged_user'];
 		$fecha_hora_creacion = date("Y-m-d H:i:s");
 				
-	$sql_invdet = "SELECT invdet.id_inventario_det as id_inventario_det, inv.almacen_id as almacen_id, invdet.cantidad_contada as cantidad_contada, invdet.diferencia as diferencia 
+	$sql_invdet = "SELECT 
+	invdet.id_inventario_det as id_inventario_det, 
+	inv.almacen_id as almacen_id, 
+	invdet.cantidad_contada as cantidad_contada, 
+	invdet.diferencia as diferencia,
+    (SELECT SUM(odet.cantidad) as cantidad_sumada 
+FROM ordenes_det odet 
+INNER JOIN ordenes ord ON ord.id_oc = odet.id_oc 
+WHERE odet.articulo_id = invdet.id_articulo AND ord.almacen_id = inv.almacen_id  AND ord.folio_remision <> '') as cant_ord_rem,
+(SELECT SUM(invdet2.diferencia) as cantidad_sumada 
+				FROM inventarios_det invdet2 
+			INNER JOIN inventarios inv2 ON inv2.id_inventario = invdet2.id_inventario
+			WHERE invdet2.id_articulo = invdet.id_articulo AND inv2.almacen_id = inv.almacen_id  AND inv2.cancelado='N' ) as consumido,
+(SELECT SUM(pd.cantidad) as cantidad_pedidas 
+					FROM pedidos_det pd
+					INNER JOIN pedidos p ON p.id = pd.id_pedido 
+					WHERE pd.id_articulo = invdet.id_articulo 
+					 AND p.estatus = '1'
+					 AND p.id_empresa = inv.id_empresa OR
+					 pd.id_articulo = invdet.id_articulo 
+					 AND p.estatus = '2'
+					 AND p.id_empresa = inv.id_empresa) as cant_pedidas 
 	FROM inventarios_det invdet
 	INNER JOIN inventarios inv ON inv.id_inventario = invdet.id_inventario
-	WHERE invdet.id_inventario = '$id_inventario'
-	AND invdet.id_articulo = '$id_articulo'";
+	WHERE invdet.id_inventario = id_inventario
+	AND invdet.id_articulo = id_articulo";
+	
+	
 	$resultado = mysql_query($sql_invdet, $conex) or die(mysql_error());
 	$total_rows = mysql_num_rows($resultado);
 	$row = mysql_fetch_assoc($resultado);

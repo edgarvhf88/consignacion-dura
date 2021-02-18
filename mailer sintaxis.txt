@@ -1,0 +1,28 @@
+$mail = new PHPMailer\PHPMailer\PHPMailer;
+$mail->isSMTP();
+$mail->SMTPDebug = 3; //para ver los errores del lado del cliente y servidor
+$mail->Debugoutput = 'html';
+$mail->Host = 'allpartsmysupplies.com'; //servidor saliente stmp
+$mail->Port = 465; //puerto 465 para ssl
+$mail->SMTPSecure = "ssl";
+$mail->SMTPAuth = true; //requiere auth
+$mail->Username = "acc@allpartsmysupplies.com";
+$mail->Password = "pass123";
+$mail->setFrom('acc@allpartsmysupplies.com', 'allpartsmysupplies.com'); //desde:
+$mail->addReplyTo('acc@allpartsmysupplies.com', 'allpartsmysupplies.com'); //responder a :
+$mail->addAddress(&destino, ''); //para :
+$mail->Subject = 'test';// asunto
+$mail->Body = $cuerpo; //cuerpo
+$mail->AltBody = 'This is a plain-text message body'; //cuerpo alternativo en texto plano
+$mail->SMTPOptions = array(  //necesario sino me larga error
+    'ssl' => array(
+        'verify_peer' => false,
+        'verify_peer_name' => false,
+        'allow_self_signed' => true
+    )
+);
+if (!$mail->send()) {  //envio el email
+    echo "Mailer Error: " . $mail->ErrorInfo; //catch de error
+} else {
+    echo "Mensaje enviado!"; // respuesta si se envia
+}

@@ -150,20 +150,20 @@ $mensaje_html = get_msj_mail_auto_sup($msj_titulo,$msj_header,$msj_body);
 //echo $mensaje_html;
 ////////////////////// empiesa code mail/////////////////////////////////////////////////////////////////////////	
 $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
-try {
+
     //Server settings
     $mail->SMTPDebug = 0;                                 // Enable verbose debug output 0 1 2
     $mail->isSMTP();                                      // Set mailer to use SMTP
     $mail->Host = 'mail.allpartmysupplies.com';  						// Specify main and backup SMTP servers
     $mail->SMTPAuth = true;                               // Enable SMTP authentication
-    $mail->Username = 'system@allpartmysupplies.com';                 // SMTP username
-    $mail->Password = 'Allpart_2021';                           // SMTP password
-    //$mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-	$mail->SMTPAutoTLS = false;
-    $mail->Port = 587;                                    // TCP port to connect to
+    $mail->Username = 'infoap@allpartmysupplies.com';                 // SMTP username
+    $mail->Password = 'M160Xc=A8+b)';                           // SMTP password
+    $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
+	//$mail->SMTPAutoTLS = false;
+    $mail->Port = 465;                                    // TCP port to connect to
 
     //Recipients
-    $mail->setFrom('system@allpartmysupplies.com', 'Sistema Consigna');
+    $mail->setFrom('infoap@allpartmysupplies.com', 'Sistema Consigna');
     $mail->addAddress($correo_destino, $nombre_destino);     // Add a recipient
     //$mail->addAddress('ellen@example.com');               // Name is optional
     //$mail->addReplyTo('info@example.com', 'Information');
@@ -179,8 +179,18 @@ try {
     $mail->Subject = $asunto_correo;
     $mail->Body    = $mensaje_html; 
     $mail->AltBody = '';
+	
+	$mail->SMTPOptions = array(  //necesario sino me larga error
+		'ssl' => array(
+        'verify_peer' => false,
+        'verify_peer_name' => false,
+        'allow_self_signed' => true
+		)
+	);
 
-    $mail->send();
+if (!$mail->send()) {  //envio el email
+    echo "Mailer Error: " . $mail->ErrorInfo; //catch de error
+} else {
    // echo 'Mensage enviado';
    echo '<script>
     $(document).ready(function(){
@@ -189,10 +199,11 @@ try {
 	  alert("Correo Enviado");
      });   
      </script>';
-	 
-} catch (Exception $e) {
-   // echo 'El mensaje no pudo ser enviado. Mailer Error: ', $mail->ErrorInfo;
 }
+ 
+   
+	 
+
 
 }/// validacion de si existe id_inventario 	como parametro
 	?>

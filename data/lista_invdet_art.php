@@ -7,33 +7,13 @@
 	  }	
 	
      function lista_det($id_empresa){ 
-global  $conex;
-		
-		$consulta = "SELECT 
-		art.id as id_articulo,
-		art.clave_microsip as clave_microsip,
-		art.clave_empresa as clave_empresa,
-		art.unidad_medida as unidad_medida,
-		art.nombre as nombre,
-		SUM(indet.diferencia) as consumido,
-		exis.existencia_actual as existencia_sistema,
-		alm.almacen as almacen
-		FROM articulos art 
-		
-		LEFT JOIN inventarios_det indet ON indet.id_articulo = art.id
-		LEFT JOIN inventarios inv ON inv.id_inventario = indet.id_inventario
-		INNER JOIN existencias exis ON exis.id_articulo = art.id AND exis.almacen_id = inv.almacen_id
-		LEFT JOIN almacenes alm ON alm.almacen_id = inv.almacen_id
-		WHERE inv.id_empresa = '$id_empresa' AND inv.estatus <> 'A' AND inv.cancelado = 'N' 
-		GROUP BY art.id";	
+global  $conex, $conex_sqli;
 
-		
-$resultado = mysql_query($consulta, $conex) or die(mysql_error());
-// $row = mysql_fetch_assoc($resultado);
-$total_rows = mysql_num_rows($resultado);
 
-if ($total_rows > 0){ // con resultados
+$resul = $conex_sqli->query("call 	lista_invdet_art(".$id_empresa.")");
 
+if($resul && $resul->num_rows>0){ 
+$resul->fetch_all(MYSQLI_ASSOC);
 echo '<table id="tabla_art_invdet" class="table table-striped table-bordered table-hover table-responsive display" >
 		<thead>
 			<tr class="bg-info">
@@ -47,9 +27,7 @@ echo '<table id="tabla_art_invdet" class="table table-striped table-bordered tab
 				<th>Consumido</th>
 			</tr>
 		</thead><tbody >';
-						
-	while($row2 = mysql_fetch_array($resultado,MYSQL_BOTH)) // html de articulos a mostrar
-	{
+	foreach($resul as $row2){
 		$id_arti = $row2['id_articulo'];
 		$arr = explode('_',ultimo_inv_art($id_arti));
 		$ult_inv_act = $arr[0]; 
@@ -65,23 +43,19 @@ echo '<table id="tabla_art_invdet" class="table table-striped table-bordered tab
 	<td class="reg_indetart" id="tdartcl_'.$id_arti.'" title="Fecha inventario: '.$fecha_inventario.'">
 	'.$ult_inv_act.' </td>
 	<td class="reg_indetart" id="tdartus_'.$id_arti.'">'.$row2['consumido'].'</td>
-	</tr>';                    							
-		    
-	                    							
-	}				
-	echo ' </tbody></table>';
+	</tr>';
+	}		
+echo ' </tbody></table>';
 	
 
  echo '<script> 
 	$(document).ready(function(){
-				
+		$("#modal_cargando").modal("hide");			
 		$("#tabla_art_invdet").DataTable({
 					});		
 			
 		});
-</script>';  
-
- 
+</script>';
 }
 else
 {
@@ -93,7 +67,12 @@ else
                           
                         </div>
                     </div>
-				</div>';		
+				</div><script> 
+	$(document).ready(function(){
+			$("#modal_cargando").modal("hide");	
+			
+			});
+		</script>';		
 		
 
 
