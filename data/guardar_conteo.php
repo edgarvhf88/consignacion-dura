@@ -24,7 +24,7 @@ function guardar($id_articulo,$articulo_id,$id_inventario,$cantidad_contada)
 FROM ordenes_det odet 
 INNER JOIN ordenes ord ON ord.id_oc = odet.id_oc 
 WHERE odet.articulo_id = invdet.id_articulo AND ord.almacen_id = inv.almacen_id  AND ord.folio_remision <> '') as cant_ord_rem,
-(SELECT SUM(invdet2.diferencia) as cantidad_sumada 
+(SELECT SUM(invdet2.diferencia) as cantidad_consumida 
 				FROM inventarios_det invdet2 
 			INNER JOIN inventarios inv2 ON inv2.id_inventario = invdet2.id_inventario
 			WHERE invdet2.id_articulo = invdet.id_articulo AND inv2.almacen_id = inv.almacen_id  AND inv2.cancelado='N' ) as consumido,
@@ -39,8 +39,8 @@ WHERE odet.articulo_id = invdet.id_articulo AND ord.almacen_id = inv.almacen_id 
 					 AND p.id_empresa = inv.id_empresa) as cant_pedidas 
 	FROM inventarios_det invdet
 	INNER JOIN inventarios inv ON inv.id_inventario = invdet.id_inventario
-	WHERE invdet.id_inventario = id_inventario
-	AND invdet.id_articulo = id_articulo";
+	WHERE invdet.id_inventario = '$id_inventario'
+	AND invdet.id_articulo = '$id_articulo'";
 	
 	
 	$resultado = mysql_query($sql_invdet, $conex) or die(mysql_error());

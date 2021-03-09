@@ -564,7 +564,7 @@ limpiardivs();
 								
 				$("#div_lista_pedido").html(resultados);		
 								
-					
+					$("#modal_cargando").modal("hide");
 				//alert("Se registro pedido con exito!");
 					//jQuery('#modal1 .modal-body').html(response);
 				}
@@ -992,6 +992,7 @@ lista_limite_spend();
 					$("#resultados_js").html(resultados);
 				}
 			});
+			$("#modal_cargando").modal("hide");
 		return false;	
     };
 	/*   elimina carrito en curso - (abierto) estatus 0 */

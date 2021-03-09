@@ -29,6 +29,7 @@ $update = "UPDATE pedidos SET estatus='$estatus', total_pedido='$total_pedido' W
         $("#modal_cargando").modal("hide");
       
 		mostrar_pedido();
+		  
      });   
 	</script>';
 			

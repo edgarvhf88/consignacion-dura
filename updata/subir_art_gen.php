@@ -80,22 +80,22 @@ $lista_categorias = categorias_lista($id_empresa);
 				if ($datos[4] == 0){
 					$precio_articulo = PrecioArticulo($articulo_id);
 				}else {
-					$precio_articulo = $datos[6];
-				}
-				if ($datos[2] == ""){
-					$descripcion = NombreArticulo($articulo_id);	
-				}else {
-					$descripcion = $datos[2];
+					$precio_articulo = $datos[4];
 				}
 				if ($datos[3] == ""){
+					$descripcion = NombreArticulo($articulo_id);	
+				}else {
+					$descripcion = $datos[3];
+				} 
+				if ($datos[2] == ""){
 					$nombre_articulo = NombreArticulo($articulo_id);	
 				}else {
-					$nombre_articulo = $datos[3];
+					$nombre_articulo = $datos[2];
 				}
 				$nombre_articulo = str_replace("\"", '&#34', $nombre_articulo); 
 				$nombre_articulo = str_replace("'", '&#39', $nombre_articulo); 
-				$descripcion = str_replace("\"", '&#34', $nombre_articulo); 
-				$descripcion = str_replace("'", '&#39', $nombre_articulo); 
+				$descripcion = str_replace("\"", '&#34', $descripcion); 
+				$descripcion = str_replace("'", '&#39', $descripcion); 
 				
 				$sql_verif = "SELECT * FROM articulos WHERE id_microsip = '$articulo_id' AND id_empresa = '$id_empresa'";
 				$res_sql_verif = mysql_query($sql_verif, $conex) or die(mysql_error());
@@ -130,7 +130,7 @@ $lista_categorias = categorias_lista($id_empresa);
 				{  /// inserta nuevo articulo
 					
 					$query = "INSERT INTO articulos 	(id_empresa,clave_microsip,clave_empresa,nombre,descripcion,precio,src_img,unidad_medida,id_microsip) 
-					VALUES ('$id_empresa','$datos[0]','$datos[1]','$nombre_articulo','$datos[3]','$precio_articulo','$datos[5]','$unidad_medida','$articulo_id')";
+					VALUES ('$id_empresa','$datos[0]','$datos[1]','$nombre_articulo','$descripcion','$precio_articulo','$datos[5]','$unidad_medida','$articulo_id')";
 					if (mysql_query($query, $conex) or die(mysql_error())){
 						$id_articulo =  mysql_insert_id();	
 						
@@ -161,7 +161,7 @@ $lista_categorias = categorias_lista($id_empresa);
 		}
 
 	}
-//print_r($data);
+	//print_r($data);
 	//$inserta="insert into articulos values ". implode(",", $data);
 	//if (mysql_query($inserta,$conex)){
 		//echo "LOS DATOS SE REGISTRARON CORRECTAMENTE";

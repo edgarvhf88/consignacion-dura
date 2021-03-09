@@ -1,24 +1,18 @@
 <?php include("conexion.php");
 
+
+
+
 function get_msj_mail_auto_sup($msj_titulo,$msj_header,$msj_body){
  
-$mensaje_html = '<!DOCTYPE html>
-<html lang="es-mx">
-<head>
-	<!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	 <link href="https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic" rel="stylesheet" type="text/css">
-	<link rel="shortcut icon" type="image/png" href="https://www.allpartmysupplies.com/assets/images/favicon.png">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-	<title>'.$msj_titulo.'</title>
-</head>
+$mensaje_html = '
+<html>
 <body> 
-
+<h3>'.$msj_titulo.'</h3>
 		<br>
-		<header>
-			'.$msj_header.'
-		</header>
+		
+		<h4>'.$msj_header.'</h4>
+	
 		<br>	
 				'.$msj_body.'
 			
@@ -28,6 +22,8 @@ $mensaje_html = '<!DOCTYPE html>
 return $mensaje_html;	
 }
 
+
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -35,8 +31,15 @@ require 'PHPMailer/Exception.php';
 require 'PHPMailer/PHPMailer.php';
 require 'PHPMailer/SMTP.php';
 
+ echo '<script>
+    $(document).ready(function(){
+		console.log("ejecutando");
+       
+     });   
+     </script>';
 
 if ((isset($_POST['id_inventario'])) && ($_POST['id_inventario'] !="")){ // confirma parametro id_inventario
+
 
 $id_inventario  = $_POST['id_inventario']; /// consulta para obtener datos de inventarios
 $correo_destino  = $_POST['correo_destino']; /// consulta para obtener datos de inventarios
@@ -63,77 +66,76 @@ $color_tablas_correo = '2AAAFF';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///// LISTA DE ARTICULOS EN EL INVENTARIO
-$query_articulos = "SELECT 
-		art.clave_microsip as clave_microsip,
-		art.clave_empresa as clave_empresa,
-		art.unidad_medida as unidad_medida,
-		art.nombre as articulo,
-		indet.id_inventario_det as id_inventario_det,
-		indet.cantidad_contada as cantidad_contada,
-		indet.existencia_actual as existencia_actual,
-		indet.diferencia as diferencia
-					FROM inventarios_det indet 
-					INNER JOIN articulos art ON art.id_microsip = indet.articulo_id
-					WHERE indet.id_inventario = '$id_inventario' ";
-$resultado_articulos = mysql_query($query_articulos, $conex) or die(mysql_error());
-//$row_articulos = mysql_fetch_assoc($resultado_articulos);
-$totalRows_art = mysql_num_rows($resultado_articulos);
-
-if ($totalRows_art){
-$tabla_articulos = '<table style="width: auto; margin: 0 auto;  width: 600px; font-family: sans-serif; border-collapse: collapse; border-radius: 1em 1em; overflow: hidden; border-color: #'.$color_tablas_correo.'"  cellspacing="0" cellpadding="0" border="2">
-<tr style="height: 50px; background:#'.$color_tablas_correo.';">
-                    	
-				<th>#DURA</th>
-				<th>#ALLPART</th>
-				<th>Articulo</th>
-				<th>Unid. Med.</th>
-				<th>existencia</th>
-				<th>Cant. Conteo</th>
-				<th>Cant. facturar</th>
-			</tr>
-						';
-$tabla_articulos_comprador = '<table style="width: auto; margin: 0 auto;  width: 600px; font-family: sans-serif; border-collapse: collapse; border-radius: 1em 1em; overflow: hidden; border-color: #'.$color_tablas_correo.'"  cellspacing="0" cellpadding="0" border="2">
-<tr style="height: 50px; background:#'.$color_tablas_correo.';">
-                <th>#DURA</th>
-				<th>#ALLPART</th>
-				<th>Articulo</th>
-				<th>Unid. Med.</th>
-				<th>existencia</th>
-				<th>Cant. Conteo</th>
-				<th>Cant. facturar</th>
-                    	</tr>
-						';
-/////////while articulos//////
-while($row_articulos = mysql_fetch_array($resultado_articulos,MYSQL_BOTH)) 
-	// lista de vendedores a quienes se les enviara el correo
-{
-$tabla_articulos .= '<tr >
-                    		<td class="success">'.$row_articulos['clave_empresa'].'</td>
-                    		<td>'.$row_articulos['clave_microsip'].'</td>
-                    		<td>'.$row_articulos['articulo'].'</td>
-                    		<td align="center">'.$row_articulos['unidad_medida'].'</td>
-                    		<td align="right">'.number_format($row_articulos['existencia_actual'],2).'</td>
-                    		<td align="right">'.number_format($row_articulos['cantidad_contada'],0).'</td>
-                    		<td align="right">'.number_format($row_articulos['diferencia'],0).'</td>
-                    	</tr>';
-$tabla_articulos_comprador .= '<tr >
-                    		<td class="success">'.$row_articulos['clave_empresa'].'</td>
-                    		<td>'.$row_articulos['clave_microsip'].'</td>
-                    		<td>'.$row_articulos['articulo'].'</td>
-                    		<td align="center">'.$row_articulos['unidad_medida'].'</td>
-                    		<td align="right">'.number_format($row_articulos['existencia_actual'],2).'</td>
-                    		<td align="right">'.number_format($row_articulos['cantidad_contada'],0).'</td>
-                    		<td align="right">'.number_format($row_articulos['diferencia'],0).'</td>
-                    	</tr>';
-						
-						
-}
-					
-$tabla_articulos .= '</table>';
-$tabla_articulos_comprador .= '</table>';
-}
-
-mysql_free_result($resultado_articulos);
+//	$query_articulos = "SELECT 
+//			art.clave_microsip as clave_microsip,
+//			art.clave_empresa as clave_empresa,
+//			art.unidad_medida as unidad_medida,
+//			art.nombre as articulo,
+//			indet.id_inventario_det as id_inventario_det,
+//			indet.cantidad_contada as cantidad_contada,
+//			indet.existencia_actual as existencia_actual,
+//			indet.diferencia as diferencia
+//						FROM inventarios_det indet 
+//						INNER JOIN articulos art ON art.id_microsip = indet.articulo_id
+//						WHERE indet.id_inventario = '$id_inventario' ";
+//	$resultado_articulos = mysql_query($query_articulos, $conex) or die(mysql_error());
+//	//$row_articulos = mysql_fetch_assoc($resultado_articulos);
+//	$totalRows_art = mysql_num_rows($resultado_articulos);
+//	
+//	if ($totalRows_art){
+//	$tabla_articulos = '<table style="width: auto; margin: 0 auto;  width: 600px; font-family: sans-serif; border-collapse: collapse; border-radius: 1em 1em; overflow: hidden; border-color: #'.$color_tablas_correo.'"  cellspacing="0" cellpadding="0" border="2">
+//	<tr style="height: 50px; background:#'.$color_tablas_correo.';">
+//	                    	
+//					<th>#DURA</th>
+//					<th>#ALLPART</th>
+//					<th>Articulo</th>
+//					<th>Unid. Med.</th>
+//					<th>existencia</th>
+//					<th>Cant. Conteo</th>
+//					<th>Cant. facturar</th>
+//				</tr>
+//							';
+//	$tabla_articulos_comprador = '<table style="width: auto; margin: 0 auto;  width: 600px; font-family: sans-serif; border-collapse: collapse; border-radius: 1em 1em; overflow: hidden; border-color: #'.$color_tablas_correo.'"  cellspacing="0" cellpadding="0" border="2">
+//	<tr style="height: 50px; background:#'.$color_tablas_correo.';">
+//	                <th>#DURA</th>
+//					<th>#ALLPART</th>
+//					<th>Articulo</th>
+//					<th>Unid. Med.</th>
+//					<th>existencia</th>
+//					<th>Cant. Conteo</th>
+//					<th>Cant. facturar</th>
+//	                    	</tr>
+//							';
+//	/////////while articulos//////
+//	while($row_articulos = mysql_fetch_array($resultado_articulos,MYSQL_BOTH)) 
+//	{
+//	$tabla_articulos .= '<tr >
+//	                    		<td class="success">'.$row_articulos['clave_empresa'].'</td>
+//	                    		<td>'.$row_articulos['clave_microsip'].'</td>
+//	                    		<td>'.$row_articulos['articulo'].'</td>
+//	                    		<td align="center">'.$row_articulos['unidad_medida'].'</td>
+//	                    		<td align="right">'.number_format($row_articulos['existencia_actual'],2).'</td>
+//	                    		<td align="right">'.number_format($row_articulos['cantidad_contada'],0).'</td>
+//	                    		<td align="right">'.number_format($row_articulos['diferencia'],0).'</td>
+//	                    	</tr>';
+//	$tabla_articulos_comprador .= '<tr >
+//	                    		<td class="success">'.$row_articulos['clave_empresa'].'</td>
+//	                    		<td>'.$row_articulos['clave_microsip'].'</td>
+//	                    		<td>'.$row_articulos['articulo'].'</td>
+//	                    		<td align="center">'.$row_articulos['unidad_medida'].'</td>
+//	                    		<td align="right">'.number_format($row_articulos['existencia_actual'],2).'</td>
+//	                    		<td align="right">'.number_format($row_articulos['cantidad_contada'],0).'</td>
+//	                    		<td align="right">'.number_format($row_articulos['diferencia'],0).'</td>
+//	                    	</tr>';
+//							
+//							
+//	}
+//						
+//	$tabla_articulos .= '</table>';
+//	$tabla_articulos_comprador .= '</table>';
+//	}
+//	
+//	mysql_free_result($resultado_articulos);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -141,7 +143,7 @@ mysql_free_result($resultado_articulos);
 $nombre_destino = "Edgar Herebia"; // nombre a quien se le envia
 $asunto_correo ='Lista de inventario #'.$folio; 
 $msj_titulo = 'Inventario ';
-$msj_header = '<h3>Saludos cordiales, le compartimos la captura de invetario de '.$almacen.' con el folio:'.$folio.' </h3>';
+$msj_header = 'Saludos cordiales, le compartimos la captura de invetario de '.$almacen.' con el folio:'.$folio;
 //$msj_body = '</br>'.$tabla_articulos_comprador.'</br>';	
 $msj_body = '</br></br>';	
 $ruta_adjunto = '../inv_docs/Inventario_'.$almacen.'_Folio_'.$folio.'.xlsx';	
@@ -154,16 +156,16 @@ $mail = new PHPMailer(true);                              // Passing `true` enab
     //Server settings
     $mail->SMTPDebug = 0;                                 // Enable verbose debug output 0 1 2
     $mail->isSMTP();                                      // Set mailer to use SMTP
-    $mail->Host = 'mail.allpartmysupplies.com';  						// Specify main and backup SMTP servers
+    $mail->Host = 'smtp.correoexchange.com.mx';  						// Specify main and backup SMTP servers
     $mail->SMTPAuth = true;                               // Enable SMTP authentication
-    $mail->Username = 'infoap@allpartmysupplies.com';                 // SMTP username
-    $mail->Password = 'M160Xc=A8+b)';                           // SMTP password
-    $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
-	//$mail->SMTPAutoTLS = false;
+    $mail->Username = 'noreply@allpart.com.mx';                 // SMTP username
+    $mail->Password = 'H1LtTN5?y3V1';                           // SMTP password
+    $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+	//$mail->SMTPAutoTLS = true;
     $mail->Port = 465;                                    // TCP port to connect to
 
     //Recipients
-    $mail->setFrom('infoap@allpartmysupplies.com', 'Sistema Consigna');
+    $mail->setFrom('noreply@allpart.com.mx', 'Sistema Consigna');
     $mail->addAddress($correo_destino, $nombre_destino);     // Add a recipient
     //$mail->addAddress('ellen@example.com');               // Name is optional
     //$mail->addReplyTo('info@example.com', 'Information');
@@ -194,6 +196,7 @@ if (!$mail->send()) {  //envio el email
    // echo 'Mensage enviado';
    echo '<script>
     $(document).ready(function(){
+		console.log("correo enviado");
         $("#modal_cargando").modal("hide");
     
 	  alert("Correo Enviado");

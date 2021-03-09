@@ -70,12 +70,11 @@ else if ($almacen_id=='11142')
 			else {$existencia=0;}
 				
 				$existe = 'S';
-				//inserto
-					{
-						$insert_existencia = "INSERT INTO inventario_inicial (id, planta_3, existe) 
+				
+						$insert_existencia = "INSERT INTO inventario_inicial (id, ".$planta.", existe) 
 						VALUES ('$articulo_id', '$existencia', '$existe' )";
 						if (mysql_query($insert_existencia, $conex) or die(mysql_error())){}
-					}
+				
 								
 			}
 			else 
@@ -85,17 +84,20 @@ else if ($almacen_id=='11142')
 				//uso los datos
 				$existencia = $datos[7];
 				if (is_numeric ($existencia))
-			{
-				//
-			}
-			else {$existencia=0;}
+				{
+					//
+				}
+				else 
+				{
+				$existencia=0;
+				}
 				$existe = 'N';
 				//inserto
-					{
-						$insert_existencia = "INSERT INTO inventario_inicial 	(id, ".$planta.", existe) 
-						VALUES ('$articulo_id', '$existencia', '$existe')";
-						if (mysql_query($insert_existencia, $conex) or die(mysql_error())){}
-					}
+					
+						//$insert_existencia = "INSERT INTO inventario_inicial (id, ".$planta.", existe) 
+						//VALUES ('$articulo_id', '$existencia', '$existe')";
+						//if (mysql_query($insert_existencia, $conex) or die(mysql_error())){}
+				
 								
 			}
 			
@@ -105,7 +107,7 @@ else if ($almacen_id=='11142')
 	}
 
 	fclose($fichero);
-echo "No se encontraron ".$contador.", claves en microsip.";
+echo 'No se encontraron '.$contador.', claves en microsip. Para ejecutar la insercion del ajuste inicial en microsip <a href="../data/generar_traspaso_inicial.php"> Click Aqui</a>';
 
 
 

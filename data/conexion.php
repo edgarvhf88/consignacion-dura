@@ -4,7 +4,7 @@ session_start();
 if (!isset($_SESSION["logged_user"])){
 	$_SESSION["logged_user"] = '';
 }
-
+/* */
 $ruta = "10.0.0.9:C:\\microsip datos\\ALLPARTS.fdb";
 //$ruta = "10.0.0.9:C:\\microsip datos\\nef2011.fdb";
 $username = "SYSDBA";
@@ -27,12 +27,12 @@ try {
 } catch (PDOException $e) {
    print "Error!: " . $e->getMessage() . "<br/>";
    die();
-} 
+}  
 
 // mysql pdo
 
 
-$conex_sqli = new mysqli('162.214.184.221','wwallp_admin','allpart2020','wwallp_consigna_dura','3306') or die(mysqli_error());
+$conex_sqli = new mysqli('162.214.184.221','consigna_adminallpart','Nacional_2021','consigna_dura','3306') or die(mysqli_error());
 ///////////////////////////////////////////////////////
 
 
@@ -47,9 +47,9 @@ $username_conexion = "root";
 $password_conexion = "fAMMA1234";
 */ 
  $hostname_conexion = "162.214.184.221:3306";  // db hostgator
-$database_conexion = "wwallp_consigna_dura";
-$username_conexion = "wwallp_admin";
-$password_conexion = "allpart2020"; 
+$database_conexion = "consigna_dura";
+$username_conexion = "consigna_adminallpart";
+$password_conexion = "Nacional_2021"; 
 
 $conex = mysql_pconnect($hostname_conexion, $username_conexion, $password_conexion) or trigger_error(mysql_error(),E_USER_ERROR);
 mysql_select_db($database_conexion, $conex);

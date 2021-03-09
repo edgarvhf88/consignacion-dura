@@ -55,7 +55,7 @@ echo '<table id="mis_carritos_pendientes" class="display table table-striped tab
                     			if ($tipo_usuario!=4){
                     			echo '<th>'.$total_tabla_mis_pedidos.'</th>';
 								}
-								else {'<th hidden >'.$total_tabla_mis_pedidos.'</th>';}
+								else { echo '<th hidden >'.$total_tabla_mis_pedidos.'</th>';}
                     			echo '<th></th>
                     		</tr>
                     	</thead><tbody>';
@@ -139,7 +139,7 @@ echo '<table id="mis_carritos_pendientes" class="display table table-striped tab
                                         </h3>
                                     </div>
                                     <!-- Contenido de la ventana -->
-                                    <div class="modal-body" style="overflow:auto;>
+                                    <div class="modal-body" style="overflow:auto;">
                                       
                                     </div>
                                     <!-- Footer de la ventana -->

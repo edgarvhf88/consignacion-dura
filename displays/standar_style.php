@@ -6,12 +6,8 @@ $nombre_usuario = '<a href="login.php" class="dropdown-toggle" id="drop4" data-t
 $tipo_usuario = validar_usuario($_SESSION["logged_user"]); 
 $folio_pedido_index = "1";
 $btns_menu = '';
-$reportes = '	<li style="">
-                    <a href="#" style="z-index:3;" onclick="spotby_lista();">
-                      <span class="fa fa-bars" aria-hidden="true"></span> Spot Buy
-                    </a>
-                </li> 
-
+$spor_by = '';
+$reportes = '	
 				<li style="">
                     <a href="#" style="z-index:8;" onclick="mostrar_reportes();">
                       <span class="fa fa-table" aria-hidden="true"></span>  Reports
@@ -27,7 +23,11 @@ switch($tipo_usuario)
 	break;
 	case 2:
 	//si es comprador
-	$btns_menu = ' 
+	$btns_menu = ' <li style="">
+                    <a href="#" style="z-index:3;" onclick="spotby_lista();">
+                      <span class="fa fa-bars" aria-hidden="true"></span> Spot Buy
+                    </a>
+                </li> 
 				<li style="background-color:rgba(192,192,192,0.8);">
                     <a href="#" style="z-index:3;" onclick="mostrar_pedido();">
                       <span class="fa fa-bars" aria-hidden="true"></span>  Current Request
@@ -77,7 +77,13 @@ switch($tipo_usuario)
 	case 5:
 	//si es Supervisor
 	//$nombre_usuario = '<a href="#" >'.Nombre($_SESSION["logged_user"]).'</a>';
-	$btns_menu = ' <li style="background-color:rgba(192,192,192,0.8);">
+
+	$btns_menu = ' <li style="">
+                    <a href="#" style="z-index:3;" onclick="spotby_lista();">
+                      <span class="fa fa-bars" aria-hidden="true"></span> Spot Buy
+                    </a>
+                </li> 
+				<li style="background-color:rgba(192,192,192,0.8);">
                     <a href="#" style="z-index:3;" onclick="mostrar_pedido();">
                       <span class="fa fa-bars" aria-hidden="true"></span>  Current request
                     </a>

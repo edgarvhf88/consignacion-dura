@@ -50,7 +50,7 @@ $(document).ready(function()
 		$lista_invdet[] = array("value" => $clave, 
 							   "clave" => $clave, 
 							   "id_microsip" => $row_arti['id'], 
-							   "cantidad" => $row_arti['planta_3'], 
+							   "cantidad" => $row_arti['planta_4'], 
 							   "costo_unitario" => "0", 
 							   "costo_total" => "0");
 	
