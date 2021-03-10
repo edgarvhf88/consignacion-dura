@@ -6,7 +6,7 @@ $nombre_usuario = '<a href="login.php" class="dropdown-toggle" id="drop4" data-t
 $tipo_usuario = validar_usuario($_SESSION["logged_user"]); 
 $folio_pedido_index = "1";
 $btns_menu = '';
-$spor_by = '';
+$spot_buy = '';
 $reportes = '	
 				<li style="">
                     <a href="#" style="z-index:8;" onclick="mostrar_reportes();">
@@ -23,11 +23,12 @@ switch($tipo_usuario)
 	break;
 	case 2:
 	//si es comprador
-	$btns_menu = ' <li style="">
+	$spot_buy = '<li style="">
                     <a href="#" style="z-index:3;" onclick="spotby_lista();">
                       <span class="fa fa-bars" aria-hidden="true"></span> Spot Buy
                     </a>
-                </li> 
+                </li>';
+	$btns_menu = '  
 				<li style="background-color:rgba(192,192,192,0.8);">
                     <a href="#" style="z-index:3;" onclick="mostrar_pedido();">
                       <span class="fa fa-bars" aria-hidden="true"></span>  Current Request
@@ -77,12 +78,12 @@ switch($tipo_usuario)
 	case 5:
 	//si es Supervisor
 	//$nombre_usuario = '<a href="#" >'.Nombre($_SESSION["logged_user"]).'</a>';
-
-	$btns_menu = ' <li style="">
+$spot_buy = '<li style="">
                     <a href="#" style="z-index:3;" onclick="spotby_lista();">
                       <span class="fa fa-bars" aria-hidden="true"></span> Spot Buy
                     </a>
-                </li> 
+                </li>';
+	$btns_menu = ' 
 				<li style="background-color:rgba(192,192,192,0.8);">
                     <a href="#" style="z-index:3;" onclick="mostrar_pedido();">
                       <span class="fa fa-bars" aria-hidden="true"></span>  Current request
@@ -116,7 +117,8 @@ switch($tipo_usuario)
 
 
 $menu_bar = '<ul class="nav navbar-nav navbar-right ">
-                '.$reportes.'
+                '.$spot_buy.'
+				'.$reportes.'
 		<!--	<li  style="">
                     <a href="#" style="z-index:9;" onclick="solicitudes();">
                       <span class="fa fa-life-ring" aria-hidden="true"></span>  Solicitudes
@@ -130,7 +132,7 @@ $menu_bar = '<ul class="nav navbar-nav navbar-right ">
 			<ul class="dropdown-menu"> '.$btns_menu.'</ul>  <!---->
                 </li>
                 <li  style="z-index:7;" >
-                     <a href="data/logout.php" class="btn btn-primary" style="width:100px;">Salir</a>
+                     <a href="data/logout.php" class="btn btn-primary" style="width:100px;">Exit</a>
                 </li>
             </ul>';
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
