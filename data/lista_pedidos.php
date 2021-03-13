@@ -191,7 +191,7 @@ echo '<table id="lista_pedidos" class="table table-striped table-bordered table-
                                       
                                     </div>
                                     <!-- Contenido de la ventana -->
-                                    <div class="modal-body" style="overflow:auto;>
+                                    <div class="modal-body" style="overflow:auto;">
                                         
                                     </div>
                                     <!-- Footer de la ventana -->

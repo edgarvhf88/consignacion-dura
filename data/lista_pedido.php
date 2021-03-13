@@ -180,6 +180,20 @@ $(document).ready( function () {
 				</script>
 				';
 } 
+else /// sin resultados
+{
+	echo ' <div class="row"> 
+                    <div class="col-md-12">
+                        <div class="topics-list">
+                            <h3><a href="#">'.$msj_sin_pedidos_index.'</a></h3>
+                           
+                        </div>
+                    </div>
+				</div>';		
+		
+
+
+}
 } 
 else /// sin resultados
 {

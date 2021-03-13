@@ -107,6 +107,7 @@ if (isset($_POST['tipo_periodo']))
 	else if($tipo_reporte == 2)
 	{ // reporte de inventario
 		$sql = "SELECT e.existencia_actual as existencia_sistema, 
+				e.max as max, 
 				a.nombre as articulo, 
 				a.clave_empresa as clave_empresa,
 				a.precio as precio,
@@ -130,6 +131,7 @@ if (isset($_POST['tipo_periodo']))
                     		<tr class="info">
                     			<th>#Part</th>
                     			<th>Item</th>
+                    			<th>Max.</th>
                     			<th>Qty. Consignment</th>
                     			<th>Qty. Inventory</th>
                     			<th>Qty. Consumed</th>
@@ -151,6 +153,7 @@ if (isset($_POST['tipo_periodo']))
 			$tabla .= '<tr>
 							<td>'.$row['clave_empresa'].'</td>
 							<td>'.$row['articulo'].'</td>
+							<td>'.$row['max'].'</td>
 							<td>'.$row['existencia_sistema'].'</td>
 							<td>'.$existencia_fisica.'</td>
 							<td>'.$consumo.'</td>
@@ -189,8 +192,7 @@ if (isset($_POST['tipo_periodo']))
 						ORDER BY ii.fecha_hora_cierre DESC LIMIT 1) as existencia_fisica
 				FROM existencias e 
 				INNER JOIN articulos a on a.id = e.id_articulo
-				WHERE e.almacen_id = '$almacen_id'
-				";
+				WHERE e.almacen_id = '$almacen_id' ";
 		
 		$res= mysql_query($sql, $conex) or die(mysql_error());
 		//$row = mysql_fetch_assoc($res);

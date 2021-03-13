@@ -32,7 +32,7 @@
 		  
 		 agregar($id_articulo,$cantidad,$iduser,$id_almacen);
 	  }
-     function agregar($id_articulo,$cantidad,$iduser,$id_almacen){ // Funcion para Buscar Articulos
+     function agregar($id_articulo,$cantidad,$iduser,$id_almacen){ // 
 global $conex;
 $clave_microsip = "";
 $clave_empresa = "";
@@ -41,7 +41,6 @@ $precio_unitario = "";
 $precio_total = "";
 $unidad_medida = "";
 $existencia_actual = 0;
-$almacen_id = 0;
 $existencia_preventiva = 0;
 $id_pedido = '';
 
@@ -63,7 +62,6 @@ $id_pedido = '';
 				$precio_total = ($precio_unitario) * ($cantidad);
 				$unidad_medida = $row['unidad_medida'];
 				$existencia_actual = $row['existencia'];
-				$almacen_id = $row['almacen_id'];
 				
 			}
 			//$cantidades_pedidos = cantidad_pedidas($id_articulo);

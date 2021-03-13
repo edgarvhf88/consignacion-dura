@@ -1332,6 +1332,19 @@ function ver_partidas_traspaso(id_pedido_traspaso)
 		});
 	};
 	
+	
+function automatic_request(){
+	var almacen_id = document.getElementById("select_almacen_oc").value; 
+	$.ajax({
+			type: "post",
+			url: "data/generar_pedido_automatico.php",
+			data: {almacen_id:almacen_id},
+			dataType: "html",
+			success:  function (response) {
+			$('#resultados_js').html(response);
+			}
+		});
+}	
 </script>
 
 

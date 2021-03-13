@@ -86,6 +86,37 @@ if ($total_rows_traspasos > 0){
 	}
 	$select_traspaso .= '</select>';
 }
+$sql_trasimg = "SELECT folio_traspaso, id_pedido FROM pedido_traspaso WHERE id_pedido_cliente = '$id_pedido' AND estatus = '3'";
+$res_trasimg = mysql_query($sql_trasimg, $conex) or die(mysql_error());
+$total_rows_traspasos = mysql_num_rows($res_trasimg);
+//$lista_traspasos = array();
+if ($total_rows_traspasos > 0){
+	
+	
+	 while($row_traspaso = mysql_fetch_array($res_trasimg,MYSQL_BOTH)) // html de articulos a mostrar
+    {
+		if ($cont == 0){ 
+		$id_tras = $row_traspaso['id_pedido']; }
+		$cont++;
+		$cosulta_imag = "SELECT * FROM relacion_imagenes WHERE id_docto= '$id_tras' AND tipo_docto='TRAS'";
+		$res_img = mysql_query($cosulta_imag, $conex) or die(mysql_error());
+		$total_img = mysql_num_rows($res_img);
+		$html_imagen = '';
+		if ($total_img > 0){ // con resultados
+		$html_imagen = '<h5>Imagenes de traspaso</h5>';
+			while($row_img = mysql_fetch_array($res_img,MYSQL_BOTH)) 
+			{
+				$fecha_subida = ""; //$row_img['fecha_subida'];
+				$src_mostrar = "tras_docs/imagenes/";
+				$ruta = $src_mostrar.$row_img['ruta'];
+				$html_imagen .= '<div class=""> <div class="topics-list"> <p><img src="'.$ruta.'" width="108" height="88" id="imagen_'.$row_img['id_imagen'].'" class="img-thumbnail imagen_tras"></p> <p><b>'.$fecha_subida.'</b></p>    </div> </div>';	
+			}
+		}
+		
+		
+	}
+	
+}
 $cosulta_imagenes = "SELECT * FROM relacion_imagenes WHERE id_docto= '$id_tras' AND tipo_docto='TRAS'";
 		$res_img = mysql_query($cosulta_imagenes, $conex) or die(mysql_error());
 		$total_imgs = mysql_num_rows($res_img);
@@ -103,6 +134,7 @@ $cosulta_imagenes = "SELECT * FROM relacion_imagenes WHERE id_docto= '$id_tras' 
 $ocultar_precio_unitario = '';
 $ocultar_precio_total = '';
 $ocultar_precio_total_global = '';
+$hidden = '';
 $estatus ='';	
 $ocultar_btn_recibir ='';	
 
@@ -137,6 +169,9 @@ $tabla = '<table id="pedido_det" class="table table-striped table-bordered table
                                 
                          $tabla .= '   </tr>
                         </thead><tbody>';
+						if ($select_traspaso == ""){
+							$hidden = 'hidden';
+						}
                             while($row2 = mysql_fetch_array($resultado_lista,MYSQL_BOTH)) // html de articulos a mostrar
                             {
                                 
@@ -148,7 +183,7 @@ $tabla = '<table id="pedido_det" class="table table-striped table-bordered table
                             <td>'.$row2['clave_empresa'].'</td>
                             <td>'.$row2['articulo'].'</td>
                             <td>'.$row2['cantidad'].'</td>
-                            <td class="elementos_recibir" id="td_art_'.$row2['id_articulo'].'">'.CantRecibir($row2['id_articulo'],$id_pedido).'</td>
+                            <td class="elementos_recibir" '.$hidden.' id="td_art_'.$row2['id_articulo'].'">'.CantRecibir($row2['id_articulo'],$id_pedido).'</td>
                             <td class="elementos_recibidos" id="td_recibidos_'.$row2['id_articulo'].'">'.$row2['surtido'].'</td>
                             
                             <td align="right" '.$ocultar_precio_unitario.' >$'.number_format($row2['precio_unitario'],2).' </td>
@@ -181,7 +216,7 @@ $tabla = '<table id="pedido_det" class="table table-striped table-bordered table
 								
 								<td class="col-md-1 " align="right" >
 								
-								
+								<div id="div_imagen_tras" class="">'.$html_imagen.' </div>
 								</td>
 								<td  class="col-md-2 " >
 									<span class="elementos_recibir"> Folio a Recibir </span>'.$select_traspaso.'
@@ -197,7 +232,8 @@ $tabla = '<table id="pedido_det" class="table table-striped table-bordered table
 							</tr>
 							</table> </p>';
 							
-											
+				$html_imagenes_max1 = '<div > <div class=\"topics-list\"> <p><img src=\"';							
+				$html_imagenes_max2 = '\" width=\"600\" height=\"650\" ></p>     </div> </div>';						
      echo $cabezera.$tabla.'
 						<script>
 
@@ -225,6 +261,15 @@ $tabla = '<table id="pedido_det" class="table table-striped table-bordered table
 						   
 								});
 								$(".imagen_tras").on("click", function(){
+									var id = $(this).attr("id");
+                         							   
+									var arr_id = id.split("_");
+									var id_img = arr_id[1];
+									
+									var src_img = $("#imagen_"+id_img).attr("src");
+									
+									jQuery("#modal_imagen_tras .modal-body").html("'.$html_imagenes_max1.'"+src_img+"'.$html_imagenes_max2.'");
+									//alert("'.$html_imagenes_max1.'"+src_img+"'.$html_imagenes_max2.'");
 									$("#modal_imagen_tras").modal("show");
 								});
 								

@@ -5,9 +5,9 @@ if (!isset($_SESSION["logged_user"])){
 }
 
 $hostname_conexion = "localhost:3306";
-$database_conexion = "wwallp_consigna_dura";
-$username_conexion = "wwallp_admin";
-$password_conexion = "allpart2020"; 
+$database_conexion = "consigna_dura";
+$username_conexion = "consigna_adminallpart";
+$password_conexion = "Nacional_2021"; 
 
 /*
 $hostname_conexion = "localhost";

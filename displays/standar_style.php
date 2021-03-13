@@ -59,7 +59,13 @@ switch($tipo_usuario)
 	//si es Almacenista
 	//$reportes = '';  //para no mostrar ningun reportes
 	echo '<script> </script>';
-	$btns_menu = '<!-- --><li style="background-color:rgba(192,192,192,0.8);">
+	$btns_menu = '<!-- -->
+				<li style="background-color:rgba(192,192,192,0.8);">
+                    <a href="#" style="z-index:3;" onclick="automatic_request();">
+                      <span class="fa fa-bars" aria-hidden="true"></span>  Automatic Request
+                    </a>
+                </li> 
+				<li style="background-color:rgba(192,192,192,0.8);">
                     <a href="#" style="z-index:3;" onclick="mostrar_pedido();">
                       <span class="fa fa-bars" aria-hidden="true"></span>  Current request
                     </a>
